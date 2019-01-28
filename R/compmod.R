@@ -7,14 +7,15 @@ compmod <- function(model){
   mod.exp <- model$exp
 
   #intern variables (not parameters)
-  modChars <- c(" ","+","-","*","/","^","(",")","l","o","g","s","i","n","e","x","p","A","1")
+  modChars <- c(" ","+","-","*","/","^","(",")","l","o","g","s","i","n",
+                "e","x","p","A","1")
 
   #extracting characaters from the equation
   chars <- unlist(strsplit(as.character(mod.exp),split=""))
 
   #parameters extraction
   model$parNames <- unique(chars[!is.element(chars,modChars)])
-  names(model$parNames) <- 1:length(model$parNames)
+  names(model$parNames) <- seq_along(model$parNames)
 
   #1rst & 2nd derivatives
   model$d1.exp <- D(mod.exp,"A")
@@ -25,17 +26,21 @@ compmod <- function(model){
   stringStartFun <- " <- function(A,par){ eval("
   stringStartFunRss <- " <- function(data,par,opt){ eval("
   stringStartList <- "list(A=A,"
-  stringPars <- paste(model$parNames,"=par[",names(model$parNames),"]",sep="")
+  stringPars <- paste(model$parNames,"=par[",names(model$parNames),"]",
+                      sep="")
   stringEnd <- ")) }"
 
   #model function
-  eval(parse(text=paste("model$mod.fun",stringStartFun,"model$exp,",stringStartList,paste(stringPars,collapse=","),stringEnd ,sep="")))
+  eval(parse(text=paste("model$mod.fun",stringStartFun,"model$exp,",
+        stringStartList,paste(stringPars,collapse=","),stringEnd ,sep="")))
 
   #first derivative function
-  eval(parse(text=paste("model$d1.fun",stringStartFun,"model$d1.exp,",stringStartList,paste(stringPars,collapse=","),stringEnd ,sep="")))
+  eval(parse(text=paste("model$d1.fun",stringStartFun,"model$d1.exp,",
+        stringStartList,paste(stringPars,collapse=","),stringEnd ,sep="")))
 
   #second derivative function
-  eval(parse(text=paste("model$d2.fun",stringStartFun,"model$d2.exp,",stringStartList,paste(stringPars,collapse=","),stringEnd ,sep="")))
+  eval(parse(text=paste("model$d2.fun",stringStartFun,"model$d2.exp,",
+          stringStartList,paste(stringPars,collapse=","),stringEnd ,sep="")))
 
   #rss function
   model$rss.fun <- function(par,data,parLim=model$parLim,opt=TRUE){
