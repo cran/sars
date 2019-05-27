@@ -63,7 +63,11 @@ summary.sars <- function(object, ...){
       res$power <- round(c("logc" = cp, "z" = zp), 2)
     }
   }
-
+  
+  if (attributes(object)$type == "pred"){
+    return(cat("\nNo summary method for 'pred' object of class 'sars'\n", sep = ""))
+  }
+  
   if (attributes(object)$type == "fit"){
     name <- object$model$name
     resid <- object$residuals
@@ -78,7 +82,6 @@ summary.sars <- function(object, ...){
     shape <- object$observed_shape
     asymp <- object$asymptote
     conv <- object$verge
-    negCheck <- ifelse(any(object$calculated < 0), 1, 0)
     res <- list("Model" = name, "residuals" = round(resid, 1),
                 "Parameters" = pars_tab,
                 "parNames" = parN, "formula" = formula, "AIC" = round(ic, 2),
@@ -87,7 +90,7 @@ summary.sars <- function(object, ...){
                 "observed_shape" = shape, "asymptote" = asymp,
                 "convergence" = conv, "normaTest" = object$normaTest,
                 "homoTest" = object$homoTest,
-                "Negative_values" = negCheck)
+                "Negative_values" = object$neg_check)
   }
 
 
@@ -111,6 +114,14 @@ summary.sars <- function(object, ...){
                      function(x){x$R2a}, FUN.VALUE = numeric(1))
     df$Shape <- vapply(object$details$fits,
                     function(x){x$observed_shape}, FUN.VALUE = character(1))
+    #a warning produces a long shape value sometimes: "observed shape 
+    #algorithm failed: observed shape ..". So change these cases to sigmoid
+    shape_check <- vapply(df$Shape, FUN = function(x){grepl("failed", x)},
+                          FUN.VALUE = logical(1))
+    if (any(shape_check)){
+      wsc <- which(shape_check)
+      df$Shape[wsc] <- "sigmoid"
+    }
     df$Asymptote <- vapply(object$details$fits,
                            function(x){x$asymptote}, FUN.VALUE = logical(1))
     df <- df[order(-df$Weight),]

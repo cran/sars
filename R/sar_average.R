@@ -137,7 +137,7 @@ sar_multi <- function(data,
 
       if (verb) {
         if(is.na(f$value)) {
-          cat_line( paste0(red(symbol$arrow_right)," ",
+          cat_line(paste0(red(symbol$arrow_right)," ",
                            col_align(x,max(nchar(obj)))," : ",
                            red(symbol$cross)))
         }else{
@@ -185,8 +185,9 @@ sar_multi <- function(data,
 #'   be NULL.
 #' @param crit The criterion used to compare models and compute the model
 #'   weights. The default \code{crit = "Info"} switches to AIC or AICc depending
-#'   on the number of data points in the dataset. For BIC, use \code{crit =
-#'   "Bayes"}.
+#'   on the number of data points in the dataset. AIC (\code{crit = "AIC"}) or
+#'   AICc (\code{crit = "AICc"}) can be chosen regardless of the sample size. For
+#'   BIC, use \code{crit ="Bayes"}.
 #' @param normaTest The test used to test the normality of the residuals of each
 #'   model. Can be any of "lillie" (Lilliefors Kolmogorov-Smirnov test; the
 #'   default), "shapiro" (Shapiro-Wilk test of normality), "kolmo"
@@ -507,7 +508,9 @@ sar_average <- function(obj = c("power", "powerR","epm1","epm2","p1","p2",
   #choosing an IC criterion (AIC or AICc or BIC)
   IC <- switch(crit,
                Info= if ( (nPoints / 3) < 40 ) { "AICc" } else { "AIC" },
-               Bayes= "BIC")
+               AIC = "AIC",
+               AICc = "AICc",
+               Bayes = "BIC")
 
   #get ICs
   ICs <- vapply(X = fits, FUN = function(x){x[[IC]]}, FUN.VALUE = double(1))
@@ -572,3 +575,132 @@ sar_average <- function(obj = c("power", "powerR","epm1","epm2","p1","p2",
   invisible(res)
 
 }#end of sar_average
+
+
+#' Use SAR model fits to predict richness on islands of a given size
+#'
+#' @description Predict the richness on an island of a given size using either
+#'   individual SAR model fits, a fit_collection of model fits, or a multi-model
+#'   SAR curve.
+#' @usage sar_pred(fit, area)
+#' @param fit Either a model fit object, a fit_collection object (generated
+#'   using \code{\link{sar_multi}}), or a sar_multi object (generated using
+#'   \code{\link{sar_average}}).
+#' @param area A numeric vector of area values (length >= 1).
+#' @details Extrapolation (e.g. predicting the richness of areas too large to be
+#'   sampled) is one of the primary uses of the SAR. The \code{sar_pred}
+#'   function provides an easy method for undertaking such an exercise. The
+#'   function works by taking an already fitted SAR model, extacting the parameter
+#'   values and then using these values and the model function to predict the
+#'   richness for any value of area provided.
+#'
+#'   If a multi-model SAR curve is used for prediction (i.e. using
+#'   \code{\link{sar_average}}), the model information criterion weight (i.e.
+#'   the conditional probabilities for each of the n models) for each of the
+#'   individual model fits that were used to generate the curve are stored. The
+#'   n models are then each used to predict the richness of a larger area and
+#'   these predictions are multiplied by the respective model weights and summed
+#'   to provide a multi-model averaged prediction.
+#'
+#' @return A data.frame of class 'sars' with three columns: 1) the name of the
+#'   model, 2) the area value for which a prediction has been generated, and 3)
+#'   the prediction from the model extrapolation.
+#' @note This function is used in the ISAR extrapolation paper of Matthews &
+#'   Aspin (2019).
+#'
+#'   Code to calculate confidence intervals around the predictions using
+#'   bootstrapping will be added in a later version of the package.
+#' @references Matthews, T.J. & Aspin, T.W.H. (2019) ....
+#' @examples
+#' data(galap)
+#' #fit the power model and predict richness on an island of area = 5000
+#' fit <- sar_power(data = galap)
+#' p <- sar_pred(fit, area = 5000)
+#' 
+#' #fit three SAR models and predict richness on islands of area = 5000 & 10000
+#' fit2 <- sar_multi(galap, obj = c("power", "loga", "koba"))
+#' p2 <- sar_pred(fit2, area = c(5000, 10000))
+#' 
+#' #calculate a multi-model curve and predict richness on islands of area = 5000 & 10000
+#' fit3 <- sar_average(data = galap)
+#' p3 <- sar_pred(fit3, area = c(5000, 10000))
+#' @export
+
+
+#test with known dataset from results that uses AICc
+
+sar_pred <- function(fit, area){
+  
+  if (!any(class(fit) %in% c("multi", "sars")))
+    stop("fit must be of class multi or sars")
+  
+  if (!(is.numeric(area) & is.vector(area)))
+    stop("area should be a numeric vector")
+
+  if (attributes(fit)$type == "multi"){ #if a sar_multi object
+    wei <- fit$details$weights_ics#weights
+    #get predicted values for area from each of the model fits
+    #works whether area is single value or vector of values with length > 1
+      pred0 <- vapply(area, function(a){
+        predVec <- vector(length = length(fit$details$mod_names))
+        for (i in seq_along(fit$details$mod_names)){
+          fi <- fit$details$fits[[i]]
+          nam <- fit$details$mod_names[i]
+          pPars <- fi$par
+          if (nam == "Linear model"){
+            predVec[i] <- as.vector(pPars[1] + (pPars[2] * a))
+            } else {
+              predVec[i] <- as.vector(fi$model$mod.fun(a, pPars))
+              }#eo if linear model
+          }#eo for i
+        if (!identical(names(wei), names(fit$details$mod_names))){ 
+          stop ("Model names do not match.")
+        }
+        pred <- sum(predVec * wei) #multiply each model's fitted values by its weight
+        pred
+        }, FUN.VALUE = numeric(length = 1))
+      pred <- data.frame("Model" = "Multi", "Area" = area, "Prediction" = pred0)
+      } else if (attributes(fit)$type == "fit"){ #if a standard fit object
+        if (fit$model$name == "Linear model"){
+          pPars <- fit$par
+          pred0 <- as.vector((pPars[1] + (pPars[2] * area)))
+          pred <- data.frame("Model" = "Linear", "Area" = area, 
+                             "Prediction" = pred0)
+          } else {
+            pPars <- fit$par
+            pred0 <- as.vector(fit$model$mod.fun(area, pPars))
+            pred <- data.frame("Model" = fit$model$name,"Area" = area, 
+                               "Prediction" = pred0)
+            }#eo if linear model
+        } else if (attributes(fit)$type == "fit_collection"){ #if a fit collection 
+          pred0 <- vapply(fit, function(f){
+            if (f$model$name == "Linear model"){
+              pPars <- f$par
+              pred2 <- as.vector((pPars[1] + (pPars[2] * area)))
+              } else {
+                pPars <- f$par
+                pred2 <- as.vector(f$model$mod.fun(area, pPars))
+                }#eo if linear model
+            pred2
+            }, FUN.VALUE = numeric(length = length(area)))
+           #get model names in fit_collection
+           mns <-  vapply(fit, function(x) x$model$name, FUN.VALUE = character(1))
+           #build data.frame depening on whether one area value provided or multiple
+           if (length(area) == 1){
+            pred <- data.frame("Model" = mns, "Area" = rep(area, length(pred0)),
+                               "Prediction" = pred0)
+           } else{
+             #have to unpack the results properly to build data.frame in correct order
+             mns2 <- as.vector(vapply(mns, function(x) rep(x, nrow(pred0)), 
+                                      FUN.VALUE = character(nrow(pred0))))
+             p2 <- as.vector(unlist(pred0))
+             pred <- data.frame("Model" = mns2, "Area" = area, "Prediction" = p2)
+           }
+            rownames(pred) <- NULL
+        } else{
+    stop("Incorrect fit object provided")
+        }
+  class(pred) <- c("sars", "data.frame")
+  attr(pred, "type") <- "pred"
+  return(pred)
+}

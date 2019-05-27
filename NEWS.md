@@ -1,4 +1,9 @@
-
+## Version 1.1.2
+  * bug fixes
+  * additional tests added
+  * sar_pred() function added for SAR extrapolation
+  * negative fitted value check (fit$neg_check) returned for each individual model fit
+  * knitr error correction (for CRAN)
   
 ## Version 1.1.1
  * added vignette
