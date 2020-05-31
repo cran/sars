@@ -43,6 +43,15 @@ rssoptim <- function(model, data, start = NULL, algo = "Nelder-Mead",
 
   #renaming the parameters vector
   names(res1$par) <- model$parNames
+  
+  #for asymptotic model, if a negative z is returned, just error, as this
+  #causes very strange fits. This will then return the model did not fit
+  #message to the user.
+  if (model$name == "Asymptotic regression"){
+    if (res1$par[3] < 0){
+      stop ("Asymp negative z")
+    }
+  }
 
   #calculating expected richness
   S.calc <- model$mod.fun(data$A,res1$par)
@@ -121,15 +130,18 @@ rssoptim <- function(model, data, start = NULL, algo = "Nelder-Mead",
   R2a <-  1 - ( ((n-1)*(res1$value)) /
                   ((n-P)*sum((data$S - mean(data$S))^2)) )
 
-  #AIC
-  AIC <- n * log(res1$value / n) + 2 * P
-
-  #AICc
-  AICc <- n * log(res1$value / n) + 2*P*(n / (n - P - 1))
-
-  #BIC
-  BIC <- n *log(res1$value / n) + log(n) * P
-
+  #old formulas based on rss
+  #AIC <- n * log(res1$value / n) + 2 * P
+  #AICc <- n * log(res1$value / n) + 2*P*(n / (n - P - 1))
+  #BIC <- n *log(res1$value / n) + log(n) * P
+  
+  #using log likelihood (and AIC etc) based on nls approach
+  #log likelihood code from nls
+  val <-  -n * (log(2 * pi) + 1 - log(n) + log(sum(residu^2)))/2
+  AIC <- (2 * P) - (2 * val)
+  AICc <- -2 * val + 2 * P * (n / (n - P - 1))
+  BIC <- (-2 * val) + (P * log(n))
+  
   res3 <- list(AIC=AIC, AICc=AICc, BIC=BIC, R2=R2, R2a=R2a)
 
   #convergence verif -> 71 is R2<=0
@@ -206,94 +218,160 @@ rssoptim <- function(model, data, start = NULL, algo = "Nelder-Mead",
 grid_start_fit <- function(model, data, n, algo = "Nelder-Mead",
                            normaTest = "lillie", homoTest = "cor.fitted",
                            verb = TRUE) {
-
-  if(length(model$parNames)<4){
-    ns <- 100
-  }else{
-    ns <- 10
-  }
+  
+  #  if(length(model$parNames)<4){
+  ns <- 100
+  # }else{
+  #   ns <- 10
+  # }
+  
 
   start.list <- lapply(model$parLim,function(x){
     res <- switch(x,
-                 R = sample(seq(-500,500),ns),
-                 Rplus = seq(.1,500,length.out = ns),
-                 unif = runif(ns)
+                  R = sample(seq(-500,500), ns),
+                  Rplus = c(seq(.1,500,length.out = ns)),
+                  unif = runif(ns)
     )
     return(res)
   })
+  
 
   names(start.list) <- model$parNames
-
+  
   grid.start <- expand.grid(start.list)
-
+  
   grid.start <- grid.start[sample.int(dim(grid.start)[1],n),]
-
-  if (verb) cat("- running grid optim: ")
-
-  fit.list <- apply(grid.start, 1, function(x){
-    if (verb) cat(".")
+  
+  #add our default in as possible 
+  def.start <- model$init(data)
+  names(def.start) <- colnames(grid.start)
+  grid.start <- rbind(grid.start, def.start)
+  
+  #ensure very small values are included as useful for some models
+  sm_val <- lapply(model$parNames, function(x){
+    c(0.000001, 0.00001, 0.0001, 0.001, 0.01, 0.1)
+  })
+  
+  sm_grid <- expand.grid(sm_val)
+  
+  colnames(sm_grid) <- colnames(grid.start)
+  
+  grid.start <- rbind(grid.start, sm_grid)
+  
+  
+  #the asymptote parameters are all Rplus, and when e.g. PD is used as the
+  #response, the asymptote can occur much higher than 500, so for Rplus,
+  #we tag on the 4 largest richness values on the end. Values also tagged on
+  #if max richness < 500, but this doesn't matter (and might help as should
+  #be closer to true asymptote value)
+  if (any(model$parLim == "Rplus")){
+    RPM <- sort(data$S, decreasing = TRUE)[1:4]
+    WPM <- which(model$parLim == "Rplus")
+    WPM2 <- which(!model$parLim == "Rplus")
+    
+    ZZ <- vector("list", length = length(model$parLim))
+    #iterate across model parameters, and if Rplus store the 4 largest values,
+    #and if not, store the relevant values. Then create a new expanded grid
+    #and add onto grid.start
+    for (i in 1:length(model$parLim)){
+      if (model$parLim[i] == "Rplus"){
+        ZZ[[i]] <- RPM
+      } else if(model$parLim[i] == "R"){
+        ZZ[[i]] <- c(-500, -250, -50, 0.1, 50, 250, 500)
+      } else{
+        ZZ[[i]] <- runif(5)
+      }
+    }#eo for
+    lar_grid <- expand.grid(ZZ)
+    colnames(lar_grid) <- colnames(grid.start)
+    grid.start <- rbind(grid.start, lar_grid)
+  }#eo if Rplus
+  
+  #some more specific values for Chapman and Gompertz models
+  if(model$name == "Chapman Richards"){
+    zseq <- c(0.00001, 0.00005, 0.0001, 0.0005, 0.001, 0.005, 
+              0.01, 0.05, 0.1, 0.5)
+    gs2 <- data.frame(rep(def.start[1], 10), zseq, rep(def.start[3], 10))
+    colnames(gs2) <- colnames(grid.start)
+    grid.start <- rbind(grid.start, gs2)
+  }
+  if (model$name == "Gompertz"){
+    d2 <- sort(data$S, decreasing = TRUE)[1:3]
+    zz2 <- c(0.00001, 0.00005, 0.0001, 0.0005, 0.001, 0.005, 
+              0.01, 0.05, 0.1, 0.5)
+    cc <- def.start[3]
+    cc2 <- c(cc + 5, cc + 10, cc + 50, cc + 100, cc + 200, cc + 500, cc + 800,
+             cc - 5, cc - 10, cc - 50, cc - 100, cc - 200, cc - 500, cc - 800)
+    gs2 <- expand.grid(d2, zz2, cc2)
+    colnames(gs2) <- colnames(grid.start)
+    grid.start <- rbind(grid.start, gs2)
+  }
+  
+  
+  #####################################################
+  
+  if (verb) cat("- running grid optim: \n")
+  
+  fit.list <- suppressWarnings(apply(grid.start, 1, function(x){
+    #  if (verb) cat(".")
     tryCatch(rssoptim(model, data , start = x, algo = algo,
                       normaTest = normaTest, homoTest = homoTest)
              , error = function(e) list(value = NA))
-  })
-
+  }))
+  
   fit.list <- as.list(fit.list)
-
+  
   values <- unlist(lapply(fit.list,function(x){x$value}))
-
+  
   min <- which.min(values)
-
+  
   if(length(min) != 0) {
     fit.list[[min]]
   }else{
     list(value = NA)
   }
-
+  
 }#eo grid_start_fit
 
 ######################################## optimization wrapper
 get_fit <- function(model = model, data = data, start = NULL,
-                    grid_start = NULL, algo = "Nelder-Mead",
+                    grid_start = FALSE, grid_n = NULL, algo = "Nelder-Mead",
                     normaTest = "lillie", homoTest = "cor.fitted",
                     verb = TRUE){
-
-  if(!is.null(start) & !is.null(grid_start)){
+  
+  if (isFALSE(is.null(start)) & (grid_start)){
     stop("You must choose between 'start' and 'grid_start',",
          " but choose wisely\n")
   }
-
-  if(is.null(start)){
-    fit <- tryCatch(rssoptim(model = model, data = data, algo = algo,
-                             normaTest = normaTest, homoTest = homoTest)
-                    ,error=function(e) list(value = NA))
-    if(is.na(fit$value)){
-      if(!is.null(grid_start)){
-        if(grid_start != FALSE){
-          n <- min(grid_start,1000)
-          fit <- grid_start_fit(model = model, data = data, n = n,
-                                algo = algo, normaTest = normaTest,
-                                homoTest = homoTest,verb = verb)
-          grid_start <- NULL
-        }
-      }
+  
+  ##found that for some models, grid start often pushes it into weird parameter 
+  ##space (e.g. weibull 3 becomes wiggly), but not forbidden space (e.g. pars 
+  ##are all positive) so for now, for these models, just fit using our starting
+  ##parameter estimates.
+  if(grid_start) { #use grid_search
+    
+    if (!model$name %in% c("Cumulative Weibull 3 par.",
+                           "Cumulative Weibull 4 par.")){
+    
+    fit <- grid_start_fit(model = model, data = data, n = grid_n,
+                          algo = algo, normaTest = normaTest,
+                          homoTest = homoTest, verb = verb)
+    } else{
+      fit <- tryCatch(rssoptim(model = model, data = data, algo = algo,
+                               normaTest = normaTest, homoTest = homoTest),
+                      error=function(e) list(value = NA))
     }
-  }
-
-  if(!is.null(start)){
+  } else if (!is.null(start)){#or provided start values
     fit <- tryCatch(rssoptim(model = model, data = data,
                              start = start, algo = algo,
                              normaTest = normaTest, homoTest = homoTest),
                     error = function(e) list(value = NA))
+  } else { #or if neither selected, use default start values from within sars
+    fit <- tryCatch(rssoptim(model = model, data = data, algo = algo,
+                             normaTest = normaTest, homoTest = homoTest),
+                    error=function(e) list(value = NA))
   }
-
-  if(!is.null(grid_start)) {
-    if (grid_start != FALSE){
-      fit <- grid_start_fit(model = model, data = data, n = grid_start,
-                            algo = algo, normaTest = normaTest,
-                            homoTest = homoTest, verb = verb)
-    }#eo if (grid_start != FALSE)
-  }#eo if(!is.null(grid_start))
-
+  
   if(is.na(fit$value)){
     warning("The model could not be fitted :(\n")
     return(list(value = NA))

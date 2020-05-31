@@ -3,11 +3,23 @@ library(sars)
 
 test_that("sar_power returns correct results", {
   fit <- sar_power(galap)
-  expect_equal(round(fit$AICc, 2), 143.62)
+  expect_equal(round(fit$AICc, 2), 189.03)
   expect_equal(as.vector(round(fit$par[2], 2)), 0.28)
   expect_is(fit, "sars")
   expect_match(fit$normaTest[[1]], "lillie")
   expect_error(sar_linear(5), "data must be a matrix or dataframe")
+})
+
+
+#changed neg_expo function allowing z to be > 1, and also the change to 
+#asymp setting z to Rplus rather than R
+test_that("neg_expo and asymp returns correct results", {
+  fit <- sar_negexpo(niering)
+  expect_equal(round(fit$AICc, 2), 207.39)
+  expect_equal(as.vector(round(fit$par[2], 2)), 26.14)
+  fit2 <- sar_asymp(niering)
+  expect_equal(round(fit2$BIC, 2), 204.32)
+  expect_equal(as.vector(round(fit2$par[3], 5)), 0)
 })
 
 

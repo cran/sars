@@ -2,14 +2,17 @@
 knitr::opts_chunk$set(
   out.width = "100%"
 )
+options(cli.unicode = FALSE)
 
 ## ----include = FALSE----------------------------------------------------------
 library(sars)
 
 ## ---- fig.width=6, fig.height=6-----------------------------------------------
-#load an example dataset (Preston, 1962), fit the logarithmic SAR model,
-#return a model fit summary and plot the model fit. data(galap) 
-fit <- sar_loga(data = galap) 
+#load an example dataset (Preston, 1962), fit the logarithmic SAR model using
+#the grid_start method of selecting starting parameter values, return a model 
+#fit summary and plot the model fit. 
+data(galap) 
+fit <- sar_loga(data = galap, grid_start = TRUE, grid_n = 100) 
 summary(fit) 
 plot(fit)
 
@@ -41,8 +44,8 @@ normaTest = "none", homoTest = "none", neg_check = FALSE, confInt = TRUE, ciN
 = 50) #a message is provided indicating that one model (asymp) could not be
 #fitted
 
-par(mfrow = c(3,1)) #plot all model fits with the multimodel SAR curve
-plot(fit, ModTitle = "a) Multimodel SAR")
+par(mfrow = c(3,1)) #plot all model fits and the multimodel SAR curve as a separate curve on top
+plot(fit, ModTitle = "a) Multimodel SAR", mmSep = TRUE)
 
 #plot the multimodel SAR curve (with confidence intervals; see explanation
 #in the main text, above) on its own 

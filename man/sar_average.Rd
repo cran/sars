@@ -9,8 +9,8 @@ sar_average(obj = c("power",
   "mmf","monod","negexpo","chapman","weibull3","asymp",
   "ratio","gompertz","weibull4","betap","heleg", "linear"), data = NULL, crit
   = "Info", normaTest = "lillie", homoTest = "cor.fitted", neg_check = FALSE,
-  alpha_normtest = 0.05, alpha_homotest = 0.05, confInt = FALSE, ciN = 100,
-  verb = TRUE)
+  alpha_normtest = 0.05, alpha_homotest = 0.05, grid_start = FALSE,
+  grid_n = NULL, confInt = FALSE, ciN = 100, verb = TRUE)
 }
 \arguments{
 \item{obj}{Either a vector of model names or a fit_collection object created
@@ -51,6 +51,14 @@ the test).}
 \item{alpha_homotest}{The alpha value used in the residual homogeneity test
 (default = 0.05, i.e. any test with a P value < 0.05 is flagged as failing
 the test).}
+
+\item{grid_start}{Logical argument specifying whether a grid search procedure
+should be implemented to test multiple starting parameter values. The
+default is set to FALSE, but we would recommend using it to ensure the fits
+of certain models (e.g. Gompertz, Chapman Richards) are optimal.}
+
+\item{grid_n}{If \code{grid_start = TRUE}, the number of points sampled in
+the model parameter space.}
 
 \item{confInt}{A logical argument specifying whether confidence intervals
 should be calculated for the multimodel curve using bootstrapping.}
@@ -129,10 +137,36 @@ Occasionally a model fit will converge and pass the model fitting
   the resultant 'multi' object to check the individual model fits. To re-run
   the \code{sar_multi} function without a particular model, simply remove it
   from the \code{obj} argument.
+  
+  Choosing starting parameter values for non-linear regression optimisation
+  algorithms is not always straight forward, depending on the data at hand.
+  In the package, we use various approaches to choose default starting
+  parameters. However, if any of the resultant model fits does not converge,
+  returns a singular gradient at parameter estimates, or the plot of the
+  model fit does not look optimum, try using the \code{grid_start} argument
+  to undertake a more extensive selection of starting values, or provide your
+  own starting values (\code{start}). While using \code{grid_start} is more
+  time consuming, it will often provide (much) better fits for certain
+  models, and so we recommend its use where possible. Note, that
+  \code{grid_start} has been disabled for a small number of models (e.g.
+  Weibull 3 par.). See the vignette for more information.
 
   The generation of confidence intervals around the multimodel curve (using
   \code{confInt == TRUE}), may throw up errors that we have yet to come
   across. Please report any issues to the package maintainer.
+  
+  There are different formulas for calculating the various information
+  criteria (IC) used for model comparison (e.g. AIC, BIC). For example, some
+  formulas use the residual sum of squares (rss) and others the
+  log-likelihood (ll). Both are valid approaches and will give the same
+  parameter estimates, but it is important to only compare IC values that
+  have been calculated using the same approach. For example, the 'sars'
+  package used to use formulas based on the rss, while the \link[stats]{nls}
+  function function in the stats package uses formulas based on the ll. To
+  increase the compatability between nls and sars, we have changed our
+  formulas such that now our IC formulas are the same as those used in the
+  \link[stats]{nls} function. See the "On the calculation of information
+  criteria" section in the package vignette for more information.
 }
 \examples{
 data(galap)

@@ -1,3 +1,21 @@
+##version 1.2.3
+  * return shape algorithm fail info to model summary table
+  * added grid_start argument option to sar_average and sar_multi
+  * edited grid_start to ensure very small starting par values are always included
+  * edited how grid_start works and have added a grid_n argument
+  * changed the negative exponential model fitting process so that the z parameter can
+    be any number rather than constrained between 0 and 1.
+  * changed the asymptotic model fitting process so that a negative z-value cannot be returned
+  * bug corrections in the confidence interval function, and adapting it to work with
+    grid_start
+  * Changing model plotting to plot smooth curves by creating 1000 fitted values
+    using fitted parameters
+
+## Version 1.2.2
+  * bug fix - no AICc option in confidence interval function
+  * changed AIC, BIC and AICc equations to be calculated using
+    the same approach as the nls and lm functions.
+
 ## Version 1.2.1
   * added a warning for when all richness values are identical
   * adding functionality to plot.multi for plotting the multimodel curve on top of the other model fits
