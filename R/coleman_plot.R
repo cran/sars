@@ -25,13 +25,12 @@
 #'   should be scaled relative to the default.
 #' @param \dots Further graphical parameters (see
 #'   \code{\link[graphics]{par}},
-#'   \code{\link[graphics]{plot}},\code{\link[graphics]{title}},
+#'   \code{\link[graphics]{plot.default}},\code{\link[graphics]{title}},
 #'   \code{\link[graphics]{lines}}) may be supplied as arguments.
 #' @details The resultant plot contains the observed richness values with the
 #'   model fit and confidence intervals. Following Wang et al. (2010), the
 #'   model is rejected if more than a third of the observed data points fall
 #'   beyond one standard deviation from the expected curve.
-#' @importFrom dplyr arrange_
 #' @examples
 #' data(cole_sim)
 #' fit <- coleman(cole_sim[[1]], cole_sim[[2]])
@@ -49,8 +48,8 @@ plot.coleman <- function(x, xlab = "Relative area (log transformed)",
                    x$Relative_areas, x$Species_richness)
     colnames(df) <- c("pv", "sd", "ra", "os")
 
-    df <- arrange_(df, ~ra)#using standard evaluation
-
+    df <- df[order(df$ra),]#used to use dplyr::arrange
+    
     plot(x = log(df$ra), y = df$os, ylim = c(min((df$pv - df$sd)),
                                              max((df$pv + df$sd))),
          xlab = xlab, ylab = ylab, pch = pch, cex = cex, col = pcol,
