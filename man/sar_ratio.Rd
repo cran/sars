@@ -4,8 +4,9 @@
 \alias{sar_ratio}
 \title{Fit the Rational function model}
 \usage{
-sar_ratio(data, start = NULL, grid_start = FALSE, grid_n = NULL, normaTest = 'lillie',
-  homoTest = 'cor.fitted')
+sar_ratio(data, start = NULL, grid_start = 'partial',
+  grid_n = NULL, normaTest = 'none',
+  homoTest = 'none', homoCor = 'spearman')
 }
 \arguments{
 \item{data}{A dataset in the form of a dataframe with two columns: 
@@ -14,19 +15,22 @@ of each island/site.}
 
 \item{start}{NULL or custom parameter start values for the optimisation algorithm.}
 
-\item{grid_start}{Logical argument specifying whether a grid search procedure should be implemented to test multiple starting parameter values. The default is set to FALSE, but for certain models (e.g. Gompertz, Chapman Richards), we advice using it to ensure an optimal fit.}
+\item{grid_start}{Should a grid search procedure be implemented to test multiple starting parameter values. Can be one of 'none', 'partial' or 'exhaustive' The default is set to 'partial'.}
 
-\item{grid_n}{If \code{grid_start = TRUE}, the number of points sampled in the model parameter space.}
+\item{grid_n}{If \code{grid_start = exhaustive}, the number of points sampled in the starting parameter space.}
 
 \item{normaTest}{The test used to test the normality of the residuals of the
-model. Can be any of 'lillie' (Lilliefors Kolmogorov-Smirnov test; the
-default), 'shapiro' (Shapiro-Wilk test of normality), 'kolmo'
-(Kolmogorov-Smirnov test), or 'none' (no residuals normality test is undertaken).}
+  model. Can be any of 'lillie' (Lilliefors test
+, 'shapiro' (Shapiro-Wilk test of normality), 'kolmo'
+  (Kolmogorov-Smirnov test), or 'none' (no residuals normality test is undertaken; the default).}
 
 \item{homoTest}{The test used to check for homogeneity of the residuals of
 the model. Can be any of 'cor.fitted' (a correlation of the residuals with
-the model fitted values; the default), 'cor.area' (a correlation of the
-residuals with the area values), or 'none' (no residuals homogeneity test is undertaken).}
+the model fitted values), 'cor.area' (a correlation of the
+residuals with the area values), or 'none' (no residuals homogeneity test is undertaken; the default).}
+
+\item{homoCor}{The correlation test to be used when \code{homoTest !='none'}. Can be any of 'spearman'
+(the default), 'pearson', or 'kendall'.}
 }
 \value{
 A list of class 'sars' with the following components: 
@@ -34,10 +38,10 @@ A list of class 'sars' with the following components:
     \item{par} { The model parameters}
     \item{value} { Residual sum of squares}
     \item{counts} {  The number of iterations for the convergence of the fitting algorithm}
-    \item{convergence} { Numeric code indicating model convergence (0 = converged)}
+    \item{convergence} { Numeric code returned from optim indicating model convergence (0 = converged)}
     \item{message} { Any message from the model fit algorithm}
     \item{hessian} { A symmetric matrix giving an estimate of the Hessian at the solution found}
-    \item{verge} { Logical code indicating model convergence}
+    \item{verge} { Logical code indicating that optim model convergence value is zero}
     \item{startValues} { The start values for the model parameters used in the optimisation}
     \item{data} { Observed data}
     \item{model} { A list of model information (e.g. the model name and formula)}
@@ -69,10 +73,13 @@ not work, custom values can be provided (using the \code{start} argument), or a 
   can be undertaken using the \code{grid_start} argument. See the vignette for more information.
   The fitting process also determines the observed shape of the model fit,
   and whether or not the observed fit is asymptotic (see Triantis et al. 2012 for further details).
-  Model validation is undertaken by assessing the normality (\code{normaTest}) and homogeneity (\code{homoTest})
-  of the residuals and a warning is provided in \code{\link{summary.sars}} if either test is failed.
+  Model validation can be undertaken by assessing the normality (\code{normaTest}) and homogeneity (\code{homoTest})
+  of the residuals and a warning is provided in \code{\link{summary.sars}} if either test is chosen and fails.
   A selection of information criteria (e.g. AIC, BIC) are returned and can be used to compare models
-  (see also \code{\link{sar_average}})
+  (see also \code{\link{sar_average}}).
+  
+  As grid_start has a random component, when \code{grid_start != 'none'} in your model fitting, you can
+   get slightly different results each time you fit a model
 }
 \examples{
 data(galap)

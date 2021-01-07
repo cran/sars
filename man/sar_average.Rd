@@ -8,9 +8,9 @@ sar_average(obj = c("power",
   "powerR","epm1","epm2","p1","p2","loga","koba",
   "mmf","monod","negexpo","chapman","weibull3","asymp",
   "ratio","gompertz","weibull4","betap","heleg", "linear"), data = NULL, crit
-  = "Info", normaTest = "lillie", homoTest = "cor.fitted", neg_check = FALSE,
-  alpha_normtest = 0.05, alpha_homotest = 0.05, grid_start = FALSE,
-  grid_n = NULL, confInt = FALSE, ciN = 100, verb = TRUE)
+  = "Info", normaTest = "none", homoTest = "none", homoCor = "spearman",
+  neg_check = FALSE, alpha_normtest = 0.05, alpha_homotest = 0.05, grid_start
+  = "partial", grid_n = NULL, confInt = FALSE, ciN = 100, verb = TRUE)
 }
 \arguments{
 \item{obj}{Either a vector of model names or a fit_collection object created
@@ -30,16 +30,18 @@ AICc (\code{crit = "AICc"}) can be chosen regardless of the sample size. For
 BIC, use \code{crit ="Bayes"}.}
 
 \item{normaTest}{The test used to test the normality of the residuals of each
-model. Can be any of "lillie" (Lilliefors Kolmogorov-Smirnov test; the
-default), "shapiro" (Shapiro-Wilk test of normality), "kolmo"
-(Kolmogorov-Smirnov test), or "none" (no residuals normality test is
-undertaken).}
+model. Can be any of "lillie" (Lilliefors Kolmogorov-Smirnov test),
+"shapiro" (Shapiro-Wilk test of normality), "kolmo" (Kolmogorov-Smirnov
+test), or "none" (no residuals normality test is undertaken; the default).}
 
 \item{homoTest}{The test used to check for homogeneity of the residuals of
-each model. Can be any of "cor.fitted" (a correlation of the residuals with
-the model fitted values; the default), "cor.area" (a correlation of the
-residuals with the area values), or "none" (no residuals homogeneity test
-is undertaken).}
+each model. Can be any of "cor.fitted" (a correlation of the squared
+residuals with the model fitted values), "cor.area" (a correlation of the
+squared residuals with the area values), or "none" (no residuals
+homogeneity test is undertaken; the default).}
+
+\item{homoCor}{The correlation test to be used when \code{homoTest !=
+"none"}. Can be any of "spearman" (the default), "pearson", or "kendall".}
 
 \item{neg_check}{Whether or not a check should be undertaken to flag any
 models that predict negative richness values.}
@@ -52,13 +54,12 @@ the test).}
 (default = 0.05, i.e. any test with a P value < 0.05 is flagged as failing
 the test).}
 
-\item{grid_start}{Logical argument specifying whether a grid search procedure
-should be implemented to test multiple starting parameter values. The
-default is set to FALSE, but we would recommend using it to ensure the fits
-of certain models (e.g. Gompertz, Chapman Richards) are optimal.}
+\item{grid_start}{Should a grid search procedure be implemented to test
+multiple starting parameter values. Can be one of 'none', 'partial' or
+'exhaustive' The default is set to 'partial'.}
 
-\item{grid_n}{If \code{grid_start = TRUE}, the number of points sampled in
-the model parameter space.}
+\item{grid_n}{If \code{grid_start = exhaustive}, the number of points sampled
+in the starting parameter space (see details).}
 
 \item{confInt}{A logical argument specifying whether confidence intervals
 should be calculated for the multimodel curve using bootstrapping.}
@@ -84,8 +85,10 @@ A list of class "multi" and class "sars" with two elements. The first
   criterion values} \item{weights_ics} { The information criterion weights of
   each model fit} \item{n_points} {  Number of data points} \item{n_mods} {
   The number of successfully fitted models} \item{no_fit} { Names of the
-  models which could not be fitted or did not pass model checks} }
-
+  models which could not be fitted or did not pass model checks}
+  \item{convergence} { Logical value indicating whether \code{\link{optim}}
+  model convergence code = 0, for each model} }
+  
   The \code{\link{summary.sars}} function returns a more useful summary of
   the model fit results, and the \code{\link{plot.multi}} plots the
   multimodel curve.
@@ -107,11 +110,13 @@ The multimodel SAR curve is constructed using information criterion
   heterogeneity tests, and checks for negative predicted richness values),
   these are undertaken and any model that fails the selected test(s) is
   removed from the multimodel SAR. The order of the additional checks inside
-  the function is: normality of residuals, homogeneity of residuals, and a
-  check for negative fitted values. Once a model fails one test it is removed
-  and thus is not available for further tests. Thus, a model may fail
-  multiple tests but the returned warning will only provide information on a
-  single test.
+  the function is (if all are turned on): normality of residuals, homogeneity
+  of residuals, and a check for negative fitted values. Once a model fails
+  one test it is removed and thus is not available for further tests. Thus, a
+  model may fail multiple tests but the returned warning will only provide
+  information on a single test. We have now changed the defaults so that
+  no checks are undertaken, so it is up to the user to select any checks if
+  appropriate.
 
   The resultant models are then used to construct the multimodel SAR curve.
   For each model in turn, the model fitted values are multiplied by the
@@ -122,34 +127,67 @@ The multimodel SAR curve is constructed using information criterion
   procedure transforms the residuals from the individual model fits and
   occasionally NAs / Inf values can be produced - in these cases, the model
   is removed from the confidence interval calculation (but not the multimodel
-  curve itself). When several SAR models are used and the number of
-  bootstraps (\code{ciN}) is large, generating the confidence intervals can
-  take a long time.
-
+  curve itself). There is also a constraint within the procedure to remove
+  any transformed residuals that result in negative richness values. When
+  several SAR models are used, when grid_start is turned on and when the
+  number of bootstraps (\code{ciN}) is large, generating the confidence
+  intervals can take a (very) long time. Parallel processing will be added to
+  future versions.
+  
+  Choosing starting parameter values for non-linear regression optimisation
+  algorithms is not always straight forward, depending on the data at hand.
+  In the package, we use various approaches to choose default starting
+  parameters. However, we also use a grid search process which creates a
+  large array of different possible starting parameter values (within certain
+  bounds) and then randomly selects a proportion of these to test. There are
+  three options for the \code{grid_start} argument to control this process.
+  The default (\code{grid_start = "partial"}) randomly samples 500 different
+  sets of starting parameter values for each model, adds these to the model's
+  default starting values and tests all of these. A more comprehensive set of
+  starting parameter estimates can be used (\code{grid_start = "exhaustive"})
+  - this option allows the user to choose the number of starting parameter
+  sets to be tested (using the \code{grid_n} argument) and includes a range
+  of additional starting parameter estimates, e.g. very small values and
+  particular values we have found to be useful for individual models. Using
+  \code{grid_start = "exhaustive"} in combination with a large \code{grid_n}
+  can be very time consuming; however, we would recommend it as it makes it
+  more likely that the optimal model fit will be found, particularly for the
+  more complex models. This is particularly true if any of the model fits
+  does not converge, returns a singular gradient at parameter estimates, or
+  the plot of the model fit does not look optimum. The grid start procedure
+  can also be turned off (\code{grid_start = "none"}), meaning just the
+  default starting parameter estimates are used. Note that \code{grid_start}
+  has been disabled for a small number of models (e.g. Weibull 3 par.). See
+  the vignette for more information. Remember that, as grid_start has a
+  random component, when \code{grid_start != "none"}, you can get slightly
+  different results each time you fit a model or run \code{sar_average}.
+  
+  Even with grid_start, occasionally a model fit will be able to be fitted
+  and pass the model fitting checks (e.g. residual normality) but the
+  resulting fit is nonsensical (e.g. a horizontal line with intercept at
+  zero). Thus, it can be useful to plot the resultant 'multi' object to check
+  the individual model fits. To re-run the \code{sar_average} function
+  without a particular model, simply remove it from the \code{obj} argument.
+  
   The \code{sar_models()} function can be used to bring up a list of the 20
   model names. \code{display_sars_models()} generates a table of the 20
   models with model information.
 }
 \note{
-Occasionally a model fit will converge and pass the model fitting
-  checks (e.g. residual normality) but the resulting fit is nonsensical (e.g.
-  a horizontal line with intercept at zero). Thus, it can be useful to plot
-  the resultant 'multi' object to check the individual model fits. To re-run
-  the \code{sar_multi} function without a particular model, simply remove it
-  from the \code{obj} argument.
-  
-  Choosing starting parameter values for non-linear regression optimisation
-  algorithms is not always straight forward, depending on the data at hand.
-  In the package, we use various approaches to choose default starting
-  parameters. However, if any of the resultant model fits does not converge,
-  returns a singular gradient at parameter estimates, or the plot of the
-  model fit does not look optimum, try using the \code{grid_start} argument
-  to undertake a more extensive selection of starting values, or provide your
-  own starting values (\code{start}). While using \code{grid_start} is more
-  time consuming, it will often provide (much) better fits for certain
-  models, and so we recommend its use where possible. Note, that
-  \code{grid_start} has been disabled for a small number of models (e.g.
-  Weibull 3 par.). See the vignette for more information.
+There are different types of non-convergence and these are dealt with
+  differently in the package. If the optimisation algorithm fails to return
+  any solution, the model fit is defined as NA and is then removed, and so
+  does not appear in the model summary table or multi-model curve etc.
+  However, the optimisation algorithm (e.g. Nelder-Mead) can also return
+  non-NA model fits but where the solution is potentially non-optimal (e.g.
+  degeneracy of the Nelder–Mead simplex) - these cases are identified by any
+  \code{\link{optim}} convergence code that is not zero. We have decided not
+  to remove these fits (i.e. they are kept in the model summary table and
+  multimodel curve) - as arguably a non-optimal fit is still better than no
+  fit - but any instances can be checked using the returned
+  \code{details$converged} vector and then the model fitting re-run without
+  these models, if preferred. Increasing the starting parameters grid search
+  (see above) may also help avoid this issue.
 
   The generation of confidence intervals around the multimodel curve (using
   \code{confInt == TRUE}), may throw up errors that we have yet to come
@@ -163,7 +201,7 @@ Occasionally a model fit will converge and pass the model fitting
   have been calculated using the same approach. For example, the 'sars'
   package used to use formulas based on the rss, while the \link[stats]{nls}
   function function in the stats package uses formulas based on the ll. To
-  increase the compatability between nls and sars, we have changed our
+  increase the compatibility between nls and sars, we have changed our
   formulas such that now our IC formulas are the same as those used in the
   \link[stats]{nls} function. See the "On the calculation of information
   criteria" section in the package vignette for more information.
@@ -171,7 +209,8 @@ Occasionally a model fit will converge and pass the model fitting
 \examples{
 data(galap)
 #attempt to construct a multimodel SAR curve using all twenty sar models
-fit <- sar_average(data = galap)
+#using no grid_start just for speed here (not recommended generally)
+fit <- sar_average(data = galap, grid_start = "none")
 summary(fit)
 plot(fit)
 
@@ -179,6 +218,12 @@ plot(fit)
 ff <- sar_multi(galap, obj = c("power", "loga", "monod", "weibull3"))
 fit2 <- sar_average(obj = ff, data = NULL)
 summary(fit2)
+
+\dontrun{ 
+# construct a multimodel SAR curve using a more exhaustive set of starting 
+# parameter values 
+fit3 <- sar_average(data = galap, grid_start = "exhaustive", grid_n = 1000) 
+}
 
 }
 \references{
@@ -188,4 +233,8 @@ Burnham, K. P., & Anderson, D. R. (2002). Model selection and
 
   Guilhaumon, F., Mouillot, D., & Gimenez, O. (2010). mmSAR: an R-package for
   multimodel species-area relationship inference. Ecography, 33, 420-424.
+  
+  Matthews, T. J., K. A. Triantis, R. J. Whittaker, & F. Guilhaumon. (2019_.
+  sars: an R package for fitting, evaluating and comparing species–area
+  relationship models. Ecography, 42, 1446–55.
 }

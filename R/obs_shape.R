@@ -14,20 +14,23 @@ obs_shape <- function(x){
     Areas <- seq(range(data$A)[1], range(data$A)[2], length.out = 9999)
 
     #function to detect sign changes and provide roots
-    getRoots <- function(fun, Areas, pars) {
+    getRoots <- function(fun, d1 = TRUE, Areas, pars) {
         #values and sign of the function evaluated
         values <- fun(Areas, pars)
         signs <- sign(values)
         minMax <- NA
         sigCh <- vector()
-
+        
+        #check if the sign of a value is the same as the next value
         for (i in 1:(length(signs)-1)) {
           if (sign(signs[i]) != sign(signs[i + 1])) sigCh <- c(sigCh, i)
         }
           nMinMax <- length(sigCh)
           if (nMinMax != 0){
-            dc <- as.list(match.call())
-            if (as.character(dc$fun)[3] == "d1.fun") {
+            #check whether is first derivative function??
+           # dc <- as.list(match.call())
+           # if (as.character(dc$fun)[3] == "d1.fun") {
+            if (d1) {
               if (nMinMax > 1){
              warning("more than one minimum and/or maximum in the derivative,
                       check the model plot to asses whether the model fit
@@ -59,7 +62,7 @@ obs_shape <- function(x){
           roots <- vapply(seq_along(sigCh), FUN = function(x){
                             uniroot(fun, c(Areas[sigCh[x]],
                                         Areas[sigCh[x] + 1]),
-                                    par = pars)$root},
+                                     par = pars)$root},
                             FUN.VALUE = double(1))
           res <- list(sigCh = sigCh, roots = roots, minMax = minMax)
           return(res)
@@ -113,11 +116,11 @@ obs_shape <- function(x){
           asymp <- TRUE
       }#eo if
 
-      roots.d1 <- tryCatch(getRoots(model$d1.fun, Areas, pars),
+      roots.d1 <- tryCatch(getRoots(model$d1.fun, d1 = TRUE, Areas, pars),
                            error = function(e) list(sigCh = NA, roots = NA,
                                                     minMax = NA))
-      if (model$shape =="sigmoid") {
-        roots.d2 <- tryCatch(getRoots(model$d2.fun, Areas, pars),
+      if (model$shape %in% c("sigmoid", "convex/sigmoid")) {
+        roots.d2 <- tryCatch(getRoots(model$d2.fun, d1 = FALSE, Areas, pars),
                              error = function(e) list(sigCh = NA,
                                                     roots = NA, minMax = NA))
       } else {
@@ -135,7 +138,7 @@ obs_shape <- function(x){
       #if the model is sigmoid but the shape study failed then
       #we will said the fit to be sigmoid
       fm <- NULL
-      if (model$shape == "sigmoid" & sum(possFits) == 0) {
+      if (model$shape %in% c("sigmoid", "convex/sigmoid") & sum(possFits) == 0) {
         fm <- 1
         possFits <- c(0, 0, 0, 1)
       }

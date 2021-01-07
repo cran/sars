@@ -35,27 +35,28 @@ display_sars_models <- function() {
 #'   "powerR","epm1","epm2","p1","p2","loga","koba",
 #'   "mmf","monod","negexpo","chapman","weibull3","asymp",
 #'   "ratio","gompertz","weibull4","betap","heleg","linear"), normaTest =
-#'   "lillie", homoTest = "cor.fitted", grid_start = FALSE, grid_n = NULL,
-#'    verb = TRUE)
+#'   "none", homoTest = "none", homoCor = "spearman", grid_start = "partial", 
+#'   grid_n = NULL, verb = TRUE)
 #' @param data A dataset in the form of a dataframe with two columns: the first
 #'   with island/site areas, and the second with the species richness of each
 #'   island/site.
 #' @param obj A vector of model names.
 #' @param normaTest The test used to test the normality of the residuals of each
-#'   model. Can be any of "lillie" (Lilliefors Kolmogorov-Smirnov test; the
-#'   default), "shapiro" (Shapiro-Wilk test of normality), "kolmo"
-#'   (Kolmogorov-Smirnov test), or "none" (no residuals normality test is
-#'   undertaken).
+#'   model. Can be any of "lillie" (Lilliefors Kolmogorov-Smirnov test),
+#'   "shapiro" (Shapiro-Wilk test of normality), "kolmo" (Kolmogorov-Smirnov
+#'   test), or "none" (no residuals normality test is undertaken; the default).
 #' @param homoTest The test used to check for homogeneity of the residuals of
-#'   each model. Can be any of "cor.fitted" (a correlation of the residuals with
-#'   the model fitted values; the default), "cor.area" (a correlation of the
-#'   residuals with the area values), or "none" (no residuals homogeneity test
-#'   is undertaken).
-#' @param grid_start Logical argument specifying whether a grid search procedure
-#'   should be implemented to test multiple starting parameter values (default:
-#'   \code{grid_start = FALSE}).
-#' @param grid_n If \code{grid_start = TRUE}, the number of points sampled in
-#'   the model parameter space.
+#'   each model. Can be any of "cor.fitted" (a correlation of the squared
+#'   residuals with the model fitted values), "cor.area" (a correlation of the
+#'   squared residuals with the area values), or "none" (no residuals
+#'   homogeneity test is undertaken; the default).
+#' @param homoCor The correlation test to be used when \code{homoTest !=
+#'   "none"}. Can be any of "spearman" (the default), "pearson", or "kendall".
+#' @param grid_start Should a grid search procedure be implemented to test
+#'   multiple starting parameter values. Can be one of 'none', 'partial' or
+#'   'exhaustive' The default is set to 'partial'.
+#' @param grid_n If \code{grid_start = exhaustive}, the number of points sampled
+#'   in the starting parameter space (see details).
 #' @param verb verbose (default: \code{verb == TRUE}).
 #' @details The \code{sar_models()} function can be used to bring up a list of
 #'   the 20 model names. \code{display_sars_models()} generates a table of the
@@ -71,7 +72,8 @@ display_sars_models <- function() {
 #' plot(fit2)
 #'
 #' # construct a fit_collection object of all 20 SAR model fits
-#' fit3 <- sar_multi(galap)
+#' # using no grid_start for speed
+#' fit3 <- sar_multi(galap, grid_start = "none")
 #'
 #' @export
 
@@ -82,9 +84,10 @@ sar_multi <- function(data,
                               "chapman","weibull3","asymp","ratio",
                               "gompertz", "weibull4","betap","heleg",
                               "linear"),
-                      normaTest = "lillie",
-                      homoTest = "cor.fitted",
-                      grid_start = FALSE,
+                      normaTest = "none",
+                      homoTest = "none",
+                      homoCor = "spearman",
+                      grid_start = "partial",
                       grid_n = NULL,
                       verb = TRUE){
   
@@ -108,11 +111,13 @@ sar_multi <- function(data,
       stop("provided model names do not match with model functions")
   }
   
-  if (!is.logical(grid_start)) stop("grid_start should be logical")
-  
-  if (grid_start){
+  if (!(grid_start %in% c("none", "partial", "exhaustive"))){
+    stop("grid_start should be one of 'none', 'partial' or 'exhaustive'")
+  }
+ 
+  if (grid_start == "exhaustive"){
     if (!is.numeric(grid_n)) 
-      stop("grid_n should be numeric if grid_start == TRUE")
+      stop("grid_n should be numeric if grid_start == exhaustive")
   }
   
   if (length(obj) < 2)
@@ -122,6 +127,10 @@ sar_multi <- function(data,
                                       "kolmo", "lillie"))
   homoTest <- match.arg(homoTest, c("none","cor.area",
                                     "cor.fitted"))
+  if (homoTest != "none"){
+    homoCor <- match.arg(homoCor, c("spearman","pearson",
+                                    "kendall"))
+  }
   
   #if (verb) cat_line(rule(left = paste0(cyan(symbol$bullet),
   #bold(" multi_sars")),right="multi-model SAR"))
@@ -144,22 +153,25 @@ sar_multi <- function(data,
   
   fits <- suppressWarnings(lapply(obj, function(x){
     
-    #have to do separately because linear does not have grid_start;
-    #or if grid_start is set to FALSE
-    if (x == "linear" || !(grid_start)){
-      f <- eval(parse(text = paste0(mods[x],
-                                    "(data", ", normaTest = ",
-                                    paste0("'", normaTest, "'"),
-                                    ", homoTest = ", paste0("'", homoTest,
-                                                            "'"), ")")))
-    } else{ #if grid_start provided, implement it (for non-linear models)
+    #have to do separately because linear does not have grid_start
+    if (x == "linear"){
       f <- eval(parse(text = paste0(mods[x],
                                     "(data", ", normaTest = ",
                                     paste0("'", normaTest, "'"),
                                     ", homoTest = ", paste0("'", homoTest,
                                                             "'"), 
+                                    ", homoCor = ", paste0("'", homoCor,
+                                                            "'"),")")))
+    } else{ #if grid_start provided, implement it (for non-linear models)
+      f <- eval(parse(text = paste0(mods[x],
+                                    "(data", ", normaTest = ",
+                                    paste0("'", normaTest, "'"),
+                                    ", homoTest = ", paste0("'", homoTest,
+                                                            "'"),
+                                    ", homoCor = ", paste0("'", homoCor,
+                                                            "'"),
                                     ", grid_start = ", 
-                                    paste0(grid_start), ", grid_n = ",
+                                    paste0("'",grid_start,"'"), ", grid_n = ",
                                     paste0(grid_n),")")))
     }
     
@@ -200,9 +212,9 @@ sar_multi <- function(data,
 #'   "powerR","epm1","epm2","p1","p2","loga","koba",
 #'   "mmf","monod","negexpo","chapman","weibull3","asymp",
 #'   "ratio","gompertz","weibull4","betap","heleg", "linear"), data = NULL, crit
-#'   = "Info", normaTest = "lillie", homoTest = "cor.fitted", neg_check = FALSE,
-#'   alpha_normtest = 0.05, alpha_homotest = 0.05, grid_start = FALSE,
-#'   grid_n = NULL, confInt = FALSE, ciN = 100, verb = TRUE)
+#'   = "Info", normaTest = "none", homoTest = "none", homoCor = "spearman",
+#'   neg_check = FALSE, alpha_normtest = 0.05, alpha_homotest = 0.05, grid_start
+#'   = "partial", grid_n = NULL, confInt = FALSE, ciN = 100, verb = TRUE)
 #' @param obj Either a vector of model names or a fit_collection object created
 #'   using \code{\link{sar_multi}}. If a vector of names is provided,
 #'   \code{sar_average} first calls \code{sar_multi} before generating the
@@ -217,15 +229,16 @@ sar_multi <- function(data,
 #'   AICc (\code{crit = "AICc"}) can be chosen regardless of the sample size. For
 #'   BIC, use \code{crit ="Bayes"}.
 #' @param normaTest The test used to test the normality of the residuals of each
-#'   model. Can be any of "lillie" (Lilliefors Kolmogorov-Smirnov test; the
-#'   default), "shapiro" (Shapiro-Wilk test of normality), "kolmo"
-#'   (Kolmogorov-Smirnov test), or "none" (no residuals normality test is
-#'   undertaken).
+#'   model. Can be any of "lillie" (Lilliefors Kolmogorov-Smirnov test),
+#'   "shapiro" (Shapiro-Wilk test of normality), "kolmo" (Kolmogorov-Smirnov
+#'   test), or "none" (no residuals normality test is undertaken; the default).
 #' @param homoTest The test used to check for homogeneity of the residuals of
-#'   each model. Can be any of "cor.fitted" (a correlation of the residuals with
-#'   the model fitted values; the default), "cor.area" (a correlation of the
-#'   residuals with the area values), or "none" (no residuals homogeneity test
-#'   is undertaken).
+#'   each model. Can be any of "cor.fitted" (a correlation of the squared
+#'   residuals with the model fitted values), "cor.area" (a correlation of the
+#'   squared residuals with the area values), or "none" (no residuals
+#'   homogeneity test is undertaken; the default).
+#' @param homoCor The correlation test to be used when \code{homoTest !=
+#'   "none"}. Can be any of "spearman" (the default), "pearson", or "kendall".
 #' @param neg_check Whether or not a check should be undertaken to flag any
 #'   models that predict negative richness values.
 #' @param alpha_normtest The alpha value used in the residual normality test
@@ -234,12 +247,11 @@ sar_multi <- function(data,
 #' @param alpha_homotest The alpha value used in the residual homogeneity test
 #'   (default = 0.05, i.e. any test with a P value < 0.05 is flagged as failing
 #'   the test).
-#' @param grid_start Logical argument specifying whether a grid search procedure
-#'   should be implemented to test multiple starting parameter values. The
-#'   default is set to FALSE, but we would recommend using it to ensure the fits
-#'   of certain models (e.g. Gompertz, Chapman Richards) are optimal.
-#' @param grid_n If \code{grid_start = TRUE}, the number of points sampled in
-#'   the model parameter space.
+#' @param grid_start Should a grid search procedure be implemented to test
+#'   multiple starting parameter values. Can be one of 'none', 'partial' or
+#'   'exhaustive' The default is set to 'partial'.
+#' @param grid_n If \code{grid_start = exhaustive}, the number of points sampled
+#'   in the starting parameter space (see details).
 #' @param confInt A logical argument specifying whether confidence intervals
 #'   should be calculated for the multimodel curve using bootstrapping.
 #' @param ciN The number of bootstrap samples to be drawn to calculate the
@@ -257,11 +269,13 @@ sar_multi <- function(data,
 #'   heterogeneity tests, and checks for negative predicted richness values),
 #'   these are undertaken and any model that fails the selected test(s) is
 #'   removed from the multimodel SAR. The order of the additional checks inside
-#'   the function is: normality of residuals, homogeneity of residuals, and a
-#'   check for negative fitted values. Once a model fails one test it is removed
-#'   and thus is not available for further tests. Thus, a model may fail
-#'   multiple tests but the returned warning will only provide information on a
-#'   single test.
+#'   the function is (if all are turned on): normality of residuals, homogeneity
+#'   of residuals, and a check for negative fitted values. Once a model fails
+#'   one test it is removed and thus is not available for further tests. Thus, a
+#'   model may fail multiple tests but the returned warning will only provide
+#'   information on a single test. We have now changed the defaults so that
+#'   no checks are undertaken, so it is up to the user to select any checks if
+#'   appropriate.
 #'
 #'   The resultant models are then used to construct the multimodel SAR curve.
 #'   For each model in turn, the model fitted values are multiplied by the
@@ -272,10 +286,48 @@ sar_multi <- function(data,
 #'   procedure transforms the residuals from the individual model fits and
 #'   occasionally NAs / Inf values can be produced - in these cases, the model
 #'   is removed from the confidence interval calculation (but not the multimodel
-#'   curve itself). When several SAR models are used and the number of
-#'   bootstraps (\code{ciN}) is large, generating the confidence intervals can
-#'   take a long time.
-#'
+#'   curve itself). There is also a constraint within the procedure to remove
+#'   any transformed residuals that result in negative richness values. When
+#'   several SAR models are used, when grid_start is turned on and when the
+#'   number of bootstraps (\code{ciN}) is large, generating the confidence
+#'   intervals can take a (very) long time. Parallel processing will be added to
+#'   future versions.
+#'   
+#'   Choosing starting parameter values for non-linear regression optimisation
+#'   algorithms is not always straight forward, depending on the data at hand.
+#'   In the package, we use various approaches to choose default starting
+#'   parameters. However, we also use a grid search process which creates a
+#'   large array of different possible starting parameter values (within certain
+#'   bounds) and then randomly selects a proportion of these to test. There are
+#'   three options for the \code{grid_start} argument to control this process.
+#'   The default (\code{grid_start = "partial"}) randomly samples 500 different
+#'   sets of starting parameter values for each model, adds these to the model's
+#'   default starting values and tests all of these. A more comprehensive set of
+#'   starting parameter estimates can be used (\code{grid_start = "exhaustive"})
+#'   - this option allows the user to choose the number of starting parameter
+#'   sets to be tested (using the \code{grid_n} argument) and includes a range
+#'   of additional starting parameter estimates, e.g. very small values and
+#'   particular values we have found to be useful for individual models. Using
+#'   \code{grid_start = "exhaustive"} in combination with a large \code{grid_n}
+#'   can be very time consuming; however, we would recommend it as it makes it
+#'   more likely that the optimal model fit will be found, particularly for the
+#'   more complex models. This is particularly true if any of the model fits
+#'   does not converge, returns a singular gradient at parameter estimates, or
+#'   the plot of the model fit does not look optimum. The grid start procedure
+#'   can also be turned off (\code{grid_start = "none"}), meaning just the
+#'   default starting parameter estimates are used. Note that \code{grid_start}
+#'   has been disabled for a small number of models (e.g. Weibull 3 par.). See
+#'   the vignette for more information. Remember that, as grid_start has a
+#'   random component, when \code{grid_start != "none"}, you can get slightly
+#'   different results each time you fit a model or run \code{sar_average}.
+#'   
+#'   Even with grid_start, occasionally a model fit will be able to be fitted
+#'   and pass the model fitting checks (e.g. residual normality) but the
+#'   resulting fit is nonsensical (e.g. a horizontal line with intercept at
+#'   zero). Thus, it can be useful to plot the resultant 'multi' object to check
+#'   the individual model fits. To re-run the \code{sar_average} function
+#'   without a particular model, simply remove it from the \code{obj} argument.
+#'   
 #'   The \code{sar_models()} function can be used to bring up a list of the 20
 #'   model names. \code{display_sars_models()} generates a table of the 20
 #'   models with model information.
@@ -295,30 +347,27 @@ sar_multi <- function(data,
 #'   criterion values} \item{weights_ics} { The information criterion weights of
 #'   each model fit} \item{n_points} {  Number of data points} \item{n_mods} {
 #'   The number of successfully fitted models} \item{no_fit} { Names of the
-#'   models which could not be fitted or did not pass model checks} }
-#'
+#'   models which could not be fitted or did not pass model checks}
+#'   \item{convergence} { Logical value indicating whether \code{\link{optim}}
+#'   model convergence code = 0, for each model} }
+#'   
 #'   The \code{\link{summary.sars}} function returns a more useful summary of
 #'   the model fit results, and the \code{\link{plot.multi}} plots the
 #'   multimodel curve.
-#' @note Occasionally a model fit will converge and pass the model fitting
-#'   checks (e.g. residual normality) but the resulting fit is nonsensical (e.g.
-#'   a horizontal line with intercept at zero). Thus, it can be useful to plot
-#'   the resultant 'multi' object to check the individual model fits. To re-run
-#'   the \code{sar_multi} function without a particular model, simply remove it
-#'   from the \code{obj} argument.
-#'   
-#'   Choosing starting parameter values for non-linear regression optimisation
-#'   algorithms is not always straight forward, depending on the data at hand.
-#'   In the package, we use various approaches to choose default starting
-#'   parameters. However, if any of the resultant model fits does not converge,
-#'   returns a singular gradient at parameter estimates, or the plot of the
-#'   model fit does not look optimum, try using the \code{grid_start} argument
-#'   to undertake a more extensive selection of starting values, or provide your
-#'   own starting values (\code{start}). While using \code{grid_start} is more
-#'   time consuming, it will often provide (much) better fits for certain
-#'   models, and so we recommend its use where possible. Note, that
-#'   \code{grid_start} has been disabled for a small number of models (e.g.
-#'   Weibull 3 par.). See the vignette for more information.
+#' @note There are different types of non-convergence and these are dealt with
+#'   differently in the package. If the optimisation algorithm fails to return
+#'   any solution, the model fit is defined as NA and is then removed, and so
+#'   does not appear in the model summary table or multi-model curve etc.
+#'   However, the optimisation algorithm (e.g. Nelder-Mead) can also return
+#'   non-NA model fits but where the solution is potentially non-optimal (e.g.
+#'   degeneracy of the Nelder–Mead simplex) - these cases are identified by any
+#'   \code{\link{optim}} convergence code that is not zero. We have decided not
+#'   to remove these fits (i.e. they are kept in the model summary table and
+#'   multimodel curve) - as arguably a non-optimal fit is still better than no
+#'   fit - but any instances can be checked using the returned
+#'   \code{details$converged} vector and then the model fitting re-run without
+#'   these models, if preferred. Increasing the starting parameters grid search
+#'   (see above) may also help avoid this issue.
 #'
 #'   The generation of confidence intervals around the multimodel curve (using
 #'   \code{confInt == TRUE}), may throw up errors that we have yet to come
@@ -332,7 +381,7 @@ sar_multi <- function(data,
 #'   have been calculated using the same approach. For example, the 'sars'
 #'   package used to use formulas based on the rss, while the \link[stats]{nls}
 #'   function function in the stats package uses formulas based on the ll. To
-#'   increase the compatability between nls and sars, we have changed our
+#'   increase the compatibility between nls and sars, we have changed our
 #'   formulas such that now our IC formulas are the same as those used in the
 #'   \link[stats]{nls} function. See the "On the calculation of information
 #'   criteria" section in the package vignette for more information.
@@ -343,10 +392,15 @@ sar_multi <- function(data,
 #'
 #'   Guilhaumon, F., Mouillot, D., & Gimenez, O. (2010). mmSAR: an R-package for
 #'   multimodel species-area relationship inference. Ecography, 33, 420-424.
+#'   
+#'   Matthews, T. J., K. A. Triantis, R. J. Whittaker, & F. Guilhaumon. (2019_.
+#'   sars: an R package for fitting, evaluating and comparing species–area
+#'   relationship models. Ecography, 42, 1446–55.
 #' @examples
 #' data(galap)
 #' #attempt to construct a multimodel SAR curve using all twenty sar models
-#' fit <- sar_average(data = galap)
+#' #using no grid_start just for speed here (not recommended generally)
+#' fit <- sar_average(data = galap, grid_start = "none")
 #' summary(fit)
 #' plot(fit)
 #'
@@ -354,6 +408,12 @@ sar_multi <- function(data,
 #' ff <- sar_multi(galap, obj = c("power", "loga", "monod", "weibull3"))
 #' fit2 <- sar_average(obj = ff, data = NULL)
 #' summary(fit2)
+#' 
+#' \dontrun{ 
+#' # construct a multimodel SAR curve using a more exhaustive set of starting 
+#' # parameter values 
+#' fit3 <- sar_average(data = galap, grid_start = "exhaustive", grid_n = 1000) 
+#' }
 #'
 #' @export
 
@@ -364,12 +424,13 @@ sar_average <- function(obj = c("power", "powerR","epm1","epm2","p1","p2",
                                 "gompertz", "weibull4","betap","heleg",
                                 "linear"), data = NULL,
                         crit = "Info",
-                        normaTest = "lillie",
-                        homoTest = "cor.fitted",
+                        normaTest = "none",
+                        homoTest = "none",
+                        homoCor = "spearman",
                         neg_check = FALSE,
                         alpha_normtest = 0.05,
                         alpha_homotest = 0.05,
-                        grid_start = FALSE,
+                        grid_start = "partial",
                         grid_n = NULL,
                         confInt = FALSE,
                         ciN = 100,
@@ -389,21 +450,28 @@ sar_average <- function(obj = c("power", "powerR","epm1","epm2","p1","p2",
       stop("provided model names do not match with model functions")
   }
   
-  if (!is.logical(grid_start)) stop("grid_start should be logical")
+  if (!(grid_start %in% c("none", "partial", "exhaustive"))){
+    stop("grid_start should be one of 'none', 'partial' or 'exhaustive'")
+  }
   
-  if (grid_start){
+  if (grid_start == "exhaustive"){
     if (!is.numeric(grid_n)) 
-      stop("grid_n should be numeric if grid_start == TRUE")
+      stop("grid_n should be numeric if grid_start == exhaustive")
   }
   
   if (length(obj) < 2)
     stop("more than 1 fit is required to construct a sar_multi")
   
+  if(verb & grid_start != "none"){
+  cat("\nModels to be fitted using a grid start approach: \n")
+  }
+  
   #if a vector of names is provided, then call sar_multi first
   if (is.character(obj)){
     fits <- sar_multi(data = data, obj = obj,
                       normaTest = normaTest,
-                      homoTest = homoTest, 
+                      homoTest = homoTest,
+                      homoCor = homoCor,
                       grid_start = grid_start,
                       grid_n = grid_n,
                       verb = verb)
@@ -411,16 +479,24 @@ sar_average <- function(obj = c("power", "powerR","epm1","epm2","p1","p2",
     fits <- obj
   }
 
+  #save the full list of models that the user wants to fit for use with
+  #the CI function
+  if (confInt) obj_all <- obj
+  
   #####BAD MODEL CHECKS#######################
 
   normaTest <- match.arg(normaTest, c("none", "shapiro",
                                       "kolmo", "lillie"))
   homoTest <- match.arg(homoTest, c("none","cor.area",
                                     "cor.fitted"))
-
+  if (homoTest != "none"){
+    homoCor <- match.arg(homoCor, c("spearman","pearson",
+                                    "kendall"))
+  }
+  
   #if obj = character vector, check the test names match up with
   #those provide here. Doesn't actually matter but can be brought to
-  #attention of use
+  #attention of user
   if (!is.character(obj)){
     wn <- obj[[1]]$normaTest[[1]]
     wh <- obj[[1]]$homoTest[[1]]
@@ -431,8 +507,8 @@ sar_average <- function(obj = c("power", "powerR","epm1","epm2","p1","p2",
                                  object.")
       normaTest <- wn
     }
-    if (wh != homoTest){warning("normaTest argument does not match the
-                                 normaTest stored in the fit collection
+    if (wh != homoTest){warning("homoTest argument does not match the
+                                 homoTest stored in the fit collection
                                  object. The multi SAR curve will proceed
                                  with the test used in the fit collection
                                  object.")
@@ -555,8 +631,14 @@ sar_average <- function(obj = c("power", "powerR","epm1","epm2","p1","p2",
     }
   }
 
-  if (length(badMods) == bml & verb) cat("\nAll models passed the model",
-                                         " validation checks\n\n")
+  if (length(badMods) == bml & verb) {
+    if((normaTest == "none" & homoTest == "none" & !(neg_check))){
+      cat("\nNo model validation checks selected\n\n")
+    } else{
+      cat("\nAll models passed the model",
+          "validation checks\n\n")
+    }
+  }
 
   if (length(badMods) == 0) badMods <- 0
   if (length(fits) < 2) stop("Fewer than two models could be fitted and /",
@@ -605,7 +687,10 @@ sar_average <- function(obj = c("power", "powerR","epm1","epm2","p1","p2",
   mmi <- apply(wm, 1 , sum)
 
   res <- mmi
-
+  
+  #get convergence info (of models that have passed checks)
+  conv <- vapply(fits, FUN=function(x){x$verge}, FUN.VALUE = logical(1))
+  
   details <- list(
     mod_names = modNames,
     fits = fits,
@@ -620,7 +705,8 @@ sar_average <- function(obj = c("power", "powerR","epm1","epm2","p1","p2",
     weights_ics = weights_ICs,
     n_points = nPoints,
     n_mods = nMods,
-    no_fit = as.vector(badMods)
+    no_fit = as.vector(badMods),
+    convergence = conv
   )
 
   res <- list(mmi = mmi, details = details)
@@ -634,8 +720,10 @@ sar_average <- function(obj = c("power", "powerR","epm1","epm2","p1","p2",
   if (confInt){
     cat("\nCalculating sar_multi confidence intervals - this may take",
         " some time:\n")
-    cis <- sar_conf_int(fit = res, n = ciN, crit = crit, normaTest = normaTest,
+    cis <- sar_conf_int(fit = res, n = ciN, crit = IC, obj_all = obj_all,
+                        normaTest = normaTest,
                         homoTest = homoTest,
+                        homoCor = homoCor,
                         neg_check = neg_check,
                         alpha_normtest = alpha_normtest,
                         alpha_homotest = alpha_homotest, 
@@ -685,7 +773,15 @@ sar_average <- function(obj = c("power", "powerR","epm1","epm2","p1","p2",
 #'
 #'   Code to calculate confidence intervals around the predictions using
 #'   bootstrapping will be added in a later version of the package.
-#' @references Matthews, T.J. & Aspin, T.W.H. (2019) ....
+#'
+#'   As grid_start has a random component, when \code{grid_start != "none"} in
+#'   your model fitting, you can get slightly different results each time you
+#'   fit a model or run \code{sar_average} and then run \code{sar_pred} on it.
+#'   We would recommend using \code{grid_start = "exhaustive"} as this is more
+#'   likely to find the optimum fit for a given model.
+#' @references Matthews, T.J. & Aspin, T.W.H. (2019) Model averaging fails to
+#'   improve the extrapolation capability of the island species–area
+#'   relationship. Journal of Biogeography, 46, 1558-1568.
 #' @examples
 #' data(galap)
 #' #fit the power model and predict richness on an island of area = 5000
@@ -697,7 +793,8 @@ sar_average <- function(obj = c("power", "powerR","epm1","epm2","p1","p2",
 #' p2 <- sar_pred(fit2, area = c(5000, 10000))
 #' 
 #' #calculate a multi-model curve and predict richness on islands of area = 5000 & 10000
-#' fit3 <- sar_average(data = galap)
+#' #using no grid_start for speed
+#' fit3 <- sar_average(data = galap, grid_start = "none")
 #' p3 <- sar_pred(fit3, area = c(5000, 10000))
 #' @export
 
@@ -760,7 +857,7 @@ sar_pred <- function(fit, area){
             }, FUN.VALUE = numeric(length = length(area)))
            #get model names in fit_collection
            mns <-  vapply(fit, function(x) x$model$name, FUN.VALUE = character(1))
-           #build data.frame depening on whether one area value provided or multiple
+           #build data.frame depending on whether one area value provided or multiple
            if (length(area) == 1){
             pred <- data.frame("Model" = mns, "Area" = rep(area, length(pred0)),
                                "Prediction" = pred0)

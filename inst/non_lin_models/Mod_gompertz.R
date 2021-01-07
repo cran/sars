@@ -1,7 +1,9 @@
 #gompertz model
+#have checked and this formula is equivalent to those listed
+#in Tjorve and Williams etc, and generates identical output.
 model <- list(
   name=c("Gompertz"),
-  formula=expression(S==d*e^(-e^(-z*(A-c)))),
+  formula=expression(S==d*exp(-exp(-z*(A-c)))),
   exp=expression(d*exp(-exp(-z*(A-c)))),
   shape="sigmoid",
   asymp=function(pars)pars["d"],

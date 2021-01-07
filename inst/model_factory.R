@@ -33,10 +33,10 @@ cat_roxygen <- function(model, funName, fileName){
   cat1("\n")
   cat1(paste0("#' @description ","Fit the ", model$name,
               " model to SAR data.", "\n"))
-  cat1(paste0("#' @usage ", funName,
-              "(data, start = NULL, grid_start = FALSE, grid_n = NULL,", 
-              " normaTest = 'lillie',", "\n"))
-  cat1(paste0("#'   homoTest = 'cor.fitted')\n"))
+  cat1(paste0("#' @usage ", funName, "(data, start = NULL,",
+              " grid_start = 'partial',", "\n"))
+  cat1(paste0("#'   grid_n = NULL, normaTest = 'none',", "\n"))
+  cat1(paste0("#'   homoTest = 'none', homoCor = 'spearman')\n"))
   cat1(paste0("#' @param ", "data ", "A dataset in the form of a dataframe ",
                 "with two columns: \n"))
   cat1(paste0("#'   the first with island/site areas, and the second with ",
@@ -44,29 +44,31 @@ cat_roxygen <- function(model, funName, fileName){
   cat1(paste0("#'   of each island/site.\n"))
   cat1(paste0("#' @param ", "start ", "NULL or custom parameter start", 
               " values for the optimisation algorithm.\n"))
-  cat1(paste0("#' @param ", "grid_start ", "Logical argument specifying whether", 
-              " a grid search procedure should be implemented to test multiple",
-              " starting parameter values. The default is set to FALSE, but",
-              " for certain models (e.g. Gompertz, Chapman Richards), we",
-              " advice using it to ensure an optimal fit.\n"))
-  cat1(paste0("#' @param ", "grid_n ", "If \\code{grid_start = TRUE}, the",
-              " number of points sampled in the model parameter space.\n"))
+  cat1(paste0("#' @param ", "grid_start ", "Should a grid search procedure be", 
+              " implemented to test multiple starting parameter values.",
+              " Can be one of 'none', 'partial' or 'exhaustive' The default",
+              " is set to 'partial'.\n"))
+  cat1(paste0("#' @param ", "grid_n ", "If \\code{grid_start = exhaustive}, the",
+              " number of points sampled in the starting parameter space.\n"))
   cat1(paste0("#' @param ", "normaTest ", "The test used to test the", 
               " normality of the residuals of the\n"))
   cat1(paste0("#'   model. Can be any of 'lillie' (Lilliefors ", 
-              "Kolmogorov-Smirnov test; the\n"))
-  cat1(paste0("#'   default), 'shapiro' (Shapiro-Wilk test of normality),", 
+              "test\n"))
+  cat1(paste0("#', 'shapiro' (Shapiro-Wilk test of normality),", 
               " 'kolmo'", "\n"))
   cat1(paste0("#'   (Kolmogorov-Smirnov test), or 'none' (no residuals ", 
-              "normality test is undertaken).\n"))
+              "normality test is undertaken; the default).\n"))
   cat1(paste0("#' @param ", "homoTest ","The test used to check for", 
               " homogeneity of the residuals of\n"))
   cat1(paste0("#'   the model. Can be any of 'cor.fitted' (a correlation ", 
               "of the residuals with\n"))
-  cat1(paste0("#'   the model fitted values; the default), 'cor.area'", 
+  cat1(paste0("#'   the model fitted values), 'cor.area'", 
               " (a correlation of the\n"))
   cat1(paste0("#'   residuals with the area values), or 'none' (no residuals", 
-              " homogeneity test is undertaken).\n"))
+              " homogeneity test is undertaken; the default).\n"))
+  cat1(paste0("#' @param ", "homoCor ","The correlation test to be used", 
+              " when \\code{homoTest !='none'}. Can be any of 'spearman'\n"))
+  cat1(paste0("#'   (the default), 'pearson', or 'kendall'.\n"))
   
   cat1(paste0("#' @details The model is fitted using non-linear regression.", 
               " The model parameters are estimated", "\n"))
@@ -84,15 +86,19 @@ cat_roxygen <- function(model, funName, fileName){
               " also determines the observed shape of the model fit,\n")) 
   cat1(paste0("#'   and whether or not the observed fit is asymptotic (see", 
               " Triantis et al. 2012 for further details).\n\n"))
-  cat1(paste0("#'   Model validation is undertaken by assessing the", 
+  cat1(paste0("#'   Model validation can be undertaken by assessing the", 
               " normality (\\code{normaTest}) and homogeneity", 
               " (\\code{homoTest})\n")) 
   cat1(paste0("#'   of the residuals and a warning is provided in", 
-              " \\code{\\link{summary.sars}} if either test is failed.",
+              " \\code{\\link{summary.sars}} if either test is chosen and fails.",
               "\n\n")) 
   cat1(paste0("#'   A selection of information criteria (e.g. AIC, BIC) are", 
               " returned and can be used to compare models\n")) 
-  cat1(paste0("#'   (see also \\code{\\link{sar_average}})\n")) 
+  cat1(paste0("#'   (see also \\code{\\link{sar_average}}).\n")) 
+  cat1(paste0("#'   \n")) 
+  cat1(paste0("#'   As grid_start has a random component, when",
+              " \\code{grid_start != 'none'} in your model fitting, you can\n")) 
+  cat1(paste0("#'    get slightly different results each time you fit a model\n")) 
   cat1(paste0("#' @importFrom ", "stats lm quantile\n")) 
   
   cat1(paste0("#' @return ", "A list of class 'sars' with the following", 
@@ -102,14 +108,14 @@ cat_roxygen <- function(model, funName, fileName){
   cat1(paste0("#'     \\item{value} { Residual sum of squares}\n"))
   cat1(paste0("#'     \\item{counts} {  The number of iterations for the", 
               " convergence of the fitting algorithm}\n"))
-  cat1(paste0("#'     \\item{convergence} { Numeric code indicating model", 
-              " convergence (0 = converged)}\n"))
+  cat1(paste0("#'     \\item{convergence} { Numeric code returned from optim", 
+              " indicating model convergence (0 = converged)}\n"))
   cat1(paste0("#'     \\item{message} { Any message from the model fit", 
               " algorithm}\n"))
   cat1(paste0("#'     \\item{hessian} { A symmetric matrix giving an", 
               " estimate of the Hessian at the solution found}\n"))
-  cat1(paste0("#'     \\item{verge} { Logical code indicating model", 
-              " convergence}\n"))
+  cat1(paste0("#'     \\item{verge} { Logical code indicating that optim model", 
+              " convergence value is zero}\n"))
   cat1(paste0("#'     \\item{startValues} { The start values for the model", 
               " parameters used in the optimisation}\n"))
   cat1(paste0("#'     \\item{data} { Observed data}\n"))
@@ -143,10 +149,21 @@ cat_roxygen <- function(model, funName, fileName){
   cat1(paste0("#'   relationship: biology and statistics. Journal of", 
               " Biogeography, 39, 215-231.\n"))
   
-  cat1(paste0("#' @examples", "\n", "#' data(galap)", "\n",
-              "#' fit <- ", funName,
-              "(galap)", "\n", "#' summary(fit)","\n", "#' plot(fit)\n"))
-  
+  #grid_start makes example too long for betap, so just for this model turn
+  #grid_start off
+  if (funName == "sar_betap"){
+    cat1(paste0("#' @examples", "\n", 
+                "#' #Grid_start turned off for speed (not recommended)", "\n",
+                "#' data(galap)", "\n",
+                "#' fit <- ", funName,
+                "(galap, grid_start = 'none')", "\n", 
+                "#' summary(fit)","\n", "#' plot(fit)\n"))
+  } else{
+    cat1(paste0("#' @examples", "\n", "#' data(galap)", "\n",
+                "#' fit <- ", funName,
+                "(galap)", "\n", "#' summary(fit)","\n", "#' plot(fit)\n"))
+  }
+
   cat1(paste0("#' @export"))
   
 }#eo cat_roxygen
@@ -188,21 +205,30 @@ model_factory <- function(f, overwrite = FALSE){
   cat1("\n")
   
   #function definition
-  cat1(paste0(funName,' <- function(data, start = NULL, grid_start = FALSE,', 
-                        ' \ngrid_n = NULL, normaTest =  "lillie", homoTest =',
-                        ' "cor.fitted"){',"\n"))
+  cat1(paste0(funName,' <- function(data, start = NULL,', 
+                        ' \ngrid_start = "partial", grid_n = NULL,', 
+                        ' \nnormaTest =  "none", homoTest =',
+                        ' \n"none", homoCor = "spearman"){',"\n"))
   
   #checks
   cat1("if (!(is.matrix(data) | is.data.frame(data)))", 
        " \nstop('data must be a matrix or dataframe')\n")
   cat1("if (is.matrix(data)) data <- as.data.frame(data)\n")
   cat1("if (anyNA(data)) stop('NAs present in data')\n")
-  #cat1("normtest <- match.arg(normtest, c('none', 'shapiro', 
-  #'kolmo', 'lillie'))","\n")
-  cat1("if (!is.logical(grid_start)) stop('grid_start should be logical')\n")
-  cat1("if (grid_start){\n")
+  cat1("normaTest <- match.arg(normaTest, c('none', 'shapiro', 'kolmo',\n")
+  cat1("'lillie'))","\n")
+  cat1("homoTest <- match.arg(homoTest, c('none', 'cor.area',\n")
+  cat1("'cor.fitted'))","\n")
+  cat1("if (homoTest != 'none'){\n")
+  cat1("homoCor <- match.arg(homoCor, c('spearman', 'pearson',\n")
+  cat1("'kendall'))","\n")
+  cat1("}\n")
+  cat1("if (!(grid_start %in% c('none', 'partial', 'exhaustive'))){\n")
+  cat1("stop('grid_start should be one of none, partial or exhaustive')\n")
+  cat1("}\n")
+  cat1("if (grid_start == 'exhaustive'){\n")
   cat1("  if (!is.numeric(grid_n))\n")
-  cat1("  stop('grid_n should be numeric if grid_start == TRUE')\n")
+  cat1("  stop('grid_n should be numeric if grid_start == exhaustive')\n")
   cat1("  }\n")
   
   #data ordering and column naming (assuming Area then Species Richness)
@@ -232,7 +258,8 @@ model_factory <- function(f, overwrite = FALSE){
   
   cat1("fit <- get_fit(model = model, data = data, start = start,", 
       " \ngrid_start = grid_start, grid_n = grid_n, algo = 'Nelder-Mead', 
-       normaTest =  normaTest, homoTest = homoTest, verb = TRUE)\n")
+       normaTest =  normaTest, homoTest = homoTest, 
+       homoCor = homoCor)\n")
   cat1("if(is.na(fit$value)){\n")
   cat1("  return(list(value = NA))\n")
   cat1("}else{","\n")

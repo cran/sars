@@ -4,13 +4,10 @@
 \alias{summary.sars}
 \title{Summarising the results of the model fitting functions}
 \usage{
-\method{summary}{sars}(object, order = "BIC", ...)
+\method{summary}{sars}(object, ...)
 }
 \arguments{
 \item{object}{An object of class 'sars'.}
-
-\item{order}{The information criterion used to order the model summary table
-for objects of Type 'threshold' (Default = "BIC").}
 
 \item{\dots}{Further arguments.}
 }
@@ -26,17 +23,18 @@ The \code{summary.sars} function returns an object of class
   whether or not the fit is asymptotic, and the results of any additional
   model checks undertaken (e.g. normality of the residuals).
 
-  For a 'sars' object of Type 'multi', a list with 4 elements is returned:
-  (i) a vector of the names of the models that were successfully fitted
-  and passed any additional checks, (ii) a character string containing the
-  name of the criterion used to rank models, (iii) a data frame of the
-  ranked models, and (iv) a vector of the names of any models that were
-  not fitted or did not pass any additional checks. In regards to (iii;
-  \code{Model_table}), the dataframe contains the fit summaries for each
-  successfully fitted model (including the value of the model criterion
-  used to compare models, the R2 and adjusted R2, and the observed shape
-  of the fit); the models are ranked in decreasing order of information
-  criterion weight.
+  For a 'sars' object of Type 'multi', a list with 5 elements is returned:
+  (i) a vector of the names of the models that were successfully fitted and
+  passed any additional checks, (ii) a character string containing the name
+  of the criterion used to rank models, (iii) a data frame of the ranked
+  models, (iv) a vector of the names of any models that were not fitted or
+  did not pass any additional checks, and (v) a logical vector specifying
+  whether the \code{\link{optim}} convergence code for each model that passed
+  all the checks is zero. In regards to (iii; \code{Model_table}), the
+  dataframe contains the fit summaries for each successfully fitted model
+  (including the value of the model criterion used to compare models, the R2
+  and adjusted R2, and the observed shape of the fit); the models are ranked
+  in decreasing order of information criterion weight.
 
   For a 'sars' object of Type 'lin_pow', a list with up to 7 elements is
   returned: (i) the model fit output from the \code{\link{lm}} function, (ii)
@@ -45,19 +43,19 @@ The \code{summary.sars} function returns an object of class
   log-transformation function used. If the argument \code{compare = TRUE} is
   used in \code{\link{lin_pow}}, a 7th element is returned that contains the
   parameter values from the non-linear power model.
-  
+
   For a 'sars' object of Type 'threshold', a list with three elements is
   returned: (i) the information criterion used to order the ranked model
-  summary table ('order'), (ii) a model summary table (models are ranked
-  using the 'order' argument), and (iii) details of any axes
-  log-transformations undertaken. Note that in the model summary table, if
-  log-area is used as the predictor, the threshold values will be on the log
-  scale used. Thus it may be preferable to back-transform them (e.g. using
-  \code{exp(th)} if natural logarithms are used) so that they are on the
-  scale of untransformed area. Th1 and Th2 in the table are the threshold
-  value(s), and seg1, seg2, seg3 provide the number of datapoints within each
-  segment (for the threshold models); one-threshold models have two
-  segements, and two-threshold models have three segments.
+  summary table (currently just BIC), (ii) a model summary table (models are
+  ranked using BIC), and (iii) details of any axes log-transformations
+  undertaken. Note that in the model summary table, if log-area is used as
+  the predictor, the threshold values will be on the log scale used. Thus it
+  may be preferable to back-transform them (e.g. using \code{exp(th)} if
+  natural logarithms are used) so that they are on the scale of untransformed
+  area. Th1 and Th2 in the table are the threshold value(s), and seg1, seg2,
+  seg3 provide the number of datapoints within each segment (for the
+  threshold models); one-threshold models have two segements, and
+  two-threshold models have three segments.
 }
 \description{
 S3 method for class 'sars'. \code{summary.sars} creates
@@ -71,7 +69,7 @@ S3 method for class 'sars'. \code{summary.sars} creates
 \examples{
 data(galap)
 #fit a multimodel SAR and get the model table
-mf <- sar_average(data = galap)
+mf <- sar_average(data = galap, grid_start = "none")
 summary(mf)
 summary(mf)$Model_table
 #Get a summary of the fit of the linear power model
