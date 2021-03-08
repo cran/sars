@@ -6,11 +6,12 @@
 \usage{
 sar_average(obj = c("power",
   "powerR","epm1","epm2","p1","p2","loga","koba",
-  "mmf","monod","negexpo","chapman","weibull3","asymp",
-  "ratio","gompertz","weibull4","betap","heleg", "linear"), data = NULL, crit
-  = "Info", normaTest = "none", homoTest = "none", homoCor = "spearman",
-  neg_check = FALSE, alpha_normtest = 0.05, alpha_homotest = 0.05, grid_start
-  = "partial", grid_n = NULL, confInt = FALSE, ciN = 100, verb = TRUE)
+  "monod","negexpo","chapman","weibull3","asymp",
+  "ratio","gompertz","weibull4","betap","logistic", "heleg", "linear"), data =
+  NULL, crit = "Info", normaTest = "none", homoTest = "none", homoCor =
+  "spearman", neg_check = FALSE, alpha_normtest = 0.05, alpha_homotest =
+  0.05, grid_start = "partial", grid_n = NULL, confInt = FALSE, ciN = 100,
+  verb = TRUE)
 }
 \arguments{
 \item{obj}{Either a vector of model names or a fit_collection object created
@@ -205,6 +206,13 @@ There are different types of non-convergence and these are dealt with
   formulas such that now our IC formulas are the same as those used in the
   \link[stats]{nls} function. See the "On the calculation of information
   criteria" section in the package vignette for more information.
+
+  The mmf model was found to be equivalent to the He & Legendre logistic, and
+  so the former has been deprecated (as of Feb 2021). We have removed it from
+  the default models in \code{sar_average}, although it is still available to
+  be used for the time being (using the \code{obj} argument). The standard
+  logistic model has been added in its place, and is now used as default
+  within \code{sar_average}.
 }
 \examples{
 data(galap)

@@ -3,16 +3,16 @@
 
 # The **‘sars’** R Package <img src="man/figures/sars_logo.png" align="right" width="10%"/>
 
-[![Build
-Status](https://travis-ci.org/txm676/sars.svg?branch=master)](https://travis-ci.org/txm676/sars)
+[![CircleCI](https://circleci.com/gh/txm676/sars/tree/master.svg?style=svg)](https://circleci.com/gh/txm676/sars/tree/master)
 [![Downloads](https://cranlogs.r-pkg.org/badges/sars?color=brightgreen)](https://cran.r-project.org/package=sars)
 [![CRAN
 Downloads](http://cranlogs.r-pkg.org/badges/grand-total/sars)](https://cran.r-project.org/package=sars)
 [![CRAN](https://www.r-pkg.org/badges/version/sars)](https://cran.r-project.org/package=sars)
-[![codecov.io](https://codecov.io/github/txm676/sars/coverage.svg?branch=master)](https://codecov.io/github/txm676/sars?branch=master)
 [![DOI](https://zenodo.org/badge/95295704.svg)](https://zenodo.org/badge/latestdoi/95295704)
 [![License: GPL
 v3](https://img.shields.io/badge/License-GPLv3-yellow.svg)](https://www.gnu.org/licenses/gpl-3.0)
+[![Codecov test
+coverage](https://codecov.io/gh/txm676/sars/branch/master/graph/badge.svg)](https://codecov.io/gh/txm676/sars?branch=master)
 
 > *fit and compare **Species-Area Relationship (SAR)** models using
 > multi-model inference*
@@ -31,7 +31,7 @@ functions for fitting, evaluating and plotting a range of commonly used
 piecewise SAR models (see Matthews and Rigal (n.d.) for details on these
 functions).
 
-As this is version 1.3.2 of the package, it is possible that there are
+As this is version 1.3.3 of the package, it is possible that there are
 some bugs in places. Please report any issues to us via GitHub.
 
 The package has an associated vignette that provides examples of how to
@@ -93,7 +93,7 @@ data set and get a multi-model SAR:
 ``` r
 mm_galap <- sar_average(data = galap)
 #> 
-#> Models to be fitted using grid start approach: 
+#> Models to be fitted using a grid start approach: 
 #> 
 #>  Now attempting to fit the 20 SAR models: 
 #> 
@@ -106,7 +106,6 @@ mm_galap <- sar_average(data = galap)
 #> > p2       : v
 #> > loga     : v
 #> > koba     : v
-#> > mmf      : v
 #> > monod    : v
 #> > negexpo  : v
 #> > chapman  : v
@@ -116,13 +115,14 @@ mm_galap <- sar_average(data = galap)
 #> > gompertz : v
 #> > weibull4 : v
 #> > betap    : v
+#> > logistic : v
 #> > heleg    : v
 #> > linear   : v
 #> 
 #> No model validation checks selected
 #> 
 #> 20 remaining models used to construct the multi  SAR:
-#>  Power, PowerR, Extended Power model 1, Extended Power model 2, Persistence function 1, Persistence function 2, Logarithmic, Kobayashi, MMF, Monod, Negative exponential, Chapman Richards, Cumulative Weibull 3 par., Asymptotic regression, Rational function, Gompertz, Cumulative Weibull 4 par., Beta-P cumulative, Heleg(Logistic), Linear model 
+#>  Power, PowerR, Extended Power model 1, Extended Power model 2, Persistence function 1, Persistence function 2, Logarithmic, Kobayashi, Monod, Negative exponential, Chapman Richards, Cumulative Weibull 3 par., Asymptotic regression, Rational function, Gompertz, Cumulative Weibull 4 par., Beta-P cumulative, Logistic(Standard), Heleg(Logistic), Linear model 
 #> --------------------------------------------------------------------------------
 ```
 

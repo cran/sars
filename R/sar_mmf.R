@@ -1,6 +1,6 @@
 #' Fit the MMF model
 
-#' @description Fit the MMF model to SAR data.
+#' @description Fit the MMF model to SAR data. This function has been deprecated.
 #' @usage sar_mmf(data, start = NULL, grid_start = 'partial',
 #'   grid_n = NULL, normaTest = 'none',
 #'   homoTest = 'none', homoCor = 'spearman')
@@ -70,7 +70,7 @@
 #'   relationship: biology and statistics. Journal of Biogeography, 39, 215-231.
 #' @examples
 #' data(galap)
-#' fit <- sar_mmf(galap)
+#' fit <- suppressWarnings(sar_mmf(galap))
 #' summary(fit)
 #' plot(fit)
 #' @export
@@ -79,6 +79,7 @@ sar_mmf <- function(data, start = NULL,
 grid_start = "partial", grid_n = NULL, 
 normaTest =  "none", homoTest = 
 "none", homoCor = "spearman"){
+.Deprecated()
 if (!(is.matrix(data) | is.data.frame(data)))  
 stop('data must be a matrix or dataframe')
 if (is.matrix(data)) data <- as.data.frame(data)
@@ -112,11 +113,12 @@ if (isTRUE(all.equal(xr[1], xr[2]))) {
 #"Morgan Mercier Family" curve (Williams et al. 2009 formula)
 #have double checked and the Williams formula is definitely equivalent
 #to the Tjorve and Godeau et al formulas.
+#Found to be equivalent to mmf and deprecated
 model <- list(
   name=c("MMF"),
   formula=expression(S==d/(1+c*A^(-z))),
   exp=expression(d/(1+c*A^(-z))),
-  shape="sigmoid",
+  shape="convex/sigmoid",
   asymp=function(pars)pars["d"],
   #limits for parameters
   parLim = c("Rplus","Rplus","Rplus"),

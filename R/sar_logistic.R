@@ -1,7 +1,7 @@
-#' Fit the Heleg(Logistic) model
+#' Fit the Logistic(Standard) model
 
-#' @description Fit the Heleg(Logistic) model to SAR data.
-#' @usage sar_heleg(data, start = NULL, grid_start = 'partial',
+#' @description Fit the Logistic(Standard) model to SAR data.
+#' @usage sar_logistic(data, start = NULL, grid_start = 'partial',
 #'   grid_n = NULL, normaTest = 'none',
 #'   homoTest = 'none', homoCor = 'spearman')
 #' @param data A dataset in the form of a dataframe with two columns: 
@@ -70,12 +70,12 @@
 #'   relationship: biology and statistics. Journal of Biogeography, 39, 215-231.
 #' @examples
 #' data(galap)
-#' fit <- sar_heleg(galap)
+#' fit <- sar_logistic(galap)
 #' summary(fit)
 #' plot(fit)
 #' @export
 
-sar_heleg <- function(data, start = NULL, 
+sar_logistic <- function(data, start = NULL, 
 grid_start = "partial", grid_n = NULL, 
 normaTest =  "none", homoTest = 
 "none", homoCor = "spearman"){
@@ -109,41 +109,41 @@ if (isTRUE(all.equal(xr[1], xr[2]))) {
      } else{
        warning('All richness values identical')
      }}
-#LOGISTIC FUNCTION (HE & LEGENDRE 1996)
-#doesn't make sense to fit negative relationships with this
-#model, so pars should be Rplus.
-#Tjorve's table in book chapter says asymptote par of Archibald logistic
-#is the c parameter in ours, but have checked and we are correct with c/f.
-#Table 3 of Tjorve (2009) states its shape is sigmoid but "only the convex
-#part is used", and Williams (2009) discusses it being sigmoid but in logA
-#space. We've found it can give both shapes in untransformed space, so
-#have classified it as convex/sigmoid.
-#Found to be equivalent to mmf and the latter deprecated.
-#nb. Tjorve (2009) has a mistake in their formula for this model (Archibald
-#logistic), and give corrected version in the sar book chapter
+#Standard Logistic function
+#Formula given in Tjorve (2003)
+#d confirmed as asymptote in Tjorve (2003)
+#Starting parameter method taken from:
+#https://bscheng.com/2014/05/07/modeling-logistic-growth-data-in-r/
+#Shape given as sigmoid, but it can have observed shapes of linear, convex up
+#and convex down. 
+#Pars all set to Rplus, similar to heleg and mmf. d has to be as is the 
+#asymptote, and have tested the other two - z should be Rplus but with c it is
+#trickier. For some datasets, setting c to R results in a better fit, but then 
+#this also means for other datasets it converges on a worse fit. Having it as
+#Rplus seems to allow it to better fit the "typical" sigmoid shape so have left
+#it as that for now.
 model <- list(
-  name=c("Heleg(Logistic)"),
-  formula=expression(S == c/(f + A^(-z))),
-  exp=expression(c/(f + A^(-z))),
-  shape="convex/sigmoid",
-  asymp=function(pars)pars["c"]/pars["f"],
+  name=c("Logistic(Standard)"),
+  formula=expression(S==d/(1 + exp(-z*A + c))),
+  exp=expression(d/(1 + exp(-z*A + c))),
+  shape="sigmoid",
+  asymp=function(pars)pars["d"],
+  #limits for parameters
   parLim = c("Rplus","Rplus","Rplus"),
-  custStart=function(data)c(max(data$S),10,.01),
-  #initial values function
   init=function(data){
-    if(any(data$S==0)){data=data[data$S!=0,]}
-    #c calculation (asymptote)
-    c=max(data$S)+1
-    #Intermediate variable calculation
-    #long=length(data[[2]])
-    Z=log((c/data$S) -1)
-    #We have the z and f init values by linear regression of Z on data[[1]]
-    dat=data.frame("a"=data$A,"Z"=Z)
-    zf=stats::lm(Z~a,dat)$coefficients
-    c(max(data$S)*exp(-zf[1]),exp(-zf[1]),-zf[2])
+    if (any(data$S == 0)){
+      p <- (data$S + 0.1)/(max(data$S) + 1)
+    } else{
+      p <- data$S/(max(data$S) + 1)
+    }
+    logitR <- log(p / (1 - p)) #logit function (same as car::logit)
+    cc <- coef(lm(logitR ~ data$A))
+    d1 <- max(data$S) + 1
+    #use abs, because in the formulation they use in that website, the sign
+    #of the c parameter is reversed (seemingly negative most of the time)
+    c(d1, cc[2], abs(cc[1]))
   }
 )
-
 model <- compmod(model)
 fit <- get_fit(model = model, data = data, start = start,  
 grid_start = grid_start, grid_n = grid_n, algo = 'Nelder-Mead', 
@@ -160,4 +160,4 @@ if(is.na(fit$value)){
   attr(fit, 'type') <- 'fit'
   return(fit)
 }
-}#end of sar_heleg
+}#end of sar_logistic
