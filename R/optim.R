@@ -2,12 +2,12 @@
 
 ######################################## optimization function
 
-#' @importFrom stats formula optim shapiro.test ks.test cor.test pt
+#' @importFrom stats formula optim shapiro.test ks.test cor.test pt confint coef
 #' @importFrom nortest lillie.test
 
 rssoptim <- function(model, data, start = NULL, algo = "Nelder-Mead",
                      normaTest = "none", homoTest = "none",
-                     homoCor = "spearman"){
+                     homoCor = "spearman", verb = TRUE){
 
   #initial parameters
   if (is.null(start)) {
@@ -103,12 +103,14 @@ rssoptim <- function(model, data, start = NULL, algo = "Nelder-Mead",
   #Homogeneity of variance
 
   if (homoTest == "cor.area"){
-    homoTest  <- list("test" = "cor.area", tryCatch(cor.test(sq_residu,data$A, 
-                      method = homoCor), 
+    homoTest  <- list("test" = "cor.area", 
+                      tryCatch(suppressWarnings(cor.test(sq_residu,data$A, 
+                      method = homoCor)), 
                       error = function(e)list(estimate=NA,p.value=NA)))
   } else if (homoTest == "cor.fitted"){
-    homoTest  <- list("test" = "cor.fitted", tryCatch(cor.test(sq_residu,S.calc,
-                      method = homoCor),
+    homoTest  <- list("test" = "cor.fitted", 
+                      tryCatch(suppressWarnings(cor.test(sq_residu,S.calc,
+                      method = homoCor)),
                     error = function(e)list(estimate=NA,p.value=NA)))
   } else {
     homoTest <- list("test" = "none", "none")
@@ -148,10 +150,12 @@ rssoptim <- function(model, data, start = NULL, algo = "Nelder-Mead",
 
   res <- c(res1,list(verge=verge),res2,res3)
 
-  #estimates significance and confidence interval (95%)
+  #estimates significance and confidence interval (95%) using nls;
+  #but using our fitted parameter estimates rather than re-fitting a new
+  #model using nls (i.e. the par estimates are identical), we are simply
+  #using the nls framework to get se, t-values, p-values etc
 
   #constructing a nlsModel object
-
   formul <- formula(paste("S ~",as.character(model$exp)))
   env <- environment(formul)
   if (is.null(env)){
@@ -162,9 +166,11 @@ rssoptim <- function(model, data, start = NULL, algo = "Nelder-Mead",
   nMod <- tryCatch(stats_nlsModel(formul,data,res1$par),
                    error = function(e)NA)
 
-  if(class(nMod) != "nlsModel"){
+  if (class(nMod) != "nlsModel"){
+    if (verb){
     warning(model$name,": singular gradient at parameter estimates:
-   no parameters significance and conf. intervals.", call. = FALSE)
+             no parameters significance and conf. intervals.", call. = FALSE)
+    }
     res$sigConf <- NA
   }else{
     #number of parameters
@@ -189,18 +195,38 @@ rssoptim <- function(model, data, start = NULL, algo = "Nelder-Mead",
                                               lower.tail = FALSE))
     dimnames(param) <- list(model$paramnames, c("Estimate", "Std. Error",
                                                 "t value", "Pr(>|t|)"))
-
-    #95% confidence interval
+    
+    #95% confidence interval, simply 2 * the SE: method used
+    #in mmSAR
     conf <- matrix(c(param[,"Estimate"] - 2 * param[,"Std. Error"],
                      param[,"Estimate"] + 2 * param[,"Std. Error"]),p,2)
     colnames(conf) <- c("2.5%","97.5%")
 
-    sigConf <- cbind(param,conf)
-
+    sigConf <- cbind(param, conf)
+    
+    #If power model is fitted, properly fit the model using nls and get the par
+    #estimates & confidence intervals using their approach. Sometimes the model
+    #will fit with nls and converge, but the confint function will not work with
+    #the resultant object (e.g. states singular gradient), so if this happens we
+    #return nothing for the nls CIs
+    if (model$name == "Power"){
+      yobs <- data$S
+      xobs <- data$A
+      nls_pow <- tryCatch(nls(yobs ~ c * xobs^z,
+                     start = list("c" = res1$par[1], "z" = res1$par[2])),
+      error = function(e)NA)
+      if (!anyNA(nls_pow)) {
+        coef_nls_pow <- as.vector(coef(nls_pow))
+        CI_nls_pow <- tryCatch(suppressMessages(confint(nls_pow)),
+                               error = function(e)NA)
+        if (!anyNA(CI_nls_pow)){
+          sigConf <- cbind(sigConf, "nls.Est." = coef_nls_pow, CI_nls_pow)
+          colnames(sigConf)[8:9] <- c("nls.2.5%", "nls.97.5%")
+        }
+      }
+    }#eo if power
     res$sigConf <- sigConf
-
   }#eo if else is.na(nMod)
-
 
   res$normaTest <- normaTest
   res$homoTest <- homoTest
@@ -210,6 +236,15 @@ rssoptim <- function(model, data, start = NULL, algo = "Nelder-Mead",
 }#eo rssoptim
 
 ######################################## Multiple starting values optimization function
+
+#function to work out if all values in a vector are the same
+vec.equal <- function (x, tol = .Machine$double.eps^0.5) 
+{
+  if (length(x) == 1) 
+    return(TRUE)
+  x <- range(x)/mean(x)
+  isTRUE(all.equal(x[1], x[2], tolerance = tol))
+}
 
 #' @importFrom stats runif
 
@@ -333,14 +368,32 @@ if (model$name == "Gompertz"){
   
   values <- unlist(lapply(fit.list,function(x){x$value}))
   
-  #note this just returns one value even if there are multiple values with
-  #the same lowest rss - and there almost always will be as lots of starting
-  #par estimates will converge on same final pars, so this is fine.
-  min <- which.min(values)
+  # note this just returns one value even if there are multiple values with
+  # the same lowest rss - and there almost always will be as lots of starting
+  # par estimates will converge on same final pars, so this is fine.
   
-  if(length(min) != 0) {
+  #This finds the min RSS, then checks if multiple par estimates return the same
+  #rss. If so, it throws a warning and randomly selects a set. If not,
+  #it just returns the min set
+  min_val <- min(values, na.rm = TRUE)
+  w_mult <- as.vector(which(values == min_val))
+  if (length(w_mult) > 1){
+    mult_pars <- vapply(fit.list[w_mult], function(x) x$par, 
+         FUN.VALUE = numeric(length(model$parNames)))
+    mult_pars <- round(mult_pars, 2)
+    mult_equal <- apply(mult_pars, 2, function(x) vec.equal(x))
+    if (any(!mult_equal) & verb){
+      warning(paste0(model$name, ": Multiple parameter estimates returned the ", 
+                     "same minimum rss; one set have been randomly selected"))
+    }
+    min <- sample(w_mult, 1)
+  } else{
+    min <- which.min(values)
+  }
+  
+  if (length(min) != 0) {
     fit.list[[min]]
-  }else{
+  } else{
     list(value = NA)
   }
   
@@ -376,23 +429,23 @@ get_fit <- function(model = model, data = data, start = NULL,
     } else{
       fit <- tryCatch(rssoptim(model = model, data = data, algo = algo,
                                normaTest = normaTest, homoTest = homoTest,
-                               homoCor = homoCor),
+                               homoCor = homoCor, verb = verb),
                       error=function(e) list(value = NA))
     }
   } else if (!is.null(start)){#or provided start values
     fit <- tryCatch(rssoptim(model = model, data = data,
                              start = start, algo = algo,
                              normaTest = normaTest, homoTest = homoTest,
-                             homoCor = homoCor),
+                             homoCor = homoCor, verb = verb),
                     error = function(e) list(value = NA))
   } else { #or if neither selected, use default start values from within sars
     fit <- tryCatch(rssoptim(model = model, data = data, algo = algo,
                              normaTest = normaTest, homoTest = homoTest,
-                             homoCor = homoCor),
+                             homoCor = homoCor, verb = verb),
                     error=function(e) list(value = NA))
   }
   
-  if(is.na(fit$value)){
+  if(is.na(fit$value) & verb){
     warning("The model could not be fitted :(\n")
     return(list(value = NA))
   }else{

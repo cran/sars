@@ -60,7 +60,8 @@
 #' plot(fit, ModTitle = "A)", lcol = "blue")
 #'
 #' #fit and plot a sars object of Type fit_collection.
-#' fc <- sar_multi(data = galap, obj = c("power", "loga", "epm1"))
+#' fc <- sar_multi(data = galap, obj = c("power", "loga", "epm1"), 
+#' grid_start = "none")
 #' plot(fc, ModTitle = letters[1:3], xlab = "Size of island")
 #' @rdname plot.sars
 #' @export
@@ -834,7 +835,7 @@ plot.threshold <- function(x, xlab = NULL, ylab = NULL,
     ylab <- switch(x[[5]][[1]], 
                    none = "Species richness", 
                    area = "Species richness", 
-                   both = "Log(Species richnes)")
+                   both = "Log(Species richness)")
   }
   if (is.null(ModTitle)) {
     ModTitle <- sapply(names, function(x) {

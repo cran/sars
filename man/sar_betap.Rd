@@ -6,7 +6,7 @@
 \usage{
 sar_betap(data, start = NULL, grid_start = 'partial',
   grid_n = NULL, normaTest = 'none',
-  homoTest = 'none', homoCor = 'spearman')
+  homoTest = 'none', homoCor = 'spearman', verb = TRUE)
 }
 \arguments{
 \item{data}{A dataset in the form of a dataframe with two columns: 
@@ -31,6 +31,8 @@ residuals with the area values), or 'none' (no residuals homogeneity test is und
 
 \item{homoCor}{The correlation test to be used when \code{homoTest !='none'}. Can be any of 'spearman'
 (the default), 'pearson', or 'kendall'.}
+
+\item{verb}{Whether or not to print certain warnings (default = TRUE)}
 }
 \value{
 A list of class 'sars' with the following components: 
@@ -80,6 +82,8 @@ not work, custom values can be provided (using the \code{start} argument), or a 
   
   As grid_start has a random component, when \code{grid_start != 'none'} in your model fitting, you can
    get slightly different results each time you fit a model
+  
+   The parameter confidence intervals returned in sigConf are just simple confidence intervals, calculated as 2 * standard error.
 }
 \examples{
 #Grid_start turned off for speed (not recommended)

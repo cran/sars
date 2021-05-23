@@ -41,7 +41,7 @@ cat_roxygen <- function(model, funName, fileName){
   cat1(paste0("#' @usage ", funName, "(data, start = NULL,",
               " grid_start = 'partial',", "\n"))
   cat1(paste0("#'   grid_n = NULL, normaTest = 'none',", "\n"))
-  cat1(paste0("#'   homoTest = 'none', homoCor = 'spearman')\n"))
+  cat1(paste0("#'   homoTest = 'none', homoCor = 'spearman', verb = TRUE)\n"))
   cat1(paste0("#' @param ", "data ", "A dataset in the form of a dataframe ",
                 "with two columns: \n"))
   cat1(paste0("#'   the first with island/site areas, and the second with ",
@@ -74,6 +74,8 @@ cat_roxygen <- function(model, funName, fileName){
   cat1(paste0("#' @param ", "homoCor ","The correlation test to be used", 
               " when \\code{homoTest !='none'}. Can be any of 'spearman'\n"))
   cat1(paste0("#'   (the default), 'pearson', or 'kendall'.\n"))
+  cat1(paste0("#' @param ", "verb ","Whether or not to print certain warnings ", 
+              "(default = TRUE)\n"))
   
   cat1(paste0("#' @details The model is fitted using non-linear regression.", 
               " The model parameters are estimated", "\n"))
@@ -104,6 +106,22 @@ cat_roxygen <- function(model, funName, fileName){
   cat1(paste0("#'   As grid_start has a random component, when",
               " \\code{grid_start != 'none'} in your model fitting, you can\n")) 
   cat1(paste0("#'    get slightly different results each time you fit a model\n")) 
+  cat1(paste0("#'   \n")) 
+  
+  cat1(paste0("#'    The parameter confidence intervals returned in sigConf are just",
+              " simple confidence intervals, calculated as 2 * standard error.\n"))
+  
+  if (funName == "sar_power"){
+    cat1(paste0("#'   For the power model (and only this model) the returned object ",
+                "(sigConf) and model summary also includes the parameter estimates\n",
+                "#' generated from fitting the model using \\code{\\link{nls}} and",
+                " using as starting parameter estimates the parameter values\n",
+                "#' from our model fitting. This also returns the confidence",
+                " intervals generated with \\code{\\link{confint}} (which\n",
+                "#' calls MASS:::confint.nls), which should be more accurate",
+                " than the default \\code{sars} CIs.\n"))
+  }
+  
   cat1(paste0("#' @importFrom ", "stats lm quantile\n")) 
   
   cat1(paste0("#' @return ", "A list of class 'sars' with the following", 
@@ -218,7 +236,7 @@ model_factory <- function(f, overwrite = FALSE){
   cat1(paste0(funName,' <- function(data, start = NULL,', 
                         ' \ngrid_start = "partial", grid_n = NULL,', 
                         ' \nnormaTest =  "none", homoTest =',
-                        ' \n"none", homoCor = "spearman"){',"\n"))
+                        ' \n"none", homoCor = "spearman", verb = TRUE){',"\n"))
   
   #add deprecation warning to mmf function
   if (funName == "sar_mmf"){
@@ -245,7 +263,9 @@ model_factory <- function(f, overwrite = FALSE){
   cat1("  if (!is.numeric(grid_n))\n")
   cat1("  stop('grid_n should be numeric if grid_start == exhaustive')\n")
   cat1("  }\n")
-  
+  cat1("if (!is.logical(verb)){\n")
+  cat1("stop('verb should be logical')\n")
+  cat1("}\n")
   #data ordering and column naming (assuming Area then Species Richness)
   cat1("data <- data[order(data[,1]),]\n")
   cat1("colnames(data) <- c('A','S')\n")
@@ -274,11 +294,11 @@ model_factory <- function(f, overwrite = FALSE){
   cat1("fit <- get_fit(model = model, data = data, start = start,", 
       " \ngrid_start = grid_start, grid_n = grid_n, algo = 'Nelder-Mead', 
        normaTest =  normaTest, homoTest = homoTest, 
-       homoCor = homoCor)\n")
+       homoCor = homoCor, verb = verb)\n")
   cat1("if(is.na(fit$value)){\n")
   cat1("  return(list(value = NA))\n")
   cat1("}else{","\n")
-  cat1("  obs <- obs_shape(fit)\n")
+  cat1("  obs <- obs_shape(fit, verb = verb)\n")
   cat1("  fit$observed_shape <- obs$fitShape\n")
   cat1("  fit$asymptote <- obs$asymp\n")
   cat1("  fit$neg_check <- any(fit$calculated < 0)\n")

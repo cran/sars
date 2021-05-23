@@ -11,7 +11,7 @@ sar_average(obj = c("power",
   NULL, crit = "Info", normaTest = "none", homoTest = "none", homoCor =
   "spearman", neg_check = FALSE, alpha_normtest = 0.05, alpha_homotest =
   0.05, grid_start = "partial", grid_n = NULL, confInt = FALSE, ciN = 100,
-  verb = TRUE)
+  verb = TRUE, display = TRUE)
 }
 \arguments{
 \item{obj}{Either a vector of model names or a fit_collection object created
@@ -68,7 +68,11 @@ should be calculated for the multimodel curve using bootstrapping.}
 \item{ciN}{The number of bootstrap samples to be drawn to calculate the
 confidence intervals (if \code{confInt == TRUE}).}
 
-\item{verb}{verbose (default: \code{verb == TRUE}).}
+\item{verb}{verbose - Whether or not to print certain warnings 
+(default: \code{verb == TRUE})}
+
+\item{display}{Show the model fitting output and related messages.
+(default: \code{display == TRUE}).}
 }
 \value{
 A list of class "multi" and class "sars" with two elements. The first
@@ -242,7 +246,7 @@ Burnham, K. P., & Anderson, D. R. (2002). Model selection and
   Guilhaumon, F., Mouillot, D., & Gimenez, O. (2010). mmSAR: an R-package for
   multimodel species-area relationship inference. Ecography, 33, 420-424.
   
-  Matthews, T. J., K. A. Triantis, R. J. Whittaker, & F. Guilhaumon. (2019_.
+  Matthews, T. J., K. A. Triantis, R. J. Whittaker, & F. Guilhaumon. (2019).
   sars: an R package for fitting, evaluating and comparing species–area
   relationship models. Ecography, 42, 1446–55.
 }
