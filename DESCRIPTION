@@ -2,7 +2,7 @@ Package: sars
 Type: Package
 Title: Fit and Compare Species-Area Relationship Models Using
         Multimodel Inference
-Version: 1.3.4
+Version: 1.3.5
 Authors@R: c(person("Thomas J.", "Matthews", email = "txm676@gmail.com",
                   role = c("aut", "cre"), comment = c(ORCID = "0000-0002-7624-244X")),
             person("Francois", "Guilhaumon", email = "francois.guilhaumon@ird.fr",
@@ -25,10 +25,10 @@ RoxygenNote: 7.1.1
 Suggests: knitr, rmarkdown, testthat, covr
 VignetteBuilder: knitr
 NeedsCompilation: no
-Packaged: 2021-05-23 17:47:44 UTC; Tom
+Packaged: 2021-08-05 11:00:34 UTC; Tom
 Author: Thomas J. Matthews [aut, cre] (<https://orcid.org/0000-0002-7624-244X>),
   Francois Guilhaumon [aut] (<https://orcid.org/0000-0003-4707-8932>),
   Kevin Cazelles [rev] (<https://orcid.org/0000-0001-6619-9874>)
 Maintainer: Thomas J. Matthews <txm676@gmail.com>
 Repository: CRAN
-Date/Publication: 2021-05-23 23:40:02 UTC
+Date/Publication: 2021-08-05 16:40:05 UTC

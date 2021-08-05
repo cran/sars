@@ -1,8 +1,8 @@
-2837d45f572299e33add066a75c0d401 *DESCRIPTION
+0cfd90621f24491831cff788ea6908b2 *DESCRIPTION
 e62637ea8a114355b985fd86c9ffbd6e *LICENSE
-2307b40283fe2674b9f498d2ecd9ae23 *NAMESPACE
-b4d81563bd8c0f7ad94b135126198743 *NEWS.md
-6e326d689accd8e1cd4be513b7ffa8d1 *R/class_plot.R
+46cca27b408dbc860fa51a5524472be1 *NAMESPACE
+8fd765a1382864044eef76d517e15d7d *NEWS.md
+4fb530be4b935647a69930c19cea444c *R/class_plot.R
 40756e56ccb219e197e22215a1fd0b9b *R/class_print.R
 37e1ac62cf273bbc197832ad7a154c5f *R/class_summary.R
 c6ec5ee9fc90678638c114a7bc4ad959 *R/coleman.R
@@ -17,7 +17,7 @@ ce859c8e20a42d047d23586ec6c50a83 *R/coleman_plot.R
 e7b4ab250165a15ee8545cfd53ab2e72 *R/link_functions.R
 b54afb8a86ce4bd67de66bcf832bf18f *R/mod_linear_power.R
 d52a9857c011946ddbb9301edb998efe *R/obs_shape.R
-10c078a30c7329308ef521d08b4f5707 *R/optim.R
+10947fa481d6f35ec1c09088376bc329 *R/optim.R
 d2701ba8221fd3d11e8db0cb4d040f28 *R/sar_asymp.R
 0364cc03f4617bbec80de061ac868eb7 *R/sar_average.R
 1e5b73d8032471a56f654fa19c1f91b6 *R/sar_betap.R
@@ -45,8 +45,8 @@ c31592f6e81955333681a1c32923bd16 *R/sar_weibull4.R
 d89f54beeb7f6dec6bb547c5bd834e15 *R/sars.R
 538d1b57ae43f30a452b30e000f1cf84 *R/style.R
 17d466385a24d126ed37970bbee839af *R/sysdata.rda
-72acd08c2d0ba1e3a2900ab4a55ebfbf *README.md
-b37bbb663ffd3a6c16b9f7540cd28afa *build/vignette.rds
+a3d9718357f00c7b267d1fa191152e22 *README.md
+afa181eb00c29f2bb65260b5665cfe21 *build/vignette.rds
 5ed1b3977601638396ebfdc57cdfb114 *data/aegean.rda
 1ab48cb3de90236f2ef9242a2aa1ea6d *data/aegean2.rda
 f0fb10f94d92d54763a52cacb739b5a6 *data/cole_sim.rda
@@ -57,7 +57,7 @@ c938976a90d442eafd30145233ddfdff *inst/CITATION
 92dfcd3b770d67153587efbfc74adc19 *inst/_pkgdown.yml
 bbb323e5843f2e63b6d8d335bd9139fa *inst/doc/sars-r-package.R
 ec150c237cf0224351f2a4dcc33de5f5 *inst/doc/sars-r-package.Rmd
-ab8c451a71e44f9e671cfa82358fa382 *inst/doc/sars-r-package.html
+e4cf3771292661a6a0015db0a3c17ccf *inst/doc/sars-r-package.html
 24f99247d25dfe293d96b26d226f763f *inst/model_factory.R
 5a4d21e927c15ddb887701c774258c87 *inst/non_lin_models/Mod_asymp.R
 6761630f9f151ccbcbbe6811f02e2a54 *inst/non_lin_models/Mod_betap.R
@@ -86,7 +86,7 @@ d3ef3462440f5ace43d775973ff2177c *man/aegean2.Rd
 3edb317a0d72cb1dee16be631d7a8dff *man/display_sars_models.Rd
 d3b2e321f99be35863a5425397f28d3d *man/figures/README-plot-1.png
 675832830660ba7976a26f58ea24273b *man/figures/README-unnamed-chunk-4-1.png
-f2c902eeac4094a61bc4f98a8485ea8b *man/figures/README-unnamed-chunk-5-1.png
+d4bdda8eecdcb4473474a54b84ea2b9f *man/figures/README-unnamed-chunk-5-1.png
 cdb1afe123d768ac936c18ff64132263 *man/figures/README-unnamed-chunk-6-1.png
 d44268fdbb7c9761ba7eac46f318bf82 *man/figures/sars_logo.png
 2238f7b29950c804b125bd6f836ce563 *man/galap.Rd
@@ -97,7 +97,7 @@ b476bd8aa06228183a7e86fbfb447a7c *man/get_coef.Rd
 8ca063cd4301a0e2861ff5d3e72a3309 *man/plot.coleman.Rd
 71be22e3f65ef58fc841d8e6048b4f0d *man/plot.multi.Rd
 4affec108ac710de56faea770f80bff9 *man/plot.sars.Rd
-467e84909e4b0830d1028bfc255a53c0 *man/plot.threshold.Rd
+b113c707af0d76ae5d8605f5cd1746ac *man/plot.threshold.Rd
 12ad8be34b13ced6b32bccdd9fde502b *man/sar_asymp.Rd
 992291af139b5b3f326ac03ea2c472dc *man/sar_average.Rd
 b4c7dabb7928eaddfdeedd42c18dca0d *man/sar_betap.Rd
@@ -137,7 +137,7 @@ c914ccac8272cfa093b3dad5b3af7f6c *tests/testthat/test_crit_method.R
 b74246836d8c15a442d6a7984a7a7bd3 *tests/testthat/test_indiv_CIs.R
 0585e024e090cc41f13e79929dc47eb0 *tests/testthat/test_lin_pow.R
 14647ddd3d37f4c35aff3d1ca0817496 *tests/testthat/test_loga.R
-f7635d08fd46ade926410ba5755929bb *tests/testthat/test_logistic.R
+abe17709cb42051d349567b5340db331 *tests/testthat/test_logistic.R
 8ab89ee09d18a7e93bb9887eb81255b4 *tests/testthat/test_monod.R
 7a0e953a70dd9e3985ba7b5a8cc650bf *tests/testthat/test_multi.R
 b98bc3fdee546bc578639129d800f0c7 *tests/testthat/test_neg_check.R
