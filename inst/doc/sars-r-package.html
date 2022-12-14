@@ -15,7 +15,19 @@
 
 <title>sars R Package</title>
 
-<script src="data:application/javascript;base64,Ly8gUGFuZG9jIDIuOSBhZGRzIGF0dHJpYnV0ZXMgb24gYm90aCBoZWFkZXIgYW5kIGRpdi4gV2UgcmVtb3ZlIHRoZSBmb3JtZXIgKHRvCi8vIGJlIGNvbXBhdGlibGUgd2l0aCB0aGUgYmVoYXZpb3Igb2YgUGFuZG9jIDwgMi44KS4KZG9jdW1lbnQuYWRkRXZlbnRMaXN0ZW5lcignRE9NQ29udGVudExvYWRlZCcsIGZ1bmN0aW9uKGUpIHsKICB2YXIgaHMgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yQWxsKCJkaXYuc2VjdGlvbltjbGFzcyo9J2xldmVsJ10gPiA6Zmlyc3QtY2hpbGQiKTsKICB2YXIgaSwgaCwgYTsKICBmb3IgKGkgPSAwOyBpIDwgaHMubGVuZ3RoOyBpKyspIHsKICAgIGggPSBoc1tpXTsKICAgIGlmICghL15oWzEtNl0kL2kudGVzdChoLnRhZ05hbWUpKSBjb250aW51ZTsgIC8vIGl0IHNob3VsZCBiZSBhIGhlYWRlciBoMS1oNgogICAgYSA9IGguYXR0cmlidXRlczsKICAgIHdoaWxlIChhLmxlbmd0aCA+IDApIGgucmVtb3ZlQXR0cmlidXRlKGFbMF0ubmFtZSk7CiAgfQp9KTsK"></script>
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
 
 <style type="text/css">
   code{white-space: pre-wrap;}
@@ -25,6 +37,7 @@
   div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
   ul.task-list{list-style: none;}
     </style>
+
 
 
 <style type="text/css">
@@ -148,7 +161,187 @@ div.csl-indent {
 }
 </style>
 
-<link rel="stylesheet" href="data:text/css,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" type="text/css" />
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
 
 
 
@@ -165,21 +358,175 @@ div.csl-indent {
 
 
 
-<p>This vignette is heavily based on the paper that accompanies the package <span class="citation">(Matthews et al. 2019)</span>.To cite this vignette, please cite the corresponding paper:</p>
-<p>Matthews, T.J., Triantis, K., Whittaker, R.J. and Guilhaumon, F. (2019) sars: an R package for fitting, evaluating and comparing species–area relationship models. Ecography, 42, 1446-1455.</p>
-<p>Version 1.1.1 of the package has been archived on the Zenodo research data repository (DOI: 10.5281/zenodo.2573067).</p>
+<p>This vignette is heavily based on the paper that accompanies the
+package <span class="citation">(Matthews et al. 2019)</span>.To cite
+this vignette, please cite the corresponding paper:</p>
+<p>Matthews, T.J., Triantis, K., Whittaker, R.J. and Guilhaumon, F.
+(2019) sars: an R package for fitting, evaluating and comparing
+species–area relationship models. Ecography, 42, 1446-1455.</p>
+<p>Version 1.1.1 of the package has been archived on the Zenodo research
+data repository (DOI: 10.5281/zenodo.2573067).</p>
 <div id="background" class="section level2">
 <h2>BACKGROUND</h2>
-<p>The species–area relationship (SAR) describes the near universally observed pattern whereby the number of species increases with the area sampled, and it has been described as one of ecology’s few laws (<span class="citation">Rosenzweig (1995)</span>). The SAR is a fundamental component of numerous ecological and biogeographical theories, such as the equilibrium theory of island biogeography (<span class="citation">MacArthur and Wilson (1967)</span>). In addition, SAR models have been widely used in applied ecology and conservation biogeography: for example, to predict the number of extinctions due to habitat loss. Numerous types of SAR have been described, and one primary dichotomy employed is the split of SARs into island SARs (ISARs), whereby each data point is an individual island or isolated sample, and species accumulation curves (SACs) that represent cumulative counts of increased species number with sampling area (<span class="citation">Gray, Ugland, and Lambshead (2004)</span>). Whilst the remainder of the paper and the described R package are focused on ISARs, the models and the model fitting procedure can equally be applied to SACs (see <span class="citation">Matthews, Triantis, et al. (2016)</span>), although it should be noted that in SACs the data points are not independent of one another.</p>
-<p>Over 20 SAR models have been described in the literature (<span class="citation">Dengler (2009)</span>, <span class="citation">Tjørve (2003)</span>, <span class="citation">Tjørve (2009)</span>, <span class="citation">Triantis, Guilhaumon, and Whittaker (2012)</span>). However, despite this wide range of models, the majority of SAR studies are still based exclusively on the power model (<span class="citation">Arrhenius (1921)</span>), which if fitted in its non-linear (untransformed) form generally takes a convex form. Often, the log–log representation of the power model is used as it can be fitted using standard linear regression, and its parameters are more easily interpretable (<span class="citation">Rosenzweig (1995)</span>). However, whilst the power model has been found to provide a reasonable fit to a wide range of datasets (<span class="citation">Dengler (2009)</span>, <span class="citation">Matthews, Guilhaumon, et al. (2016)</span>), it is not universally the best model, and a number of studies have reported other models to provide better fits to empirical data (e.g. <span class="citation">Triantis, Guilhaumon, and Whittaker (2012)</span>, <span class="citation">Matthews, Guilhaumon, et al. (2016)</span>). The possibility of scale dependency of the form of the SAR has long been of interest, with, for example, a theoretical case being made for SARs at intermediate spatial scales being approximated by a power model, whilst at larger spatial scales the form of the SAR has been theorised to be sigmoidal. Additionally, it is only recently that the SAR for archipelagos as units of analysis and not just islands has started to be studied, and thus we know little about the form of archipelago SARs.</p>
-<p>Due to the increased recognition of model uncertainty in SAR research, a number of recent studies have employed a multi-model inference approach (<span class="citation">Burnham and Anderson (2002)</span>) in the analysis of SARs, whereby either (1) multiple SAR models are compared using various criteria (e.g. AIC) and a best model is chosen (e.g. <span class="citation">Dengler (2009)</span>), or (2) multiple SAR models are fitted and a multi-model averaged curve is calculated using, for example, AIC weights (e.g. <span class="citation">Guilhaumon et al. (2008)</span>). We are not aware of any published software package that enables users to fit, and create multi-model averaged curves using more than eight SAR models. Considering currently available software, the BAT R package provides functions to fit three SAR models (linear, power and logarithmic); however, this package is focused on general biodiversity assessment and thus does not provide any additional SAR functionality. The mmSAR R package (<span class="citation">Guilhaumon, Mouillot, and Gimenez (2010)</span>) is focussed on SARs and while it allows users to fit eight SAR models using an information theoretic framework, it does not include several models that have been found to provide the best fits to several empirical datasets. To provide a set of tools to fill these gaps, we have developed the R package ‘sars.’ The package provides functions to fit 20 SAR models using non-linear and linear regression, calculate multi-model averaged curves using various information criteria, and generate confidence intervals using bootstrapping. Novel features compared with mmSAR include (i) user-friendly functions for plotting (the user can now plot weighted multimodel SAR curves along with the individual SAR model curves) and (ii) determining the observed shape of the model fit (i.e. linear, convex up, convex down or sigmoidal) and (iii) presence or not of an asymptote, and (iv) functions to fit, plot and evaluate <span class="citation">Coleman (1981)</span>’s random placement model using a species-site abundance matrix, and (v) to fit the general dynamic model (GDM) of island biogeography (<span class="citation">Whittaker, Triantis, and Ladle (2008)</span>). In addition, the mmSAR package (which has been deprecated) no longer complies with recognised programming good practice , is not on CRAN (the main repository of R packages), and is not user friendly (e.g. it requires the user to load individual models prior to fitting). There was therefore a need to design a new package from scratch.</p>
+<p>The species–area relationship (SAR) describes the near universally
+observed pattern whereby the number of species increases with the area
+sampled, and it has been described as one of ecology’s few laws (<span class="citation">Rosenzweig (1995)</span>). The SAR is a fundamental
+component of numerous ecological and biogeographical theories, such as
+the equilibrium theory of island biogeography (<span class="citation">MacArthur and Wilson (1967)</span>). In addition, SAR
+models have been widely used in applied ecology and conservation
+biogeography: for example, to predict the number of extinctions due to
+habitat loss. Numerous types of SAR have been described, and one primary
+dichotomy employed is the split of SARs into island SARs (ISARs),
+whereby each data point is an individual island or isolated sample, and
+species accumulation curves (SACs) that represent cumulative counts of
+increased species number with sampling area (<span class="citation">Gray, Ugland, and Lambshead (2004)</span>). Whilst the
+remainder of the paper and the described R package are focused on ISARs,
+the models and the model fitting procedure can equally be applied to
+SACs (see <span class="citation">Matthews, Triantis, et al.
+(2016)</span>), although it should be noted that in SACs the data points
+are not independent of one another.</p>
+<p>Over 20 SAR models have been described in the literature (<span class="citation">Dengler (2009)</span>, <span class="citation">Tjørve
+(2003)</span>, <span class="citation">Tjørve (2009)</span>, <span class="citation">Triantis, Guilhaumon, and Whittaker (2012)</span>).
+However, despite this wide range of models, the majority of SAR studies
+are still based exclusively on the power model (<span class="citation">Arrhenius (1921)</span>), which if fitted in its
+non-linear (untransformed) form generally takes a convex form. Often,
+the log–log representation of the power model is used as it can be
+fitted using standard linear regression, and its parameters are more
+easily interpretable (<span class="citation">Rosenzweig (1995)</span>).
+However, whilst the power model has been found to provide a reasonable
+fit to a wide range of datasets (<span class="citation">Dengler
+(2009)</span>, <span class="citation">Matthews, Guilhaumon, et al.
+(2016)</span>), it is not universally the best model, and a number of
+studies have reported other models to provide better fits to empirical
+data (e.g. <span class="citation">Triantis, Guilhaumon, and Whittaker
+(2012)</span>, <span class="citation">Matthews, Guilhaumon, et al.
+(2016)</span>). The possibility of scale dependency of the form of the
+SAR has long been of interest, with, for example, a theoretical case
+being made for SARs at intermediate spatial scales being approximated by
+a power model, whilst at larger spatial scales the form of the SAR has
+been theorised to be sigmoidal. Additionally, it is only recently that
+the SAR for archipelagos as units of analysis and not just islands has
+started to be studied, and thus we know little about the form of
+archipelago SARs.</p>
+<p>Due to the increased recognition of model uncertainty in SAR
+research, a number of recent studies have employed a multi-model
+inference approach (<span class="citation">Burnham and Anderson
+(2002)</span>) in the analysis of SARs, whereby either (1) multiple SAR
+models are compared using various criteria (e.g. AIC) and a best model
+is chosen (e.g. <span class="citation">Dengler (2009)</span>), or (2)
+multiple SAR models are fitted and a multi-model averaged curve is
+calculated using, for example, AIC weights (e.g. <span class="citation">Guilhaumon et al. (2008)</span>). We are not aware of
+any published software package that enables users to fit, and create
+multi-model averaged curves using more than eight SAR models.
+Considering currently available software, the BAT R package provides
+functions to fit three SAR models (linear, power and logarithmic);
+however, this package is focused on general biodiversity assessment and
+thus does not provide any additional SAR functionality. The mmSAR R
+package (<span class="citation">Guilhaumon, Mouillot, and Gimenez
+(2010)</span>) is focussed on SARs and while it allows users to fit
+eight SAR models using an information theoretic framework, it does not
+include several models that have been found to provide the best fits to
+several empirical datasets. To provide a set of tools to fill these
+gaps, we have developed the R package ‘sars’. The package provides
+functions to fit 20 SAR models using non-linear and linear regression,
+calculate multi-model averaged curves using various information
+criteria, and generate confidence intervals using bootstrapping. Novel
+features compared with mmSAR include (i) user-friendly functions for
+plotting (the user can now plot weighted multimodel SAR curves along
+with the individual SAR model curves) and (ii) determining the observed
+shape of the model fit (i.e. linear, convex up, convex down or
+sigmoidal) and (iii) presence or not of an asymptote, and (iv) functions
+to fit, plot and evaluate <span class="citation">Coleman (1981)</span>’s
+random placement model using a species-site abundance matrix, and (v) to
+fit the general dynamic model (GDM) of island biogeography (<span class="citation">Whittaker, Triantis, and Ladle (2008)</span>). In
+addition, the mmSAR package (which has been deprecated) no longer
+complies with recognised programming good practice , is not on CRAN (the
+main repository of R packages), and is not user friendly (e.g. it
+requires the user to load individual models prior to fitting). There was
+therefore a need to design a new package from scratch.</p>
 </div>
 <div id="methods-and-features" class="section level2">
 <h2>METHODS AND FEATURES</h2>
-<p>The ‘sars’ (species–area relationships) package has been programmed using standard S3 methods and is available on CRAN (version 1.2.1) and the development version on GitHub (txm676/sars), meaning researchers can easily add in their own models and functions and integrate these into the multi-model inference framework. Thus, the package represents a resource for future SAR work that can be built on and expanded by workers in the field.</p>
-<p>Fitting individual SAR models and a set of SAR models The package provides functions to fit each of the 20 SAR models (see also <span class="citation">Triantis, Guilhaumon, and Whittaker (2012)</span>). The ‘sar_models’ function can be used to bring up a list of the 20 model names and a Table can be generated in the package using the ‘display_sars_models’ function. With the exception of the linear model (which is fitted using standard linear regression), all models are fitted using non-linear regression and the model parameters are estimated by minimizing the residual sum of squares with an unconstrained Nelder-Mead optimization algorithm and the ‘optim’ R function.</p>
-<p>Choosing starting parameter values for non-linear regression optimisation algorithms is not always straight forward, depending on the data at hand. The starting values for the parameter estimates used as defaults in the package are carefully chosen to avoid numerical problems and to speed up the convergence process. Custom starting values can be provided for any of the 20 models using the ‘start’ argument in the model fit functions. In addition, we also use a grid search process. ‘grid_start’ creates 100 starting values for each parameter within sensible bounds and then creates a large matrix storing all possible combinations of starting values across the n parameters in the model. For example, for a three parameter model this matrix contains one million rows. A random number of these rows are then selected and used as starting parameter values. There are three options for the grid_start argument to control this process. The default (grid_start = “partial”) randomly samples 500 different sets of starting parameter values for each model, adds these to the model’s default starting values and tests all of these. A more comprehensive set of starting parameter estimates can be used (grid_start = “exhaustive”) - this option allows the user to choose the number of starting parameter sets to be tested (using the grid_n argument) and includes a range of additional starting parameter estimates, e.g. very small values and particular values we have found to be useful for individual models. A large ‘grid_n’ will ensure a more extensive search of starting parameter value space, but will increase the time taken to fit the model. More generally, using grid_start = “exhaustive” in combination with a large grid_n can be very time consuming; however, we would recommend it as it makes it more likely that the optimal model fit will be found, particularly for the more complex models. This is particularly true if any of the model fits does not converge, returns a singular gradient at parameter estimates, or the plot of the model fit does not look optimum. The grid start procedure can also be turned off (grid_start = “none”), meaning just the default starting parameter estimates are used. It should be noted that for certain models (e.g. Weibull 3 par.) ‘grid_start’ has been found to occasionally push model fits into strange parameter space (e.g. step curves) and so for these models ‘grid_start’ just reverts back to our provided parameter starting values. However, for these models the ‘start’ argument can still be used. For certain models, there are also checks to ensure that the returned parameters are logical. For example, the optimisation procedure can sometimes return a negative z-value for the asymptotic model, meaning in the term z^A, the base is negative. Thus, if a fitting process returns a negative z-value we return that the model could not be fitted. Remember that, as grid_start has a random component, when grid_start != “none,” you can get slightly different results each time you fit a model or run sar_average().</p>
-<p>Each individual model fit returns an object of class ‘sars,’ which is a list of 22 elements containing relevant model fit information, such as the model parameter estimates, the fitted values, the residuals, model fit statistics (e.g. AIC, R2), the observed model shape (linear, convex or sigmoidal), whether or not the fit is asymptotic, and convergence information. The returned object can easily be plotted using the ‘plot.sars’ generic function; as this function is based on the base R plotting framework, the plot aesthetics can be edited using standard plotting arguments (see the ‘plot.sars’ documentation in the package). Summary and print generic functions are also provided for class ‘sars’; these functions follow the output of the standard ‘lm’ function in the ‘stats’ R package. Multiple SAR models can be fitted to the same dataset using the ‘sar_multi’ function and the resultant n model fit objects stored together as a ‘fit_collection’ object. This object is a list of class ‘sars,’ where each of the n elements contains an individual SAR model fit. Using the ‘plot.sars’ generic function on a ‘fit_collection’ object generates a grid of the n individual model fit plots (Fig. 1).</p>
+<p>The ‘sars’ (species–area relationships) package has been programmed
+using standard S3 methods and is available on CRAN (version 1.2.1) and
+the development version on GitHub (txm676/sars), meaning researchers can
+easily add in their own models and functions and integrate these into
+the multi-model inference framework. Thus, the package represents a
+resource for future SAR work that can be built on and expanded by
+workers in the field.</p>
+<p>Fitting individual SAR models and a set of SAR models The package
+provides functions to fit each of the 20 SAR models (see also <span class="citation">Triantis, Guilhaumon, and Whittaker (2012)</span>). The
+‘sar_models’ function can be used to bring up a list of the 20 model
+names and a Table can be generated in the package using the
+‘display_sars_models’ function. With the exception of the linear model
+(which is fitted using standard linear regression), all models are
+fitted using non-linear regression and the model parameters are
+estimated by minimizing the residual sum of squares with an
+unconstrained Nelder-Mead optimization algorithm and the ‘optim’ R
+function.</p>
+<p>Choosing starting parameter values for non-linear regression
+optimisation algorithms is not always straight forward, depending on the
+data at hand. The starting values for the parameter estimates used as
+defaults in the package are carefully chosen to avoid numerical problems
+and to speed up the convergence process. Custom starting values can be
+provided for any of the 20 models using the ‘start’ argument in the
+model fit functions. In addition, we also use a grid search / brute
+force process (see Archontoulis &amp; Miguez, 2014). ‘grid_start’
+creates 100 starting values for each parameter within sensible bounds
+and then creates a large matrix storing all possible combinations of
+starting values across the n parameters in the model. For example, for a
+three parameter model this matrix contains one million rows. A random
+number of these rows are then selected and used as starting parameter
+values. There are three options for the grid_start argument to control
+this process. The default (grid_start = “partial”) randomly samples 500
+different sets of starting parameter values for each model, adds these
+to the model’s default starting values and tests all of these. A more
+comprehensive set of starting parameter estimates can be used
+(grid_start = “exhaustive”) - this option allows the user to choose the
+number of starting parameter sets to be tested (using the grid_n
+argument) and includes a range of additional starting parameter
+estimates, e.g. very small values and particular values we have found to
+be useful for individual models. A large ‘grid_n’ will ensure a more
+extensive search of starting parameter value space, but will increase
+the time taken to fit the model. More generally, using grid_start =
+“exhaustive” in combination with a large grid_n can be very time
+consuming; however, we would recommend it as it makes it more likely
+that the optimal model fit will be found, particularly for the more
+complex models. This is particularly true if any of the model fits does
+not converge, returns a singular gradient at parameter estimates, or the
+plot of the model fit does not look optimum. The grid start procedure
+can also be turned off (grid_start = “none”), meaning just the default
+starting parameter estimates are used. It should be noted that for
+certain models (e.g. Weibull 3 par.) ‘grid_start’ has been found to
+occasionally push model fits into strange parameter space (e.g. step
+curves) and so for these models ‘grid_start’ just reverts back to our
+provided parameter starting values. However, for these models the
+‘start’ argument can still be used. For certain models, there are also
+checks to ensure that the returned parameters are logical. For example,
+the optimisation procedure can sometimes return a negative z-value for
+the asymptotic model, meaning in the term z^A, the base is negative.
+Thus, if a fitting process returns a negative z-value we return that the
+model could not be fitted. Remember that, as grid_start has a random
+component, when grid_start != “none”, you can get slightly different
+results each time you fit a model or run sar_average().</p>
+<p>Each individual model fit returns an object of class ‘sars’, which is
+a list of 22 elements containing relevant model fit information, such as
+the model parameter estimates, the fitted values, the residuals, model
+fit statistics (e.g. AIC, R2), the observed model shape (linear, convex
+or sigmoidal), whether or not the fit is asymptotic, and convergence
+information. The returned object can easily be plotted using the
+‘plot.sars’ generic function; as this function is based on the base R
+plotting framework, the plot aesthetics can be edited using standard
+plotting arguments (see the ‘plot.sars’ documentation in the package).
+Summary and print generic functions are also provided for class ‘sars’;
+these functions follow the output of the standard ‘lm’ function in the
+‘stats’ R package. Multiple SAR models can be fitted to the same dataset
+using the ‘sar_multi’ function and the resultant n model fit objects
+stored together as a ‘fit_collection’ object. This object is a list of
+class ‘sars’, where each of the n elements contains an individual SAR
+model fit. Using the ‘plot.sars’ generic function on a ‘fit_collection’
+object generates a grid of the n individual model fit plots (Fig.
+1).</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#load an example dataset (Preston, 1962), fit the logarithmic SAR model using</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co">#the grid_start method of selecting starting parameter values, return a model </span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co">#fit summary and plot the model fit. </span></span>
@@ -226,7 +573,37 @@ div.csl-indent {
 <p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABgAAAASACAMAAAAOH3aoAAAAb1BMVEUAAAAAADoAAGYAOjoAOpAAZpAAZrYchu46AAA6ADo6AGY6ZmY6kNtmAABmADpmOpBmZmZmtv+QOgCQOmaQ2/+2ZgC2kDq225C2///bkDrbtmbbtrbb25Db/7bb/9vb////tmb/25D//7b//9v////v5ud/AAAACXBIWXMAAA7DAAAOwwHHb6hkAAAgAElEQVR4nO3dDVvbzHYuYIVSSFPIOVDc4p69d/j6/7/xWP4IkNiDZI000qz7vtoddt+3HiBr1mNrZqTmDYCQmtLfAABlCACAoAQAQFACACAoAQAQlAAACEoAAAQlAACCEgAAQQkAgKAEAEBQAgAgKAEAEJQAAAhKAAAEJQAAghIAAEEJAICgBABAUAIAICgBABCUAAAISgAABCUAAIISAABBCQCAoAQAQFACACAoAQAQlAAACEoAAAQlAACCEgAAQQkAgKAEAEBQAgAgKAEAEJQAAAhKAAAEJQAAghIAAEEJAICgBABAUAIAICgBABCUAAAISgAABCUAAIISAABBCQCAoAQAQFACACAoAQAQlAAACEoAAAQlAACCEgAAQQkAgKAEAEBQAgAgKAEAEJQAAAhKAAAEJQAAghoeAA3MVoYpov5ZrK/Ld/gEGPwKMJIpAmD8IeA8AoDQBACRCQBCEwBEJgAITQAQmQAgNAFAZAKA0AQAkQkAQhMARCYACE0AEJkAIDQBQGQCgNAEAJEJAEITAEQmAAhNABBZ9QFwfX1dcnhmrvYAUP+k1B4A19dmAAmVB4D6J6nyALi+NgNIqTsA1D9pAoDQBACRCQBCEwBEVnkAuAZKWt0BoP5Jqz0A7IIgqfIAUP8kVR8AkFJ7AECKACA0AUBkAoDQBACRCQBCEwBEJgAITQAQmQAgNAFAZAKA0AQAkQkAQhMARCYACE0ALIyTbVkJgKUxAbLKVZyrZutmxCF4c2+L3ATAwpgAeWUqztXlr92fV6MNwZu722WXLQC8A5qECZBZnuJ8+fmw++L5x+NIQ9BS/5nlCgDvgKZhAmQmABZF/WeWKQBMgImYAJnlugS0f+NzeCM0whC0lH9eAmBhTIC8chXn2iXQaSj/rLJdAvIOaCImQFa2gRJZtkVg74BYIttAicw2UEKzDZTIbAMltBF3ATUHWYaAEdgGSmi2gRLZmLuAvANi9mwDJTLbQAnNNlAisw2U0GwDJTLbQAktU3G+3DaX//jeNEeWwNQ/82UbKKHlWgO42bwF2nT/tU0QLEmuAPAOiEXKtwtouw5mDYxFybYG4B0QSyQAiCzjLiATgOXJvA3UGyAWRQAQWqbifL3fbn84tglO/TNfubeBegfEotgGSmS5AsA7IBZJABCZbaCEJgCITAAQmgAgMgFAaAKAyAQAoQkAIhMAhCYAiEwAEJoAIDIBQGgCgMgEAKEJACITAIQmAIhMABCaACAyAUBoAoDIBAChCQAiEwCEJgCITAAQmgAgMgFAaAKAyAQAoQkAIhMAhCYAiEwAEJoAIDIBQGgCgMgEAKEJACITAIQmAIhMABCaACAyAUBoAoDIBAChCQAiEwCEJgCITAAQmgAgMgFAaAKAyAQAoQkAIhMAhCYAiEwAEJoAIDIBQGgCgMgEAKEJACITAIQmAIhMABCaACAyAUBoAoDIBAChCQAiEwCEJgCITAAQWq7iXDVbNyMOAdkJAELLVJyry1+7P69GGwLyEwCElqc4X34+7L54/vE40hAwAgFAaAKAyAQAoeW6BLS/9HO4FDTCEJCfACC0XMW5tgjMAgkAQrMNlMiyBYBtcCxRxjWAJ/XP0uQKANvgWKR8AfDUlv76SAKof2YrUwDYBcEyZQuA1/u7t8/13xxkGQJGIAAIbcQAyDsEjCDbJSDb4FiiTAFwe/G43l4CcgmUJcm2CGwbHEuUqzhfbptvD0ff/6h/5ss2UEKzDZTIcq4B2AbH4mQqztf7Xe1bA2BRMgaAbXAsT8ZbQbTXfwQAi5IvAGyDY4Fy3gzu6eJRALAoYwZAr1eAErLeDfTp8h/qnyXJFQC2wbFIee8Gum4uBAALkm0XkG1wLFG2ReB9AggAlsQ2UEKzDZTIcgWAbXAskgAgspy3grANjsURAESW9WZwtsGxNAKAyPLeDdQ2OBZGABBZ5ruB2gbHsggAIsu3CGwbHAskAIjMNlBCEwBEJgAITQAQmQAgNAFAZAKA0AQAkQkAQhMARCYACE0AEJkAIDQBQGQCgLpd75z6xwKAyAQAlbr+5NS/JQCITABQm+turX9HACzZl3+9fEEAUI1enX9PACxY979mThAALN85nX9PACzXGX/d/EEAsGDnN/4DAbBcAmA4AcASDXjP/5kAWC4BMJwAYFGydf49AbBg+v9gAoBlyNz4DwTAkun/QwkA5m6czr8nAIhMADBbI73p/0QAEJkAYH6m6Px7AoDIBMCiVXcNdMLWvyMAiEwALFlFuyAm7/x7AoDIBMCC1bEPulTr3xEARCYAFmzhAVC28+8JACITAAu22ACYRevfEQBEJgCWrHz/7Gs+nX9PABCZAFi0mXTRDmb0pv8TAUBkAoCRzbTz7wkAIhMAjGberX9HABCZAGAES2j9OwKAqn0xCQUAWS2n9e8IAKpyfdypf10AkMnCOv+eAGDJTvT7znNRADDcMnv/lgBgSQb2+78IAAZY2gWfv+UqzlWzdTPiEASUu+H/SQBwnsW3/p1Mxbm6/LX782q0IQhh3H7/FwFAX5W0/p08xfny82H3xfOPx5GGoFbTdvw/CAB6qKn17wgAplay4f9JANBFyRodVa5LQPtLP4dLQSMMwXLNqeV/1jkAXu+v3tZNc6S+M4zBjM2mVkfRtTi/qv+1RWA+mG3H/0PnAFhdPD5/v2qnwQhjME8zLdqcuhan+ucLS+n5n3QNgNf7m7en5u5tffH3Nc7hYzA3S6jdLDoW55f1bxtoREts+Z91DYCX25u39bcHAVC/5RXxEB2L86v6tw00jMX3/E/6BMDmU/Db+oxFABNgIZZezOfoEQCJ+j+6C6g5GPxNUlZdPf+T7msAl/+8vdrOgxHGoLSaarqXzmsAyfq3DbQ+9Tb9j3rsAmouHhNrYK6BLlWtpd1N911Ayfq3DbQOEXr+J7nOAbgGukQhSjwtV3HaBrpY4Zr+R5kCwEfgpYlW6Ke4G2hMobv+B5kOggmA5Yhc7n/LdBDs9X737l/9z1rUrn/6h8x1EMw10CUIVfTdZDoI1tZ/W/sCYIaCdv13iR8420Ew10DnLWjpfynPQbDdJ+CnTUgIgLmI3vXfpX54B8HqF34CpOQ5CLa/BPp0+Q8BUJa2/7dcAZA8CGYb6ByZBV/JcxDscAl03RwJCPU/Pm0/IUcAfHUQzDbQuTEVOslzEOztsDhw7BOC+h+Lt/vdZFgD+OIgjKPws2I6dJbpIFiOIehK2+/p9G/IOYDKmBP9OAewHPp+ftlOAtsGWpx5cQYBMHv6/oi6B8DLbXP5r/uT94KzDbQok+NMnYvzi/rPMQSfaPwT6BwAT98e1pe/nr+7G+jcmB9DdC1O9T8ZfX9CfQ6CtVvgTm2DcxS+BHNksB4HwVL1n2EINP7p9ToI1k6AU09EchR+YqZJD0N2QWx9Vf8p6v8LGn853T8BXG0nwLFF3jdH4adlqvSU+F11/gSQrP8k9X+Kxl9c9zWA5m4zAdbN3dF/yVH4qZgu/aV+YZ3XAJL1n6T+/+Qt/2z02gXUNN8eTvxbjsKPz4Q5U44A+KL+U9T/O41/ZnKdA3AUflzmzABZAuB86v9N55+rXAEw7ivEZtoMNXwNYIjY9a/zz1qfewFt2QUxJTMnj9O/wB73AlL//ej8C9DniWDjjcER5s4UejwRbOwhquFN/3L0OQcw3hj8weyZSo9zACMPUQWdf2EEwOyYQFMSAJlo/YvU5yDYeGOwZwpNrcdBsJGHWCwXfBasz0Gw8cbg7X0elf4+YulxEGzsIRZI51+67peAGrsgRmMWFdP5EpD6/0zvr4JzAMWZRiU5B9Cb1l8RAVCUiVSaAOhD76+Ng2DFmElz4CBYR3p/lRwEK8JcmgsHwb6m99fLOYDJmUtz4hxAmt5fNwEwLbNpZgTASXp/AA6CTcd0miEHwY7R+6PovAbw/N1BmAHMp5nqWpxx6l/zj6RTAPw+BRN5F8T5zKcZ61Kccepf74/GOYCRmVHz5hzAgeYfkQAYkxk1ewKgpflH1T0AVpe/zrwj1gImwAhMqUXoXJz11r9KDaxzAOye9v78/YzdcHOfACMwpZaia3FWWv+af3B9zwGsN++D8o9RFVNqSXqeA6ip/jV/+gdA3bsgBjOnFqZvAFRS/5o/W30Pgq0qegeUm0m1QD0PglVR/wqVgx5PBGvfAq3PWQWb3QQYg0m1TN2fCFZJ/atTPui+C2h7GuasWyLOawKMwaRarM7FWUX9K1Q+cw5gKG/9Fy3OOQB1yt8EwCC6/9LlKs7V7k4Rx3aJzqH+1SlHCYDzmVQVyFSch8Xh1ZGbhhavf4XKKR1vBnf5z9sQN8PqzqSqQ7ebwX1V/y8/H3ZfPP/4+58Xrn+Fymk+AZxD969GnuKcbQAoVJK6nwM4+3botQWA7l+TzucA0vV/uPRz7JxAsfpXqHzFIyH7Macqk+uRkOu5LQKrVDro/glAAJhTFer8CWBZ9a9U6aT7IyH/42G8MZbAlKpS50dCJut/uwbwNJdPAEqVrrpfAgq9C8h1/1p1vgT05S6gp3YZYH0kASauf5VKd3YBfU33r1i2XUC7ZeKPu4B+P0c4yxDdKFV6EQBf0P3rNmIA5B2iC6VKTwIgRfevXqYAuL14XG8vARU8CaxW6U0AnKb7B5CrOF9um28Pxx8XMEn9K1bOIQBOMKFiqONuoIqV8wiAY3T/MKoIANXKmQTA37T/QJYfAKqV83UOgPahqOumOeORqMsKAN0/lq7Fma7/38cEjp0TGLX+lStDdA6A1cXj8/erw7Ox/zbzB2J0o/uH07U4v6z/U/9g1PpXrwzT515AT83d2/rESeBZPxCjI+0/oB73AkrVf+pmQePVv3ploD53A11/ezg1AWZ7P/TOdP+YetwNNFH/OYboTcEyWJ8A2HwKflsfvwi69ADQ/aPqEQCJ+s8xRE8qlgy6rwFc/vP26vRt0Wf5QIyOvPkPrPMaQLr+cwzRi4olhx67gJqLx9NrYPN7IEZXun9o3XcBpes/wxA9qFnyCH4OwJv/6JZ4DkDNkkumAJjXAzG60v1ZYAAoWrLpHgAvt83lv07tdZvTAzG60v7pUZzJ+s8zRCeqlow6B8DTt4f15a/n78dnwGweiNGVaz9sdS3OdP1nGaILVUtWfQ6CtVvgTm8DncMDMbrS/tnrcRAsUf85huhC2ZJXr4Ng7QQ4cRBsDg/E6Er357c+B8FO13+OITpQt2TW/RPA1XYCHH3iRav0AzE60/75oPMngC/qf/gQX1O45NZ9DaC520yAdXM3xhjT0f75pPMaQPH6V7nk12sXUNO+yR9jjIno/vypzy6govWvdBlBoINg2j9/W8g5ALXLKHIdBCv2QIyutH+OWUYAqF3Gke0TQJkHYnSl/XPcIgJA8TKSTgHwcnv5z9vT7/C3ijwQoyPtn1O6FGeX+h84RJLqZSwB1gC0f05bwCcA5ctoqg8A7Z+U+QeA+mU83QOgPQLzdM426JIBoPuT1rk4C9W/CmZMnQNgdwa++M2wejF5+ErX4ixU/yqYUfW5F1BrPs9E/ZKLP3ytx72AWlPXvwpmVL0DoOjNsHrQ/umibwBMWv9qmJH1uRlcq+jNsHowdeikx83gWtPWvxpmZD1uBte+BVrIzeC0fzrqfjO4qevfZ1jG1/NmcGd8AJ4+AEwcOut3M7gJ61//ZwL1nQMwb+hhrucArj21jgnUFgAmDb0IACLrdQno8l+nb/gzaIxszBn66XMJaMr6FwBMofsi8LeH9eWveR8EM2Poq/Mi8LT1r/8zie7bQPcPxZ7vNlAThv46bwOdtv43paycGV+fg2DbCTDXg2DeMHGOHgfBJqx/tcw0+hwEayfAXA+Caf+cpcdBsOnqXzEzkR4Hwe42E2CmB8G0f87U/SDYdPWvmplKz4Ng3x5GGWMg/Z9z9TsINkn9q2YmU8E5AO2f883wHIByZjLLDwD9nwHmFwDqmen0vAR0xhLYuHNM+2eQfpeApqh/Bc10+hwE2/zn+pyLoCMGgPbPMD0Ogr1NUv9Kmgl13wa62/4wq22g3v4zVOdtoBPVv5JmSp0Pgv3cvfWZ00Ewc4XBuh4E+6r+V83WsTtF9AyAPv82DNPnVhCt+XwC8PafDHrcCqJ1qv4P//fV1dlDbClqJtXnINjbnJ4IZqaQQ4+DYG+n6//wAeHt+cffnxA6DHGoZlXNtLrfC6j5re9VoDECwEwhi873AkrW/8AA+H0jK1XNtGZ8DiDV4/V/8sj07uRw6efYJaIvh/h972dlzcTmGwCJ23u6/E8uuT6ergcsAn8IgEzfDXTTMQCev1+1l0EnvBfQ6SdiaP/k0604x61/AUAp3QJg+yCkdhnsabJF4JMBoP2TUafi7FD/g7aB6v8U0i0Atlc2V+3i17FtbsPHOOJUAOj/5NSpOL+u/4HbQK0AUEanANhugm4fiTHlQTD9nwl0Kc6v6//oLqDf24Y6fitKm8l1CoD2eXi7/5jyJPCRXu/yP5l1Kc6v63/oOYAttc3kugfA8/f28mfRk8DaP7l1DoB0/Q/aBrqjuJlexzWAq/2NEF9up1oDOEL/J7tuawBf1/+QbaA7qpvpdQuAp28Pr/eb9zav92dcAcoVAPo/+XUqzinqX3lTQMdzAE/bZ2E8NWe8/88VACYII+hWnBPUv/KmgPmeBP6D/s8Y5vJISOVNCUsJAP2fUeQJgPd7xR25RiQAmK1lBIDtn4wk1yeAxAlJAcBsLSUABr8EHJMrAA5PjDlzCO9wKGIRAWB2MJaZrAGocIpYQAC4/sN45hEAKpwyFhEAg78DOEEAEFm2ABh0O9wE7/8ZkwAgslwBMPB2uCdp/4xKABBZpgAYejfExNMfuwwPZ5pFAKhyCplHAHj6I4UIACLLdgloyO1wE49/7DQ4nEsAEFm2ReAht8M9EQDe/zM6AUBks9gGejIABg8NaXMIAIVOKfPYBnrqA0C3oeFsAiC44G1mJttA9X/KEACxndp/EsWYu4AOd8g9a47F/mthKjMIgOPbH5T/FE7uP4liHttAj4j8l8J05hkAwbvSdARAhn+jNWgb6BGh/1KYziwDIHxbmkz43/QstoH+LfTfCRMSALFF/0XPYhvoX2L/nTAhARBc8N/zXANg8KDQRfkAOLEGbA4wgTkGgOJnMvMMgOjvS5lKrl1At4ctnxfDdwGpfSYz0wCASeQ7CXzkBFi/Vzjw5ofpFA8A1U5B2QLg9f7YBqA+r3BgRjAdAUBk81sD8AGACQkAIptdAOj/TEkAENkMA2DweNCZACCyuQWADwBMSgAQ2cwCQP9nWgKAyGYXAINHgx5KB4CKp6R5BYAPAExMABDZ3AJg8GDQhwAgslkFgA8ATE0AENmcAkD/Z3ICgMjmFQCDh4J+BACRzSgAfABgegKAyGYVAINHor/guSsAiEwABBf92VOFAyD0757y5hMAn6dC7K40nfBPnxUARDabAPjchYJ3pekIgLJDRP7VMwMzCoBP/yV4W5pM+N+0ACAyARBc9F+0ACCyuQTAXysAwfvSdIL/nssGQOzfPeXNJAD+7EL6P9MQAEQ2mwD46/9gajABAUBkcw0AmESuAFg1Wzd9hvAxl9LmEQDmAYVkCoDV5a/dn1fdh3Cdk+IEAKHlCYCXnw+7L55/PHYdwk4HyhMAhCYAiGwWAWAWUEquS0D7Sz+HS0EdhhAAlCcACC3XIvC6/yLwh/4vCChjDgGg+ClmxG2gzcHxf/zhA8CgjwLCg/MJAELLuAbw1OsTwIcrQIMuBrmOxAACgNDyBcBTuwywPpIAowaAlQSGEACEli0AXu/v3vrsAhIAzMAMAkD1Uk6xAPhjDXjQFSBTiDMJAELLFAC3F4/r7SWgnieB3788d2j9nwHKB4DqpaBcu4BebptvD0ePASSGyNK69X/OJwAIreTdQL15pzQBQGgFA8Dle4oTAIQmAIiseACYAJQkAIhMABCaNQAiEwCEVvSRkPo/hQkAQiv7CWD8wSFFABCaACCy0gFgDlCUACAyAUBoAoDIBAChCQAiKxwApgBlCQAiEwCEJgCITAAQmgAgsmwBsNo9/7r7M1HfPt0QHYoQAESWKwAON0Jf9XwghilAUQKAyDIFQPtQ7K2+j8QzByhKABCZACA0AUBk2S4B7S/9HHsmngBgtgQAkWVbBF73XwT+0P8FAWUIACIbcxtoc3D8H3/u/+dPBuHB+QQAkeVcA3jq9QngwxWgQReDXEdiAAFAZBkD4KldBlgfSYBRA8BKAkMIACLLFwCv93dvfXYBCQBmoHgAKF4KKhcAmdYABABDlA4A1UtJuQLg9uJxvb0E1O8k8JEv+zKDGKBwAHj/QlHZdgG93DbfHo4eAxj7Gqj5w/kEAJEVvRuo0qc0AUBkxQNA7VOSNQAiKxkA3v1QXOkAcAWTkgQAoRUPAChIABCaACAyawCEVjYAlD9lFQ+Awa8OA5QOABOAkgoHwODXhkEKBoBLoBQnAAhNABBZ2UXgwS8NwwgAIhMAhFY8AMYfH04SAIRWOgDGHx5OEwCEVjQAxh8bkgQAoRX+BDD+6JAgAAjNJSAiEwCEVi4AbAKiPAFAaAKAyAQAoQkAIhMAhGYNgMgEAKHZBURkAoDQnAMgMgFAaAKAyIreDRRKy1Wcq2brpscQAoDiBAChZSrO1eWv3Z9X3YcQABQnAAgtT3G+/HzYffH84/H9pQ9O/D8JAIorHwC2QlDQiAHw1RAKn+KKB4DN0JSU6xLQ/tLP4VJQlyHUPcWVDgDHISkq1/XJtUVgFkgAEJptoEQmAAhNABBZ6QCwBkBRAoDIigeAXUCUJACIrHwAQEECgMgEAKEJACITAIQmAIisbAC4/k9hAoDIigaAHUCUJgCIrOzzACQAhQkAIhMAhCYAiEwAEJoAIDJrAIQmAIjMLiBCEwBE5hwAoQkAIhMAhCYAiKz0GsDgF4chBACRFd8FNPjVYQABQGQFA8AuUMoTAEQmAAhNABCZACC0ggEAxVkDIDQBQGR2ARGaACAy5wAITQAQmQAgNAFAZAKA0AQAkWULgFWzdXP+K8D0BACR5QqA1eWv3Z9X574CFCAAiCxTALz8fNh98fzj8f3/8+C8bw3GJwCIbMwA6PUKUIIAILJsl4D2l34Ol4L6vwIUIACILNsi8NoiMAskAIjMNlBCEwBEJgAITQAQmQAgNAFAZJMEAMzW4PJW/yzY1+U73sQY7ZUNPbeho/7YKTF/JTGHXvCPLQAMveyxBYChSw+94B9bABh62WMLAEOXHnrBP7YAMPSyxxYAhi499IJ/bAFg6GWPLQAMXXroBf/YAsDQyx5bABi69NAL/rEFgKGXPbYAMHTpoRf8YwsAQy97bAFg6NJDL/jHnuv0AWBkAgAgKAEAEJQAAAhKAAAEJQAAghIAAEEJAICgBABAUAIAICgBABDUSAHwet9cPI7z0ic9f2+au99DT/wdPP94LDP0ZrDmptBPvfmNf3soMvaRX3eJkjtJ/U81sPofNvxIAbC6av9nUi+3d29Pm7+P/dATfwer9pdfYujV5a/n/yjzU7e/8fXm555+7Jfbv3/dBUruNPU/2cDqf9Dw4wTAy8+HXUhN6Ony1yYF7/ZDT/wdPP3bZqwSQ7eDvb0VGXo70mbE6cdeN//516+7RMmdpP7V/4hy1v84AbD/1Yzy2imbTN4PPe138Ppf/7MZr8TQ+7/zMj/1/V3bdqYf+/9tx/w8bqmSO0r9q/8R5az/ugJgXeKvox335u+/kWlGfrr87/bKb5ku+HrfbN52lpr3AuAv6l/991RVALQX5Er8dbz8nyORPM3QT81Ne+W3yAR4ub1pf+XLngCjUP/qf1QC4Jh1uyRf4q9jdXfkb2SaofdXfotMgIIdWAAcof7Vf+9XqmcRePv+p8hy0Mtt0yqy/tYOVGrpr9gi2HuHfbYI/Jv6V/9zWQQusQ2u3Qz2YeiJv4Pt777INrjNR+AiW9HaS6A3hbbBHft1R98Gqv7V/2y2gbZvCqY+CLPavQ05DD3xd7D9GykxdHsQ5q7M0IeDMAXGPvLrLlByp6n/qQZW/8OGdysIgKAEAEBQAgAgKAEAEJQAAAhKAAAEJQAAghIAAEEJAICgBABAUAIAICgBABCUAAAISgAABCUAAIISAABBCQCAoAQAQFACACAoAQAQlAAobdVclf4WoBj1X5QAKOz5+//99lD6m4BC1H9ZAqCw9cX/fL8p/U1AIeq/LAFQ1svt1dvq8tfmq9W/3zeb90Lrpmm2E2K1+WL7D6Ba6r8wAVDWU3O3/d+24Nu6X2/mwHP7lqidFa/3Lo9SNfVfmAAoa3XxuH0XtPtqV/ubj8WPz9/vdl8U/v5gTOq/MAFQ1K7gt7W//SD8tF0Q21X/633TmADUTP2XJgCKaq94NrurntsJcPjvd+0l0ItH74ComvovTQCU9HK7XeZ6vd/88eEd0Ft7bXT/WbjktwejUv/FCYCSdstf7Rufu90E2H0k3kyD7Ux4vTcBqJj6L04AlLTaF/iHzXCbwm//2/P3q3ZemABUTP0XJwAKev59BGZT97sJsL0K2m6KeGq3Qf+vQ5LUS/2XJwAAghIAAEEJAICgBABAUAIAICgBABCUAAAISgAABCUAAIISAABBCQCAoAQAQFACACAoAQAQlAAACEoAAAQlAACCEgAAQQkAgKAEAEBQAgAgKAEAEJQAAAhKAAAEJQAAghIAAEEJAICgBABAUAIAICgBABCUAAAISgAABCUAAIISAABBCQCAoAQAQFACACAoAQAQlAAACEoAAAQlAACCEgAAQQkAgKAEAEBQAgAgKAEAEJQAAAhKAAAEJQAAghIAAEEJAICgBABAUAIAICgBABCUAAAISgAABCUAAIISAABBCQCAoAQAQFACACAoAQAQlAAACEoAAAQlAACCEgAAQQkAgKAEAEBQAgAgKAEAEJQAAAhKAJBngz4AABdRSURBVAAEJQAAghIAAEEJAICgBABAUAIAICgBABCUAAAISgAABCUAAIISAABBCQCAoAQAQFACACCo4QHQwGxlmCJQrwwBkOG7gFEoTkgRAFRMcUKKAKBiihNSBAAVU5yQIgComOKEFAFAxRQnpAgAKqY4IUUAUDHFCSkCgIopTkgRAFRMcUKKAKBiihNSBAAVU5yQsvAAuL6+Ljk8MycAIGXZAXB9LQFIEACQsugAuL6WAKQIAEgRAFRMAECKAKBiAgBSFh0A1gBIEwCQsuwAsAuIJAEAKQsPAEhRnJAiAKiY4oQUAUDFFCekCAAqpjghRQBQMcUJKQKAiilOSBEAVExxQooAoGKKE1IEABVTnJAiAObF0easFCekCIBZcXOjvBQnpHScIatm6+b8V6ADtzfNTHFCSrcZsrr8tfvz6txXoAsBkJnihJROM+Tl58Pui+cfj+e9Ap0IgMwUJ6QIgFnR//NSnJDS8RLQ/tLP4VJQ/1egG/0/K8UJKR1nyNoiMAukOCHFNlAqpjghxTZQKqY4IcU2UCqmOCHl/F1AzcEo3xdkoDghxTZQKqY4IcU2UCqmOCHFNlAqpjghxTZQKqY4IaXbDHm5bS7/8b1pjmwCMseYL8UJKR3XAG7e1m33X9sGypIoTkjpvAtouxPILiAWRXFCigCgYooTUvptA3UJiEVRnJDSbYa83m83gB47BmCOMV+KE1JsA6ViihNSBAAVU5yQIgComOKEFAFAxRQnpAgAKqY4IUUAUDHFCSkCgIopTkgRAFRMcUKKAKBiihNSBAAVU5yQIgComOKEFAFAxRQnpAgAKqY4IUUAUDHFCSkCgIopTkgRAFRMcUKKAKBiihNSBAAVU5yQIgComOKEFAFAxRQnpAgAKqY4IUUAUDHFCSkCgIopTkgRAFRMcUKKAKBiihNSBAAVU5yQIgComOKEFAFAxRQnpAgAKqY4IUUAUDHFCSkCgIopTkgRAFRMcUKKAKBiihNSBAAVU5yQIgComOKEFAFAxRQnpAgAKqY4IUUAUDHFCSkCgIopTkgRAFRMcUKKAKBiihNSBAAVU5yQ0nGGrJqtm/NfAaanOCGl2wxZXf7a/Xl17itAAYoTUjrNkJefD7svnn88nvcKUILihBQBQMUUJ6R0vAS0v/RzuBTU/xWgAMUJKR1nyNoiMAukOCHFNlAqpjghpfsawJNPACyN4oSUzgHw1C4DrI8kgDnGbClOSOkaAK/3d2+fdwE1B2N9azCU4oSU8wOg1ytACYoTUroFwO3F43p7CchJYJZEcUJKxxnyctt8ezh6DMAcY74UJ6TYBkrFFCekdJshr/e7LaDWAFgUxQkp3W8F0V7/EQAsiuKElB43g3u6eBQALIrihJQ+dwN9uvyHAGBJFCek9Lob6Lq5EAAsiOKElK6LwPsEEAAsieKEFNtAqZjihBQBQMUUJ6QIACqmOCFFAFAxxQkpAoCKKU5IEQBUTHFCigCgYooTUgQAFVOckCIAqJjihBQBQMUUJ6QIACqmOCFFAFAxxQkpAoCKKU5IEQBUTHFCigCgYooTUgQAFVOckCIAqJjihBQBQMUUJ6QIACqmOCFFAMzY9fV16W9h4RQnpAiA+bq+lgADKU5IEQCzdX0tAYZSnJAiAGZLAAynOCFFAMyWABhOcUKKAJgv/X8wxQkpAmDG9P+hFCekCAAqpjghRQBQMcUJKQKAiilOSBEAVExxQooAoGKKE1IEABVTnJAiAKiY4oQUAUDFFCekCAAqpjghRQBQMcUJKQKAGbru6dTrKE5IEQBMp29fFwAwKgFAFhN19J4UJ6TsZ8jr/dXbumkuf539CtRtVn29M8UJKfsZsrp4fP5+1cbAua/A8i2qt3eiOCFlN0Ne72/enpq7t/XF45mvwHJU1OC/ojghZTdDXm5v3tbfHgRAXWI0+RTFCSnvAbDaNP/1qUWAVbN1c/IVKCxymz9NcULKYQ3g8p+3V9scOGq1D4bVkTUCc2x6Wn1HihNSfu8Cai4eT64Bv/x82H3x/OPvS0Tm2Pg0+zMpTkjpNEMEwMR0+0wUJ6R0myGHSz+rI2sE5lgO+v0oFCekdDwItrYInJ2OPz7FCSkOgk1Kx5+W4oSUjgfBbAMdQM8vRnFCSreDYLaB9qbrz4HihJROB8GO7gJqDsb/JhdE058VxQkpnQ6C2Qb6FW1/nhQnpHQ6CGYb6Cn6/ryFLk74UscZYhvoZ9r+MoQsTujME8F60fiXJVRxQm+HGfJy21z+6/7EveDaK0Tbd/9x1wA0/kWKUZxwrv0Mefr2sL789fz91N1Ar3bX/wMGgM4/f6f/XiovThjo/SBYuwU0uQ306eIxVADo/AuR+Puptjghiw8HwdoAOH4QbL8N9OnyHzECQOdfktTfU4XFCRkdPgFcbQPg2DbP1n4b6Lo5EhBVzTGtf3kEAJzrsAbQ3G0CYN3cHf+3DicEjn1CqGaOaf3LJADgXB92ATXNt4cBr7BkWv+SWQOAM4U/B6D3L59dQHCeyAGg91dvucUJU3i/F9DWqecBfP0Ky6L3x7DI4oTJvD8RbOArLIjeH8byihOm9H4OYNgrLIQ3/rEsqjhhcpECQPMPZznFCSW8HwQb9gpzp/mHtIzihFLeD4INfIUZ0/zDmn9xQkmHS0BNrbuANP/IZl6cUFjd5wB0/+DmXJxQXsUBoPsz2+KEWaj1IJjmz9tcixPmosqDYLo/OzMsTpiR+s4B6P78NrfihHmpLQB0fz6YV3HC3FR1EMybfz6bUXHCDO1nyPP3xR8E0/35y1yKE+ap+XAKbMm7gHR/jphHccJc1XEOQPvnqDkUJ8xXBQHg2g+nFC9OmLXDDFld/jrzjnCF55juz2kCAFL2M2S9vfj//P2M3aBF55j2T4oAgJTP5wDWm88B571CEdo/aQIAUv4IgCXtAtL9+YoAgJTPB8FWy/kE4N0/XxMAkPL7iWDtR4D1OavAReaY9k8XAgBSDjNkexrsrFuClphj2j+dCABIWeI5AO2fjgQApCwvALR/OhMAkLK0AND+6UEAQMr2ZnCX/7xdyM3gtH/6EACQsqhPAN7+048AgJTDOYCzHwcw4RzT/ulJAEDKch4J6e0/vQkASDl8Aph9AGj/9CcAIOXwSMj/eBj4CuPy9p9zCABIOVwCmvcuIP2fswgASFnELiDtn/MIAEhZQAB4+8+5BACkzD8AtH/OJgAgZfYBoP9zPgEAKXMPAP2fAQQApHScIavdJqFjpwXGnGMu/zOIAICUbjPk8KjI1dW5r3AW7Z9hBACk7GdI+1DgddOceCTwy8/9MbHnH3+fExhvjun/DCQAIGU/Q1YXj8/frw7Phv9TmQDQ/xlKAEDK+72Anpq7t/WJk8CHSz+rIx8Rxppj+j+DCQBIeb8b6Prbw8kAaC8PTbwIrP8znACAlPcAWG2a//rEIsDXr5Cb/k8GAgBSDmsAl/+8vTr5WIDtGsDTlJ8A9H9yEACQ8nsXUHPxeGoNeBsAT+0/Wx9JgDHmmP5PFgIAUjrNkE0A7B4a+XEXUHOQ/5vS/8lDAEDK+QHQ6xV60f/JRABAymGGvNw2l/869WDIl9uLx/X2EtAUJ4H1f3IRAJCynyFP3x7Wl7+ev596NPAmH749HD0GkH2O6f9kIwAg5f0gWLsFdAbbQPV/8hEAkPLhIFgbAMWfCaz/k5EAgJTDJ4CrbQAcvcbT6RVy0f/JSABAymENoLnbBMC6uTv6L73cHrZ8HvmEkHOOuf8/WQkASPmwC6hp13lPOPYggD9eIQftn6wEAKR0nCGvp3aIZp1j3v+TlwCAlDk9E1j/JzMBACkzCgD9n9wEAKQ07eX/y3/enl7k7fAKeej/5CYAIGU+nwB8ACA7AQApswkA/Z/8BACkHGZIewTs6cQxgG6vMIz+zwgEAKTsZ8juHhCnbwb39SsMpP8zAgEAKe/3AmoVuxmcDwCMQQBAyh8BUGgXkP7PKAQApLzfDK5V6mZw+j+jEACQ8vtmcO1HgFM3g+vyCkP4AMA4BACkfLoZ3BkXgHLMMf2fkQgASJnDOQD9n5EIAEiZQQD4AMBYBACkfLgEdPmv0/d87vAKZ9P/GYsAgJTDIvC3h/XlryIHwXwAYDQCAFIO20D3D4Wffhuo/s94BACkvB8E2wbA9AfB9H/GIwAg5f0gWBsA0x8E8wGAEQkASPl9EOxuEwDTHwTT/xmTAICUTwfBvj0MeIWz6P+MSQBAStlzAD4AMCoBACmlA2Dw8HCaAICUT5eAzlgCFgDMmACAlPeDYJv/XJ+zCDBgjrkCxLgEAKQctoHutv9Muw1U/2dkAgBS9gfBfu7e+k94EOz6Wv9nbAIAUt5vBdGa7hPAtQBgfAIAUt4Pgr1N+USwawHABAQApBzuBdT81vcqkABgtgQApBQ6ByAAmIIAgJRSB8H0fyYgACBlO0Oev1+1ywCT3gtI/2d8AgBS2hmyfRBYuwz8NOHdQPV/xicAIKWdIdvNn6t28Xd1dd4r9OcDABMQAJDS7A8BtI+EmfIgmP7PBAQApDS750Hu/mO6AND/mYIAgJRDADx/by//T3YSWAAwBQEAKds1gKv9jUBfbqdaAxAATEEAQEo7Q56+Pbzeb977v96fcQXorDmm/zMJAQAp2xnytH0WzFNzxvt/AcCMCQBIKXMSWAAwCQEAKUUCQP9nGgIAUkoEgENgTEQAQErHGbLa3Sr65vxX+ED/ZyICAFK6zZDD+YBjt4oQAMyWAICUTjPk8Mjgt+cff+8T7fAKf1zzEQBMRABAyhQB8Me9//V/piIAIKXjJaD9pZ9jt4r48hX+ePqXJWAmIwAgpeMMWQ9YBP4rADp/czCMAICUCbaBCgBKEQCQMsU20M9rAAKAyQgASJlkG6j+TxkCAFLO3wXUHPQbUAAwHQEAKZOcA/hIADAdAQApE2wD/cQmUCYkACBlgm2gn+j/TEgAQMrEdwPV/5mSAIAUAUDFBACkCAAqJgAgpdsuoNvDls8jT40XAMyWAICUrieBTz8vvs8c0/+ZlACAlI4z5PX+2AagPq+wJQCYlACAlEnXAPR/piUAIEUAUDEBACkCgIoJAEgRAFRMAECKAKBiAgBSpgwA/Z+JCQBIEQBUTABAigCgYgIAUgQAFRMAkDJhAOj/TE0AQIoAoGICAFKmCwD9n8kJAEgRAHUL/gxmAQApZQIgeFuazvV17F+1AICUIgEQvS1N5vo6+K9aAEBKiQAI35YmE/43LQAgZbIA+PMDQOS2NJnwv2kBACkCoGrRf9ECAFJKBED4tjSh4L9oAQApRQIgeltiKgIAUsoEAExCAEDKVAGg/1OAAIAUAUDFBACkCAAqJgAgZaIA0P8pQQBAigCgYgIAUgQAFRMAkCIAqJgAgBQBQMUEAKQIAComACBlmgDQ/ylCAECKAKBiAgBSBAAVEwCQMkkA6P+UIQAgRQBQMQEAKQKAigkASBEAVEwAQIoAoGICAFIEABUTAJAyRQDo/xQiACBFAFAxAQApAoCKCQBIEQBUTABAigCgYgIAUgQAFRMAkDJBAOj/lCIAIEUAUDEBACkdZ8iq2brp8wrX+84vAChFAEBKtxmyuvy1+/Oq+ytcX+8TQABQigCAlE4z5OXnw+6L5x+PXV/h+nqfAPo/xQgASBEAVEwAQErHS0D7Sz+HS0EdXkEAUJ4AgJSOM2TdfxH4sAaw+Y9rIUARAgBSzp8hzcHxf/xhDfj3l+cQHpxPAEBK9zWAp16fAN7b/vWgBBgUHkQnACClcwA8tcsA6yMJMGoADPz4QHACAFK6BsDr/d1bn11AH9aABQClCABIGSsA/lgDHnQFSABwJgEAKd0C4Pbicb29BNTvJPDuj0ELufo/AwgASOk4Q15um28PR48BfPUKQ9u3/s/5BACkjHk30Ovt5Z/BA8C5BACkjBgArt9TmgCAlPECYNj+f8hAAECKAKBiAgBSBAAVEwCQYg2AigkASLELiIoJAEgZ+6HwAoCCBACkjBwA+j8lCQBIEQBUTABAigCgYgIAUgQAFRMAkCIAqJgAgBQBQMUEAKQIAComACBFAFAxAQAp4waA/k9RAgBSBAAVEwCQIgComACAFAFAxQQApAgAKiYAIGXUAND/KUsAQIoAoGICAFIEABUTAJAiAKiYAICUsQPAQ4EpSABAysgB4LHwlCQAIGWKAJAAFCIAIEUAUDEBACkCgIoJAEixBkDFBACkjBkAbevX/ylIAEDK2AEABQkASBEAVEwAQIoAoGICAFLGDQAJQFECAFJGDAA7gChNAEDKeAFgDyjFCQBIEQBUTABAigCgYgIAUqwBUDEBACkjB8DgV4cBBACkjBoAg18bBhEAkCIAqJgAgJRxLwENfnEYQgBAysi7gAa/OgwgACBltACwC5TyBACkCAAqJgAgRQBQMQEAKdYAqJgAgJRxA2Dwi8MQAgBSxgyAwS8NwwgASBEAVEwAQErHGbJqtm7OfwWYnuKElG4zZHX5a/fn1bmvAAUoTkjpNENefj7svnj+8fj+/3kwyvcFGShOSDk/AHq9ApSgOCGl4yWg/aWfw6Wg/q8ABShOSOk4Q9YWgVkgxQkpI94OGkpTnJAiAKiY4oQUAUDFFCekCAAqpjghRQBQMcUJKQKAiilOSBEAVExxQooAoGKKE1IEABVTnJCSIQBgtjJMEajXeDOk4NwzdKCx9Xg4mwAw9LLHFgBwNgFg6GWPLQDgbALA0MseWwDA2QSAoZc9tgCAswkAQy97bAEAZxMAhl722AIAziYADL3ssQUAnM30AQhKAAAEJQAAghIAAEEJAICgBABAUAIAICgBABCUAAAISgAABCUAAIIaKQBe75uLx3Fe+qTn701z93voib+D5x+PZYbeDNbcFPqpN7/xbw9Fxj7y6y5RcrBwIwXA6qr9n0m93N69PW360X7oib+DVdt8Sgy9uvz1/B9lfur2N77e/NzTj/1y+/evu0DJwdKNEwAvPx92b9Im9HT5a/Mu8G4/9MTfwdO/bcYqMXQ72NtbkaG3I21GnH7sdfOff/26S5QcLN04AbBvDaO8dsrmPel+6Gm/g9f/+p/NeCWG3ve8Mj/1/V0bu9OP/f+2Y34et1TJwZLVFQDrEu2oHffm7440zchPl//drnyU6YKv983mY1ep3BMAMFRVAdBekC7RD17+z5G3pNMM/dTctCsfRbrgy+1N+ysXALBUNQXAut2SUqIfrO6OdKRpht6vfBTpggU7sACAHOpZBN6+/y+yHPpy27SKrD+3A5Va+i62CPz+DsMiMAxRzzbQdjPkh6En/g62vafINtCbt6ciWzHbJYCbQttAj/26bQOF3kYKgM2b4qlP5ax2b8MPQ0/8HWw7Uomh24Ngd2WGPhwEKzD2kV93gZKDpXMrCICgBABAUAIAICgBABCUAAAISgAABCUAAIISAABBCQCAoAQAQFACACAoAQAQlAAACEoAAAQlAACCEgAAQQkAgKAEAEBQAgAgKAEAEJQAKG3VXJX+FoCYBEBhz9//77eH0t8EEJIAKGx98T/fb0p/E0BIAqCsl9urt9Xlr81Xq3+/bzafBdZN02wDYbX5YvsPAMYhAMp6au62/9s2/LbvrzcZ8Nx+JGhT4fXe8gAwHgFQ1uricfspYPfVrve/rS8en7/f7b4o/P0BFRMARe0a/rb3by8EPW0XhHfd//W+aQQAMB4BUFR7xb/ZXfXfBsDhv9+1SwAXjz4BACMSACW93G6XeV/vN398+ATw1q4N7K8Flfz2gLoJgJJ2y7/tG/+7XQDsLgltYmCbBK/3AgAYjwAoabVv8B82g24af/vfnr9ftbkgAIDxCICCnn8fAdv0/V0AbFcB2k1BT+0xgP91SBgYjwAACEoAAAQlAACCEgAAQQkAgKAEAEBQAgAgKAEAEJQAAAhKAAAEJQAAghIAAEEJAICgBABAUAIAICgBABCUAAAISgAABCUAAIISAABB/X8SInolRf5VZgAAAABJRU5ErkJggg==" width="100%" /></p>
 <div id="model-fit-validation" class="section level3">
 <h3>Model fit validation</h3>
-<p>Model fits can be evaluated through tests of the normality and homoscedasticity of the residuals. Any of three tests can be selected to test the normality of the residuals: 1) the Lilliefors extension of the Kolmogorov normality test (normaTest = “lillie”), 2) the Shapiro-Wilk test of normality (to be preferred when sample size is small; “shapiro”), and 3) the Kolmogorov-Smirnov test (“kolmo”). As a default, the option to omit a residuals normality test (“none”) is used - thus it is up to the user to select a test if appropriate. Three options are provided to check for the homogeneity of the residuals: 1) a correlation of the squared residuals with the model fitted values (“cor.fitted”), 2) a correlation of the squared residuals with the area values (“cor.area”), or 3) no homogeneity test (“none”; the default). If a test is selected and is significant at the 5% level a warning is provided in the model summary; alternatively, the full results of the three tests can be accessed in the model fit output. A third model validation check for negative predicted richness values (i.e. when at least one of the fitted values is negative) can be undertaken and a warning is provided in the model summary if negative values are predicted. It should be noted that in earlier versions of the package (pre Version 1.3.1) there was a bug in the test checking for homogeneity of the residual variance - the correlation used the raw residuals rather than the squared residuals. This has now been corrected. Finally, the convergence code from the optim algorithm can be checked manually. Occasionally the optim algorithm may not fully converge (e.g. due to degeneracy of the Nelder–Mead simplex) but still return a fitted model. As such, for each model fit we provide the optim model convergence code (anything other than 0 can indicate an issue) and a logical value (verge) specifying whether or not the code was 0.</p>
+<p>Model fits can be evaluated through tests of the normality and
+homoscedasticity of the residuals. In certain cases this is advised,
+given that the maximum likelihood parameter estimates and least-squares
+estimates are equivalent only under the assumption of normal errors with
+constant variance (see the Potential issues section, below). Any of
+three tests can be selected to test the normality of the residuals: 1)
+the Lilliefors extension of the Kolmogorov normality test (normaTest =
+“lillie”), 2) the Shapiro-Wilk test of normality (to be preferred when
+sample size is small; “shapiro”), and 3) the Kolmogorov-Smirnov test
+(“kolmo”). As a default, the option to omit a residuals normality test
+(“none”) is used - thus it is up to the user to select a test if
+appropriate. Three options are provided to check for the homogeneity of
+the residuals: 1) a correlation of the squared residuals with the model
+fitted values (“cor.fitted”), 2) a correlation of the squared residuals
+with the area values (“cor.area”), or 3) no homogeneity test (“none”;
+the default). If a test is selected and is significant at the 5% level a
+warning is provided in the model summary; alternatively, the full
+results of the three tests can be accessed in the model fit output. A
+third model validation check for negative predicted richness values
+(i.e. when at least one of the fitted values is negative) can be
+undertaken and a warning is provided in the model summary if negative
+values are predicted. It should be noted that in earlier versions of the
+package (pre Version 1.3.1) there was a bug in the test checking for
+homogeneity of the residual variance - the correlation used the raw
+residuals rather than the squared residuals. This has now been
+corrected. Finally, the convergence code from the optim algorithm can be
+checked manually. Occasionally the optim algorithm may not fully
+converge (e.g. due to degeneracy of the Nelder–Mead simplex) but still
+return a fitted model. As such, for each model fit we provide the optim
+model convergence code (anything other than 0 can indicate an issue) and
+a logical value (verge) specifying whether or not the code was 0.</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">#load an example dataset, fit the linear SAR model whilst running residual</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co">#normality and homogeneity tests, and return the results of the residual</span></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co">#normality test </span></span>
@@ -272,13 +649,82 @@ div.csl-indent {
 </div>
 <div id="observed-model-shape-and-identifying-an-asymptote" class="section level3">
 <h3>Observed model shape and identifying an asymptote</h3>
-<p>Whilst each of the 20 models has a general shape (<span class="citation">Triantis, Guilhaumon, and Whittaker (2012)</span>), the actual observed shape of the model fit can be different, for some models, depending on the parameter estimates. This is important as the shape of the curve has significant implications for conservation applications and the testing of macroecological theory (<span class="citation">Rosenzweig (1995)</span>). In ‘sars,’ the observed shape of a model fit is determined using the sequential algorithm outlined in <span class="citation">Triantis, Guilhaumon, and Whittaker (2012)</span>. The shape is calculated using the model fit within the observed range of area values. Briefly, the algorithm works by first determining whether the fit is a straight line. Then, if the fit is classified as not being linear, the observed shape is classified as either convex (upwards or downwards) or sigmoidal by analysis of the second derivative (with respect to area) of the model fit (the full algorithm is detailed in <span class="citation">Triantis, Guilhaumon, and Whittaker (2012)</span>, p. 220). It should be noted that a small number of models (e.g. Extended Power 2) are listed in previous papers (e.g. <span class="citation">Tjørve (2009)</span>) as being sigmoidal without an upper asymptote (and we have followed these classifications). However, a recent study (<span class="citation">Godeau et al. (2020)</span>) has argued that sigmoidal models must have an upper asymptote by definition; thus, the classification of these models is currently uncertain.</p>
-<p>There has also been considerable debate in the SAR literature as to whether or not the SAR is asymptotic. In the ‘sars’ package, to determine whether a fit is asymptotic, for the relevant models the fitted model parameters are analysed to check whether the estimated asymptote is within the range of the sample data (<span class="citation">Triantis, Guilhaumon, and Whittaker (2012)</span>).</p>
+<p>Whilst each of the 20 models has a general shape (<span class="citation">Triantis, Guilhaumon, and Whittaker (2012)</span>), the
+actual observed shape of the model fit can be different, for some
+models, depending on the parameter estimates. This is important as the
+shape of the curve has significant implications for conservation
+applications and the testing of macroecological theory (<span class="citation">Rosenzweig (1995)</span>). In ‘sars’, the observed
+shape of a model fit is determined using the sequential algorithm
+outlined in <span class="citation">Triantis, Guilhaumon, and Whittaker
+(2012)</span>. The shape is calculated using the model fit within the
+observed range of area values. Briefly, the algorithm works by first
+determining whether the fit is a straight line. Then, if the fit is
+classified as not being linear, the observed shape is classified as
+either convex (upwards or downwards) or sigmoidal by analysis of the
+second derivative (with respect to area) of the model fit (the full
+algorithm is detailed in <span class="citation">Triantis, Guilhaumon,
+and Whittaker (2012)</span>, p. 220). It should be noted that a small
+number of models (e.g. Extended Power 2) are listed in previous papers
+(e.g. <span class="citation">Tjørve (2009)</span>) as being sigmoidal
+without an upper asymptote (and we have followed these classifications).
+However, a recent study (<span class="citation">Godeau et al.
+(2020)</span>) has argued that sigmoidal models must have an upper
+asymptote by definition; thus, the classification of these models is
+currently uncertain.</p>
+<p>There has also been considerable debate in the SAR literature as to
+whether or not the SAR is asymptotic. In the ‘sars’ package, to
+determine whether a fit is asymptotic, for the relevant models the
+fitted model parameters are analysed to check whether the estimated
+asymptote is within the range of the sample data (<span class="citation">Triantis, Guilhaumon, and Whittaker (2012)</span>).</p>
 </div>
 <div id="multimodel-sar-curve" class="section level3">
 <h3>Multimodel SAR curve</h3>
-<p>As well as fitting individual models, the package provides a function (‘sar_average’) to fit up to 20 models, compare the resultant fits using information criteria, and construct a multimodel-averaged SAR curve based on information criteria weight (see <span class="citation">Guilhaumon, Mouillot, and Gimenez (2010)</span>). The multimodel average curve is constructed as a linear combination of individual model fits by multiplying the predicted richness values of each of the successfully fitted models by the model’s information criterion weight, and then summing the resultant values across all models (<span class="citation">Burnham and Anderson (2002)</span>). Three information criteria are available in the package: AIC, AICc and BIC. Confidence intervals around the multimodel averaged curve can be calculated using a non-parametric bootstrap algorithm described in <span class="citation">Guilhaumon, Mouillot, and Gimenez (2010)</span>. Briefly, each of the SAR models used in the ‘sar_average’ function is fitted to the data, and the fitted values and residuals stored. The residuals are then transformed using the approach in <span class="citation">Davison and Hinkley (1997)</span> (p.259). For each bootstrap sample, an individual model fit is selected with the probability of selection being equal to that model’s information criterion weight. The transformed residuals from this fit are then sampled with replacement and added to the model’s fitted richness values. The ‘sar_average’ function is then used to fit all candidate SAR models to this bootstrapped set of response values, and the multimodel averaged fitted values stored. Percentile confidence intervals are then calculated using all bootstrapped fitted values.</p>
-<p>The ‘sar_average’ function can be used without specifying any models, in which case the package attempts to fit each of the 20 models in Table 1; alternatively, a vector of model names or a ‘fit_collection’ object (generated using the ‘sar_multi’ function) can be provided using the ‘obj’ argument. The three model validation tests listed above (normality and homogeneity of residuals, and negative predicted values) can be selected (by default none are selected, so it is up to the user to select any that are appropriate); if any model fails one or more of the tests during the fitting process it is removed from the resultant multimodel SAR curve. The output of the ‘sar_average’ function is a list of class ‘multi’ and class ‘sars,’ with two elements. The first element (‘mmi’) contains the multi model inference (fitted values of the multimodel SAR curve), and the second element (‘details’) contains a range of information regarding the fitting process, including the successfully fitted models, the models removed due to failing any of the validation tests, and the information criterion values, delta values and weights for the successfully fitted models. The returned object can easily be plotted using the ‘plot.multi’ generic function, and multiple plot options are available (using the ‘type’ argument; see Fig. 2). The fits of all the successfully fitted models and the multimodel SAR curve (with or without confidence intervals) can be plotted together (‘type’ = “multi”), and a barplot of the information criterion weights of each model can also be produced (‘type’ = “bar”).</p>
+<p>As well as fitting individual models, the package provides a function
+(‘sar_average’) to fit up to 20 models, compare the resultant fits using
+information criteria, and construct a multimodel-averaged SAR curve
+based on information criteria weight (see <span class="citation">Guilhaumon, Mouillot, and Gimenez (2010)</span>). The
+multimodel average curve is constructed as a linear combination of
+individual model fits by multiplying the predicted richness values of
+each of the successfully fitted models by the model’s information
+criterion weight, and then summing the resultant values across all
+models (<span class="citation">Burnham and Anderson (2002)</span>).
+Three information criteria are available in the package: AIC, AICc and
+BIC. Confidence intervals around the multimodel averaged curve can be
+calculated using a non-parametric bootstrap algorithm described in <span class="citation">Guilhaumon, Mouillot, and Gimenez (2010)</span>.
+Briefly, each of the SAR models used in the ‘sar_average’ function is
+fitted to the data, and the fitted values and residuals stored. The
+residuals are then transformed using the approach in <span class="citation">Davison and Hinkley (1997)</span> (p.259). For each
+bootstrap sample, an individual model fit is selected with the
+probability of selection being equal to that model’s information
+criterion weight. The transformed residuals from this fit are then
+sampled with replacement and added to the model’s fitted richness
+values. The ‘sar_average’ function is then used to fit all candidate SAR
+models to this bootstrapped set of response values, and the multimodel
+averaged fitted values stored. Percentile confidence intervals are then
+calculated using all bootstrapped fitted values.</p>
+<p>The ‘sar_average’ function can be used without specifying any models,
+in which case the package attempts to fit each of the 20 models in Table
+1; alternatively, a vector of model names or a ‘fit_collection’ object
+(generated using the ‘sar_multi’ function) can be provided using the
+‘obj’ argument. The three model validation tests listed above (normality
+and homogeneity of residuals, and negative predicted values) can be
+selected (by default none are selected, so it is up to the user to
+select any that are appropriate); if any model fails one or more of the
+tests during the fitting process it is removed from the resultant
+multimodel SAR curve. The output of the ‘sar_average’ function is a list
+of class ‘multi’ and class ‘sars’, with two elements. The first element
+(‘mmi’) contains the multi model inference (fitted values of the
+multimodel SAR curve), and the second element (‘details’) contains a
+range of information regarding the fitting process, including the
+successfully fitted models, the models removed due to failing any of the
+validation tests, and the information criterion values, delta values and
+weights for the successfully fitted models. The returned object can
+easily be plotted using the ‘plot.multi’ generic function, and multiple
+plot options are available (using the ‘type’ argument; see Fig. 2). The
+fits of all the successfully fitted models and the multimodel SAR curve
+(with or without confidence intervals) can be plotted together (‘type’ =
+“multi”), and a barplot of the information criterion weights of each
+model can also be produced (‘type’ = “bar”).</p>
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co">#load an example dataset (Niering, 1963), run the ‘sar_average’ function</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co">#using a vector of model names and with no model validation tests, and</span></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co">#produce the plots in Figure 2 of the paper </span></span>
@@ -428,13 +874,48 @@ div.csl-indent {
 <span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a><span class="co">#Barplot of the information criterion weights of each model </span></span>
 <span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(fit, <span class="at">type =</span> <span class="st">&quot;bar&quot;</span>, <span class="at">ModTitle =</span> <span class="st">&quot;b) Model weights&quot;</span>, <span class="at">cex.lab =</span> <span class="fl">1.3</span>)</span></code></pre></div>
-<p><img src="data:image/png;base64,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" width="100%" /></p>
-<p>One thing to note is how the sar_average() function deals with model non-convergence. There are different types of non-convergence and these are dealt with differently. If the optimisation algorithm fails to return any solution, the model fit is defined as NA and is then removed, and so does not appear in the model summary table or multi-model curve etc. However, the optimisation algorithm (e.g. Nelder-Mead) can also return non-NA model fits but where the solution is potentially non-optimal (e.g. degeneracy of the Nelder–Mead simplex) - these cases are identified by any optim convergence code that is not zero. We have decided not to remove these fits (i.e. they are kept in the model summary table and multimodel curve), but any instances can be checked using the returned ‘details$converged’ vector and then the model fitting re-run without these models, if preferred. Increasing the starting parameters grid search (see above) may also help avoid this issue.</p>
+<p><img src="data:image/png;base64,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" width="100%" /></p>
+<p>One thing to note is how the sar_average() function deals with model
+non-convergence. There are different types of non-convergence and these
+are dealt with differently. If the optimisation algorithm fails to
+return any solution, the model fit is defined as NA and is then removed,
+and so does not appear in the model summary table or multi-model curve
+etc. However, the optimisation algorithm (e.g. Nelder-Mead) can also
+return non-NA model fits but where the solution is potentially
+non-optimal (e.g. degeneracy of the Nelder–Mead simplex) - these cases
+are identified by any optim convergence code that is not zero. We have
+decided not to remove these fits (i.e. they are kept in the model
+summary table and multimodel curve), but any instances can be checked
+using the returned ‘details$converged’ vector and then the model fitting
+re-run without these models, if preferred. Increasing the starting
+parameters grid search (see above) may also help avoid this issue.</p>
 </div>
 </div>
 <div id="additional-functions" class="section level2">
 <h2>Additional functions</h2>
-<p>In addition to the main functions used to fit and compare the 20 SAR models, the sars package provides additional functions for specific SAR-based analyses. First, a function is provided to fit the log–log version of the power model (a function that is often fitted in SAR studies; Rosenzweig 1995) and compare parameter values with those generated using the non-linear power model. The log–log version of the power model is not equivalent to its non-linear counterpart because of non-equivalence in the study of the variation in a variable and in its transformation, and bias of back-transformed results obtained on a logarithmic scale. Second, a function has been added that enables the fitting of <span class="citation">Coleman (1981)</span>’s random placement model to a species/sites abundance matrix. According to this model, the number of species occurring on an island depends on the relative area of the island and the regional relative species abundances. The fit of the random placement model can be determined through use of a diagnostic plot (which can be generated from the function output) of island area (log transformed) against species richness, alongside the model’s predicted values (see <span class="citation">Wang et al. (2010)</span>). Following <span class="citation">Wang et al. (2010)</span>, the model is rejected if more than a third of the observed data points fall beyond one standard deviation from the expected curve. Finally, a function is provided to fit the general dynamic model of island biogeography (<span class="citation">Whittaker, Triantis, and Ladle (2008)</span>) using five different SAR models (linear, logarithmic, power(area), power(area and time), linear power).</p>
+<p>In addition to the main functions used to fit and compare the 20 SAR
+models, the sars package provides additional functions for specific
+SAR-based analyses. First, a function is provided to fit the log–log
+version of the power model (a function that is often fitted in SAR
+studies; Rosenzweig 1995) and compare parameter values with those
+generated using the non-linear power model. The log–log version of the
+power model is not equivalent to its non-linear counterpart because of
+non-equivalence in the study of the variation in a variable and in its
+transformation, and bias of back-transformed results obtained on a
+logarithmic scale. Second, a function has been added that enables the
+fitting of <span class="citation">Coleman (1981)</span>’s random
+placement model to a species/sites abundance matrix. According to this
+model, the number of species occurring on an island depends on the
+relative area of the island and the regional relative species
+abundances. The fit of the random placement model can be determined
+through use of a diagnostic plot (which can be generated from the
+function output) of island area (log transformed) against species
+richness, alongside the model’s predicted values (see <span class="citation">Wang et al. (2010)</span>). Following <span class="citation">Wang et al. (2010)</span>, the model is rejected if
+more than a third of the observed data points fall beyond one standard
+deviation from the expected curve. Finally, a function is provided to
+fit the general dynamic model of island biogeography (<span class="citation">Whittaker, Triantis, and Ladle (2008)</span>) using
+five different SAR models (linear, logarithmic, power(area), power(area
+and time), linear power).</p>
 <div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co">#load an example dataset, fit the log-log power model, return a model fit</span></span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="co">#summary and plot the model fit. When ‘compare’ == TRUE, the non-linear</span></span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="co">#power model is also fitted and the resultant parameter values compared. </span></span>
@@ -493,24 +974,43 @@ div.csl-indent {
 ##   model: SR ~ Int + A * log(Area) + Ti * Time + Ti2 * Time^2
 ##    data: data
 ##     Int       A      Ti     Ti2 
-## -239.25   33.65   79.95   -6.08 
-##  residual sum-of-squares: 58451
+##  78.198  27.711 -20.644   1.161 
+##  residual sum-of-squares: 48578
 ## 
 ## Number of iterations to convergence: 1 
-## Achieved convergence tolerance: 8.744e-08
+## Achieved convergence tolerance: 4.048e-08
 ## 
 ## All model summaries:
 ## 
 ##                 RSE    R2      AIC     AICc Delta.AIC Delta.AICc
-## GDM        69.79167 0.613 186.6596 192.6596 0.0000000   3.468766
-## A          74.44350 0.486 187.1908 189.1908 0.5312341   0.000000
-## A + T      76.95674 0.490 189.0676 192.7040 2.4080018   3.513131
-## Intercept 100.32744 0.000 195.8435 196.7666 9.1838819   7.575725</code></pre>
+## GDM        63.62533 0.678 183.6995 189.6995  0.000000  0.6710548
+## A + T      68.60624 0.595 185.3921 189.0284  1.692582  0.0000000
+## A          74.44350 0.486 187.1908 189.1908  3.491330  0.1623849
+## Intercept 100.32744 0.000 195.8435 196.7666 12.143978  7.7381097</code></pre>
 </div>
 <div id="sar-extrapolation" class="section level2">
 <h2>SAR extrapolation</h2>
-<p>Extrapolation (e.g. predicting the richness of areas too large to be sampled) is one of the primary uses of the SAR. Using an individual SAR model fit, extrapolation simply involves using the model function in combination with the parameter values estimated using the observed area / richness data to predict the richness on a larger area. An alternative extrapolation approach to simply using an individual model l is to use multi-model inference and model averaging, whereby a larger number of n models is fitted to a set of islands, the models ranked according to some criterion (e.g. Akaike’s information criterion, AIC) and the criterion values converted into model weights (i.e. the conditional probabilities for each of the n models). The n models are then each used to predict the richness of a larger area and these predictions are multiplied by the respective model weights and summed to provide a multi-model averaged prediction. Both of these options are available inside the package.</p>
-<p>We would recommend using grid_start = “exhaustive” when fitting models for use with sar_pred(), as this is more likely to find the optimum fit for a given model. However, remember that, as grid_start has a random component, when grid_start != “none,” you can get slightly different results each time you fit a model or run sar_average, and then run sar_pred().</p>
+<p>Extrapolation (e.g. predicting the richness of areas too large to be
+sampled) is one of the primary uses of the SAR. Using an individual SAR
+model fit, extrapolation simply involves using the model function in
+combination with the parameter values estimated using the observed area
+/ richness data to predict the richness on a larger area. An alternative
+extrapolation approach to simply using an individual model l is to use
+multi-model inference and model averaging, whereby a larger number of n
+models is fitted to a set of islands, the models ranked according to
+some criterion (e.g. Akaike’s information criterion, AIC) and the
+criterion values converted into model weights (i.e. the conditional
+probabilities for each of the n models). The n models are then each used
+to predict the richness of a larger area and these predictions are
+multiplied by the respective model weights and summed to provide a
+multi-model averaged prediction. Both of these options are available
+inside the package.</p>
+<p>We would recommend using grid_start = “exhaustive” when fitting
+models for use with sar_pred(), as this is more likely to find the
+optimum fit for a given model. However, remember that, as grid_start has
+a random component, when grid_start != “none”, you can get slightly
+different results each time you fit a model or run sar_average, and then
+run sar_pred().</p>
 <div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co">#fit the power model and predict richness on an island of area = 5000</span></span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(galap)</span>
 <span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">sar_power</span>(<span class="at">data =</span> galap)</span>
@@ -519,7 +1019,7 @@ div.csl-indent {
 ## This is a sar_pred object:
 ## 
 ##   Model Area Prediction
-## 1 Power 5000   370.1389</code></pre>
+## 1 Power 5000   370.1208</code></pre>
 <div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co">#fit three SAR models and predict richness on islands of area = 5000 &amp; 10000</span></span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">sar_multi</span>(galap, <span class="at">obj =</span> <span class="fu">c</span>(<span class="st">&quot;power&quot;</span>, <span class="st">&quot;loga&quot;</span>, <span class="st">&quot;koba&quot;</span>))</span></code></pre></div>
 <pre><code>## 
@@ -538,8 +1038,8 @@ div.csl-indent {
 ## 2       Power 10000   450.4146
 ## 3 Logarithmic  5000   258.1944
 ## 4 Logarithmic 10000   279.1831
-## 5   Kobayashi  5000   290.7048
-## 6   Kobayashi 10000   318.4434</code></pre>
+## 5   Kobayashi  5000   290.6980
+## 6   Kobayashi 10000   318.4351</code></pre>
 <div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co">#calculate a multi-model curve and predict richness on islands of area = 5000 &amp; 10000</span></span>
 <span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="co">#grid_start set to &quot;none&quot; for speed</span></span>
 <span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>p3 <span class="ot">&lt;-</span> <span class="fu">sar_average</span>(<span class="at">data =</span> galap, <span class="at">grid_start =</span> <span class="st">&quot;none&quot;</span>)</span></code></pre></div>
@@ -583,9 +1083,37 @@ div.csl-indent {
 </div>
 <div id="sar-thresholds" class="section level2">
 <h2>SAR thresholds</h2>
-<p>An increasing number of studies have focused on identifying thresholds in the ISAR, including studies i) focused on identifying the small island effect, ii) determining whether the ISAR has an upper asymptote and iii) identifying thresholds in habitat ISARs, which are often systems of conservation concern. The most common approach in such studies is to use piecewise regression. As such, the package provide a set of functions for fitting six piecewise regression models to ISAR data, calculating confidence intervals around the breakpoint estimates (for certain models), comparing the models using various information criteria, and plotting the resultant model fits. The six piecewise models are a selection of 6 models out of the 14 listed by <span class="citation">Gao et al. (2019)</span> and comprise the continuous one-threshold and two-threshold, discontinuous one-threshold and two-threshold, and left-horizontal one-threshold and two-threshold models (see <span class="citation">Gao et al. (2019)</span> for further information).</p>
-<p>The main function is ‘sar_threshold,’ which fits the six piecewise models, in addition to a linear model and an intercept only model for comparison (using the ‘non_th_models’ argument). Summary and plot generic functions are available which return user-friendly output. As the coefficients in the fitted breakpoint regression models do not all represent the intercepts and slopes of the different segments (for these it is necessary to add different coefficients together), a separate function (‘get_coef’) can be used to calculate these. A separate function (‘threshold_ci’) generates the confidence intervals around the breakpoints of the one-threshold continuous and left-horizontal models.</p>
-<p>Detailed information on fitting and plotting the threshold models, as well as the additional functions for calculating model slopes and intercepts, and generating confidence intervals around the threshold estimates, can be found in <span class="citation">Matthews and Rigal (in press)</span>.</p>
+<p>An increasing number of studies have focused on identifying
+thresholds in the ISAR, including studies i) focused on identifying the
+small island effect, ii) determining whether the ISAR has an upper
+asymptote and iii) identifying thresholds in habitat ISARs, which are
+often systems of conservation concern. The most common approach in such
+studies is to use piecewise regression. As such, the package provide a
+set of functions for fitting six piecewise regression models to ISAR
+data, calculating confidence intervals around the breakpoint estimates
+(for certain models), comparing the models using various information
+criteria, and plotting the resultant model fits. The six piecewise
+models are a selection of 6 models out of the 14 listed by <span class="citation">Gao et al. (2019)</span> and comprise the continuous
+one-threshold and two-threshold, discontinuous one-threshold and
+two-threshold, and left-horizontal one-threshold and two-threshold
+models (see <span class="citation">Gao et al. (2019)</span> for further
+information).</p>
+<p>The main function is ‘sar_threshold’, which fits the six piecewise
+models, in addition to a linear model and an intercept only model for
+comparison (using the ‘non_th_models’ argument). Summary and plot
+generic functions are available which return user-friendly output. As
+the coefficients in the fitted breakpoint regression models do not all
+represent the intercepts and slopes of the different segments (for these
+it is necessary to add different coefficients together), a separate
+function (‘get_coef’) can be used to calculate these. A separate
+function (‘threshold_ci’) generates the confidence intervals around the
+breakpoints of the one-threshold continuous and left-horizontal
+models.</p>
+<p>Detailed information on fitting and plotting the threshold models, as
+well as the additional functions for calculating model slopes and
+intercepts, and generating confidence intervals around the threshold
+estimates, can be found in <span class="citation">Matthews and Rigal
+(2021)</span>.</p>
 <div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co">#load an example dataset, and fit the continuous two-threshold model </span></span>
 <span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="co">#to the data (with area transformed using log to the base 10), using an </span></span>
 <span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a><span class="co">#interval of 0.1 (for speed)</span></span>
@@ -615,77 +1143,271 @@ div.csl-indent {
 </div>
 <div id="on-the-calculation-of-information-criteria" class="section level2">
 <h2>On the calculation of information criteria</h2>
-<p>There are different ways to calculate the various information criteria (IC) used for model comparison (e.g. AIC, BIC). One difference relates to whether the residual sum of squares (rss) or the log-likelihood (ll) is used. Under standard assumptions (e.g. independence of data points, homoscedasticity and normality of the residuals), the two approaches produce identical parameter estimates for regression models. However, the formulas are different and thus can produce different IC values for the same model. For example, historically in the ‘sars’ package we have calculated IC values using formulas based on the rss (Burnham &amp; Anderson, 2002; Guilhaumon et al. 2008). This meant that the IC values generated in ‘sars’ were not comparable with values generated in packages using different formulas. For example, in the nls (the main function for non-linear regression in R) and lm functions in the stats R package, a ll approach is used, meaning IC values from models fitted using nls could not be compared with IC values from sars models. To re-iterate, the parameter estimates are comparable, it is simply that the IC values will differ. In the most recent version of ‘sars’ (version 1.2.2) we have changed our IC formulas to match those in nls and lm. Thus, if users have built their own models using nls (or lm) and wish to compare IC values with models fitted in ‘sars,’ this is now straightforward. To re-create IC values from previous studies (i.e. those using a version of sars pre 1.2.2), it will be necessary to download sars Version 1.2.1 or earlier (either from CRAN or GitHub; version 1.1.1 was published as a release on GitHub). It is important to note that these are not the only two ways of calculating ICs for regression models, and other formulas exits. Thus, if building models using other functions and packages (i.e. other than nls or lm), users should make sure to check how these packages calculate IC values before comparing with models fitted in sars. In sars, as in nls, we include an additional parameter for estimation of the variance. For example, the power model is considered to have three parameters when calculating IC values. Finally, if users are comparing models fitted in sars with their own models fitted using other packages, it is essential that IC values are all calculated using the same dependent variable (i.e. non-transformed richness values and not logged richness, as sars only uses the former currently).</p>
+<p>There are different ways to calculate the various information
+criteria (IC) used for model comparison (e.g. AIC, BIC). One difference
+relates to whether the residual sum of squares (rss) or the
+log-likelihood (ll) is used. Under standard assumptions
+(e.g. independence of data points, homoscedasticity and normality of the
+residuals), the two approaches produce identical parameter estimates for
+regression models. However, the formulas are different and thus can
+produce different IC values for the same model. For example,
+historically in the ‘sars’ package we have calculated IC values using
+formulas based on the rss (Burnham &amp; Anderson, 2002; Guilhaumon et
+al. 2008). This meant that the IC values generated in ‘sars’ were not
+comparable with values generated in packages using different formulas.
+For example, in the nls (the main function for non-linear regression in
+R) and lm functions in the stats R package, a ll approach is used,
+meaning IC values from models fitted using nls could not be compared
+with IC values from sars models. To re-iterate, the parameter estimates
+are comparable, it is simply that the IC values will differ. In version
+of ‘sars’ (version 1.2.2) we changed our IC formulas to match those in
+nls and lm. Thus, if users have built their own models using nls (or lm)
+and wish to compare IC values with models fitted in ‘sars’, this is now
+straightforward. To re-create IC values from previous studies
+(i.e. those using a version of sars pre 1.2.2), it will be necessary to
+download sars Version 1.2.1 or earlier (either from CRAN or GitHub;
+version 1.1.1 was published as a release on GitHub). It is important to
+note that these are not the only two ways of calculating ICs for
+regression models, and other formulas exits. Thus, if building models
+using other functions and packages (i.e. other than nls or lm), users
+should make sure to check how these packages calculate IC values before
+comparing with models fitted in sars. In sars, as in nls and lm, we
+include an additional parameter for estimation of the variance. For
+example, the power model is considered to have three parameters when
+calculating IC values. Finally, if users are comparing models fitted in
+sars with their own models fitted using other packages, it is essential
+that IC values are all calculated using the same dependent variable
+(i.e. non-transformed richness values and not logged richness, as sars
+only uses the former currently).</p>
+</div>
+<div id="potential-issues-with-using-information-criteria-in-conjunction-with" class="section level2">
+<h2>Potential issues with using information criteria in conjunction
+with</h2>
+</div>
+<div id="non-linear-regression-models" class="section level2">
+<h2>non-linear regression models</h2>
+<p>Before starting this section, it is worth pointing out that we are
+not statisticians and the following discussion should be interpreted
+with this point in mind. We have however reviewed a lot of the
+literature (including a number of statistics forums) on the use of
+information criteria (e.g. AIC) in the context of comparing non-linear
+regression models. Based on this review, we have concluded that there
+are three potential issues with this approach.</p>
+<p>First, many information criteria (including AIC) are theoretically
+applicable only when a model is fitted through the approach of maximum
+likelihood. In the case of linear and non-linear regression (e.g. the
+nls function in R, and the approach we use in ‘sars’), a least-squares
+estimator (minimising the residual sum of squares) is generally used
+rather than likelihood maximisation, for various reasons, such as
+analytical tractability. This is not necessarily a problem, as the
+least-squares parameter estimates and the maximum likelihood parameter
+estimates are equivalent in the case of normal and independent errors
+with a mean of zero and constant variance (<span class="citation">Bates
+and Watts (1988)</span>). This holds for both linear and non-linear
+regression models (<span class="citation">Bates and Watts (1988)</span>;
+<span class="citation">Forum1 (n.d.)</span>). However, if these
+assumptions are not met this equivalence may break down and thus the use
+of AIC etc would not necessarily be appropriate. The use of the
+normality and homogeneity of variance checks within the package may be
+useful in this regard, but note that it is now up to the user to
+manually turn these checks on.</p>
+<p>Second, most of the commonly used information criteria (e.g. AIC)
+include a term that penalises for the number of parameters. In the case
+of linear regression models, counting the number of parameters is
+straight forward. However, non-linear models are so called because they
+are non-linear in regard to their parameters (e.g. a quadratic model is
+a linear model but with a non-linear shaped curve). As such, it is not
+always as straight forward to count parameters in the same way,
+particularly in the case of very complex non-linear and machine learning
+type models (i.e. not those used in ‘sars’). “That is, a single
+parameter in the model may count as more or less than one parameter, in
+some sense” (<span class="citation">Forum2 (n.d.)</span>). However, in
+the absence of any other information, or indeed alternative model
+comparison approaches, all one can do is use the number of estimable
+parameters (sensu Burnham &amp; Anderson) in a model, which is what we
+follow in the ‘sars’ package, and is what a large number of studies do
+(and advise) in the ecological and wider literature (e.g. <span class="citation">Archontoulis and Miguez (2015)</span>; <span class="citation">Banks and Joyner (2017)</span>; see also <span class="citation">Forum3 (n.d.)</span>’s response to <span class="citation">Forum2 (n.d.)</span>).</p>
+<p>Finally, some have argued that you should only use AIC etc to compare
+models within the same ‘model complex’, and even only in the case of
+nested models (e.g. <span class="citation">Ripley (no date)</span>).
+From this it could be concluded that we should not compare the suite of
+19 non-linear models with the linear model. However, <span class="citation">Burnham and Anderson (2002)</span> and <span class="citation">Anderson and Burnham (2006)</span> have argued that
+this is not the case and AIC for example can be used to compare
+non-nested models. In addition, again many studies use AIC to compare
+non-nested models from different ‘complexes’. We have worked on the
+assumption that, as long as the response variable is the same and models
+are comparable in terms of parameter number calculation (e.g. all
+include or not a parameter for the variance), it is appropriate to
+compare different types of model (at least within the limited selection
+used in the package).</p>
 </div>
 <div id="conclusions" class="section level2">
 <h2>CONCLUSIONS</h2>
-<p>The SAR has been a cornerstone of ecological and biogeographical science for almost a century and its form and fit are still of great significance in both theoretical and applied contexts. The development of the ‘sars’ R package should aid future SAR research by providing a comprehensive set of tools that enable in-depth exploration of SARs and SAR-related patterns. In addition, the package has been designed in such a way as to allow other SAR researchers to add (e.g. via GitHub) new functions and models in the future to ensure the package is of lasting value. For example, future additions to the package could include the suite of countryside biogeography SAR models that have recently been published, standard SAR functions not so far incorporated, or functions specifically intended for analysis of species accumulation curves or endemics–area relationships. Finally, whilst the focus of this paper has been on classic SARs, there is no reason that the functionality in the ‘sars’ package cannot be used to analyse other diversity–area relationships (e.g. functional or phylogenetic diversity–area relationships). Application of the full set of 20 models, in addition to the multimodel SAR framework, included in the ‘sars’ package to a wider range and type of data (e.g. trait and phylogenetic data) will likely be revealing and will help in improving our understanding of SARs, and diversity–area relationships more generally.</p>
+<p>The SAR has been a cornerstone of ecological and biogeographical
+science for almost a century and its form and fit are still of great
+significance in both theoretical and applied contexts. The development
+of the ‘sars’ R package should aid future SAR research by providing a
+comprehensive set of tools that enable in-depth exploration of SARs and
+SAR-related patterns. In addition, the package has been designed in such
+a way as to allow other SAR researchers to add (e.g. via GitHub) new
+functions and models in the future to ensure the package is of lasting
+value. For example, future additions to the package could include the
+suite of countryside biogeography SAR models that have recently been
+published, standard SAR functions not so far incorporated, or functions
+specifically intended for analysis of species accumulation curves or
+endemics–area relationships. Finally, whilst the focus of this paper has
+been on classic SARs, there is no reason that the functionality in the
+‘sars’ package cannot be used to analyse other diversity–area
+relationships (e.g. functional or phylogenetic diversity–area
+relationships). Application of the full set of 20 models, in addition to
+the multimodel SAR framework, included in the ‘sars’ package to a wider
+range and type of data (e.g. trait and phylogenetic data) will likely be
+revealing and will help in improving our understanding of SARs, and
+diversity–area relationships more generally.</p>
 </div>
 <div id="references" class="section level2 unnumbered">
 <h2 class="unnumbered">References</h2>
 <div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-Anderson2006" class="csl-entry">
+Anderson, D., and K. Burnham. 2006. <span>“AIC Myths and
+Misunderstandings.”</span> <a href="https://sites.warnercnr.colostate.edu/anderson/wp-content/uploads/sites/26/2016/11/AIC-Myths-and-Misunderstandings.pdf">https://sites.warnercnr.colostate.edu/anderson/wp-content/uploads/sites/26/2016/11/AIC-Myths-and-Misunderstandings.pdf</a>.
+</div>
+<div id="ref-Archontoulis2015" class="csl-entry">
+Archontoulis, S. V., and F. E. Miguez. 2015. <span>“<span class="nocase">Nonlinear regression models and applications in
+agricultural research</span>.”</span> <em>Agronomy Journal</em> 107:
+786–98. <a href="https://doi.org/10.2134/agronj2012.0506">https://doi.org/10.2134/agronj2012.0506</a>.
+</div>
 <div id="ref-Arrhenius1921" class="csl-entry">
-Arrhenius, O. 1921. <span>“<span class="nocase">Species and Area</span>.”</span> <em>The Journal of Ecology</em> 9 (1): 95. <a href="https://doi.org/10.2307/2255763">https://doi.org/10.2307/2255763</a>.
+Arrhenius, O. 1921. <span>“<span class="nocase">Species and
+Area</span>.”</span> <em>The Journal of Ecology</em> 9 (1): 95. <a href="https://doi.org/10.2307/2255763">https://doi.org/10.2307/2255763</a>.
+</div>
+<div id="ref-Banks2017" class="csl-entry">
+Banks, H. T., and M. L. Joyner. 2017. <span>“<span class="nocase">AIC
+under the framework of least squares estimation</span>.”</span>
+<em>Applied Mathematics Letters</em> 74: 33–45. <a href="https://doi.org/10.1016/j.aml.2017.05.005">https://doi.org/10.1016/j.aml.2017.05.005</a>.
+</div>
+<div id="ref-Bates1988" class="csl-entry">
+Bates, D. M., and D. J. Watts. 1988. <em>Nonlinear Regression Analysis
+and Its Applications</em>. Book. New-York: John Wiley &amp; Sons.
 </div>
 <div id="ref-BurnhamAnderson2002" class="csl-entry">
-Burnham, K. P., and D. R Anderson. 2002. <em>Model Selection and Multi-Model Inference: A Practical Information-Theoretic Approach</em>. Book. 2nd ed. New-York: Springer.
+Burnham, K. P., and D. R Anderson. 2002. <em>Model Selection and
+Multi-Model Inference: A Practical Information-Theoretic Approach</em>.
+Book. 2nd ed. New-York: Springer.
 </div>
 <div id="ref-Coleman1981" class="csl-entry">
-Coleman, B. D. 1981. <span>“On Random Placement and Species-Area Relations.”</span> Journal Article. <em>Mathematical Biosciences</em> 54 (3–4): 191–215. <a href="https://doi.org/10.1016/0025-5564(81)90086-9">https://doi.org/10.1016/0025-5564(81)90086-9</a>.
+Coleman, B. D. 1981. <span>“On Random Placement and Species-Area
+Relations.”</span> Journal Article. <em>Mathematical Biosciences</em> 54
+(3–4): 191–215. <a href="https://doi.org/10.1016/0025-5564(81)90086-9">https://doi.org/10.1016/0025-5564(81)90086-9</a>.
 </div>
 <div id="ref-DavisonHinkley1997" class="csl-entry">
-Davison, A. C., and D. V. Hinkley. 1997. <em>Bootstrap Methods and Their Application</em>. Book. Cambridge: Cambridge University Press.
+Davison, A. C., and D. V. Hinkley. 1997. <em>Bootstrap Methods and Their
+Application</em>. Book. Cambridge: Cambridge University Press.
 </div>
 <div id="ref-Dengler2009" class="csl-entry">
-Dengler, J. 2009. <span>“Which Function Describes the Species–Area Relationship Best? A Review and Empirical Evaluation.”</span> Journal Article. <em>Journal of Biogeography</em> 36 (4): 728–44. <a href="https://doi.org/10.1111/j.1365-2699.2008.02038.x">https://doi.org/10.1111/j.1365-2699.2008.02038.x</a>.
+Dengler, J. 2009. <span>“Which Function Describes the Species–Area
+Relationship Best? A Review and Empirical Evaluation.”</span> Journal
+Article. <em>Journal of Biogeography</em> 36 (4): 728–44. <a href="https://doi.org/10.1111/j.1365-2699.2008.02038.x">https://doi.org/10.1111/j.1365-2699.2008.02038.x</a>.
+</div>
+<div id="ref-Forum1" class="csl-entry">
+Forum1. n.d. <a href="https://stats.stackexchange.com/questions/492670/is-aic-appropriate-for-comparing-non-linear-models">https://stats.stackexchange.com/questions/492670/is-aic-appropriate-for-comparing-non-linear-models</a>.
+</div>
+<div id="ref-Forum2" class="csl-entry">
+Forum2. n.d. <a href="https://stat.ethz.ch/pipermail/r-help/2010-August/250742.html">https://stat.ethz.ch/pipermail/r-help/2010-August/250742.html</a>.
+</div>
+<div id="ref-Forum3" class="csl-entry">
+Forum3. n.d. <a href="https://stat.ethz.ch/pipermail/r-help/2010-August/250839.html">https://stat.ethz.ch/pipermail/r-help/2010-August/250839.html</a>.
 </div>
 <div id="ref-Gao2019" class="csl-entry">
-Gao, D., Z. Cao, P. Xu, and G. Perry. 2019. <span>“<span class="nocase">On piecewise models and species–area patterns</span>.”</span> <em>Ecology and Evolution</em> 9: 8351–61.
+Gao, D., Z. Cao, P. Xu, and G. Perry. 2019. <span>“<span class="nocase">On piecewise models and species–area
+patterns</span>.”</span> <em>Ecology and Evolution</em> 9: 8351–61.
 </div>
 <div id="ref-Godeau2020" class="csl-entry">
-Godeau, U., C. Bouget, J. Piffady, T. Pozzi, and F. Gosselin. 2020. <span>“<span class="nocase">Lack of definition of mathematical terms in ecology: The case of the sigmoid class of functions in macro-ecology</span>.”</span> <em>Ecology and Evolution</em>, 1–12. <a href="https://doi.org/10.1002/ece3.7016">https://doi.org/10.1002/ece3.7016</a>.
+Godeau, U., C. Bouget, J. Piffady, T. Pozzi, and F. Gosselin. 2020.
+<span>“<span class="nocase">Lack of definition of mathematical terms in
+ecology: The case of the sigmoid class of functions in
+macro-ecology</span>.”</span> <em>Ecology and Evolution</em>, 1–12. <a href="https://doi.org/10.1002/ece3.7016">https://doi.org/10.1002/ece3.7016</a>.
 </div>
 <div id="ref-Gray2004" class="csl-entry">
-Gray, J. S., K. I. Ugland, and J. Lambshead. 2004. <span>“On Species Accumulation and Species–Area Curves.”</span> Journal Article. <em>Global Ecology and Biogeography</em> 13 (6): 567–68. <a href="https://doi.org/10.1111/j.1466-822X.2004.00138.x">https://doi.org/10.1111/j.1466-822X.2004.00138.x</a>.
+Gray, J. S., K. I. Ugland, and J. Lambshead. 2004. <span>“On Species
+Accumulation and Species–Area Curves.”</span> Journal Article.
+<em>Global Ecology and Biogeography</em> 13 (6): 567–68. <a href="https://doi.org/10.1111/j.1466-822X.2004.00138.x">https://doi.org/10.1111/j.1466-822X.2004.00138.x</a>.
 </div>
 <div id="ref-Guilhaumon2008" class="csl-entry">
-Guilhaumon, F., O. Gimenez, K. J. Gaston, and D. Mouillot. 2008. <span>“Taxonomic and Regional Uncertainty in Species-Area Relationships and the Identification of Richness Hotspots.”</span> Journal Article. <em>Proceedings of the National Academy of Sciences USA</em> 105 (40): 15458–63. <a href="https://doi.org/10.1073/pnas.0803610105">https://doi.org/10.1073/pnas.0803610105</a>.
+Guilhaumon, F., O. Gimenez, K. J. Gaston, and D. Mouillot. 2008.
+<span>“Taxonomic and Regional Uncertainty in Species-Area Relationships
+and the Identification of Richness Hotspots.”</span> Journal Article.
+<em>Proceedings of the National Academy of Sciences USA</em> 105 (40):
+15458–63. <a href="https://doi.org/10.1073/pnas.0803610105">https://doi.org/10.1073/pnas.0803610105</a>.
 </div>
 <div id="ref-Guilhaumon2010" class="csl-entry">
-Guilhaumon, F., D. Mouillot, and O. Gimenez. 2010. <span>“mmSAR: An r-Package for Multimodel Species–Area Relationship Inference.”</span> Journal Article. <em>Ecography</em> 33 (2): 420–24. <a href="https://doi.org/10.1111/j.1600-0587.2010.06304.x">https://doi.org/10.1111/j.1600-0587.2010.06304.x</a>.
+Guilhaumon, F., D. Mouillot, and O. Gimenez. 2010. <span>“mmSAR: An
+r-Package for Multimodel Species–Area Relationship Inference.”</span>
+Journal Article. <em>Ecography</em> 33 (2): 420–24. <a href="https://doi.org/10.1111/j.1600-0587.2010.06304.x">https://doi.org/10.1111/j.1600-0587.2010.06304.x</a>.
 </div>
 <div id="ref-MacArthurWilson1967" class="csl-entry">
-MacArthur, R. H, and E. O Wilson. 1967. <em>The Theory of Island Biogeography</em>. Book. Princeton: Princeton University Press.
+MacArthur, R. H, and E. O Wilson. 1967. <em>The Theory of Island
+Biogeography</em>. Book. Princeton: Princeton University Press.
 </div>
 <div id="ref-Matthews2016b" class="csl-entry">
-Matthews, T. J., F. Guilhaumon, K. A. Triantis, M. K. Borregaard, and R. J. Whittaker. 2016. <span>“On the Form of Species–Area Relationships in Habitat Islands and True Islands.”</span> Journal Article. <em>Global Ecology and Biogeography</em> 25: 847–58. <a href="https://doi.org/10.1111/geb.12269">https://doi.org/10.1111/geb.12269</a>.
+Matthews, T. J., F. Guilhaumon, K. A. Triantis, M. K. Borregaard, and R.
+J. Whittaker. 2016. <span>“On the Form of Species–Area Relationships in
+Habitat Islands and True Islands.”</span> Journal Article. <em>Global
+Ecology and Biogeography</em> 25: 847–58. <a href="https://doi.org/10.1111/geb.12269">https://doi.org/10.1111/geb.12269</a>.
 </div>
 <div id="ref-Matthews2020" class="csl-entry">
-Matthews, T. J., and F. Rigal. in press. <span>“<span class="nocase">Thresholds and the species–area relationship: a set of functions for fitting, evaluating and plotting a range of commonly used piecewise models in R</span>.”</span> <em>Frontiers of Biogeography</em>, in press.
+Matthews, T. J., and F. Rigal. 2021. <span>“<span class="nocase">Thresholds and the species–area relationship: a set of
+functions for fitting, evaluating and plotting a range of commonly used
+piecewise models in R</span>.”</span> <em>Frontiers of
+Biogeography</em>. <a href="https://doi.org/10.21425/F5FBG49404">https://doi.org/10.21425/F5FBG49404</a>.
 </div>
 <div id="ref-Matthews2016a" class="csl-entry">
-Matthews, T. J., K. A. Triantis, F. Rigal, M. K. Borregaard, F. Guilhaumon, and R. J. Whittaker. 2016. <span>“Island Species–Area Relationships and Species Accumulation Curves Are Not Equivalent: An Analysis of Habitat Island Datasets.”</span> Journal Article. <em>Global Ecology and Biogeography</em> 25 (5): 607–18. <a href="https://doi.org/10.1111/geb.12439">https://doi.org/10.1111/geb.12439</a>.
+Matthews, T. J., K. A. Triantis, F. Rigal, M. K. Borregaard, F.
+Guilhaumon, and R. J. Whittaker. 2016. <span>“Island Species–Area
+Relationships and Species Accumulation Curves Are Not Equivalent: An
+Analysis of Habitat Island Datasets.”</span> Journal Article. <em>Global
+Ecology and Biogeography</em> 25 (5): 607–18. <a href="https://doi.org/10.1111/geb.12439">https://doi.org/10.1111/geb.12439</a>.
 </div>
 <div id="ref-Matthews2019" class="csl-entry">
-Matthews, T. J., K. A. Triantis, R. J. Whittaker, and F. Guilhaumon. 2019. <span>“<span class="nocase">sars: an R package for fitting, evaluating and comparing species–area relationship models</span>.”</span> <em>Ecography</em> 42: 1446–55. <a href="https://doi.org/10.1111/ecog.04271">https://doi.org/10.1111/ecog.04271</a>.
+Matthews, T. J., K. A. Triantis, R. J. Whittaker, and F. Guilhaumon.
+2019. <span>“<span class="nocase">sars: an R package for fitting,
+evaluating and comparing species–area relationship
+models</span>.”</span> <em>Ecography</em> 42: 1446–55. <a href="https://doi.org/10.1111/ecog.04271">https://doi.org/10.1111/ecog.04271</a>.
+</div>
+<div id="ref-Ripley" class="csl-entry">
+Ripley, B. D. no date. <span>“Selecting Amongst Large Classes of
+Models.”</span> <a href="http://www.stats.ox.ac.uk/~ripley/Nelder80.pdf">http://www.stats.ox.ac.uk/~ripley/Nelder80.pdf</a>.
 </div>
 <div id="ref-Rosenzweig1995" class="csl-entry">
-Rosenzweig, M. L. 1995. <em>Species Diversity in Space and Time</em>. Book. Cambridge: Cambridge University Press.
+Rosenzweig, M. L. 1995. <em>Species Diversity in Space and Time</em>.
+Book. Cambridge: Cambridge University Press.
 </div>
 <div id="ref-Tjorve2003" class="csl-entry">
-Tjørve, E. 2003. <span>“<span class="nocase">Shapes and functions of species-area curves: a review of possible models</span>.”</span> <em>Journal of Biogeography</em> 30 (6): 827–35. <a href="http://doi.wiley.com/10.1046/j.1365-2699.2003.00877.x">http://doi.wiley.com/10.1046/j.1365-2699.2003.00877.x</a>.
+Tjørve, E. 2003. <span>“<span class="nocase">Shapes and functions of
+species-area curves: a review of possible models</span>.”</span>
+<em>Journal of Biogeography</em> 30 (6): 827–35. <a href="http://doi.wiley.com/10.1046/j.1365-2699.2003.00877.x">http://doi.wiley.com/10.1046/j.1365-2699.2003.00877.x</a>.
 </div>
 <div id="ref-Tjorve2009" class="csl-entry">
-———. 2009. <span>“<span class="nocase">Shapes and functions of species-area curves (II): a review of new models and parameterizations</span>.”</span> <em>Journal of Biogeography</em> 36 (8): 1435–45. <a href="https://doi.org/10.1111/j.1365-2699.2009.02101.x">https://doi.org/10.1111/j.1365-2699.2009.02101.x</a>.
+———. 2009. <span>“<span class="nocase">Shapes and functions of
+species-area curves (II): a review of new models and
+parameterizations</span>.”</span> <em>Journal of Biogeography</em> 36
+(8): 1435–45. <a href="https://doi.org/10.1111/j.1365-2699.2009.02101.x">https://doi.org/10.1111/j.1365-2699.2009.02101.x</a>.
 </div>
 <div id="ref-Triantis2012" class="csl-entry">
-Triantis, K. A., F. Guilhaumon, and R. J. Whittaker. 2012. <span>“The Island Species–Area Relationship: Biology and Statistics.”</span> Journal Article. <em>Journal of Biogeography</em> 39 (2): 215–31. <a href="https://doi.org/10.1111/j.1365-2699.2011.02652.x">https://doi.org/10.1111/j.1365-2699.2011.02652.x</a>.
+Triantis, K. A., F. Guilhaumon, and R. J. Whittaker. 2012. <span>“The
+Island Species–Area Relationship: Biology and Statistics.”</span>
+Journal Article. <em>Journal of Biogeography</em> 39 (2): 215–31. <a href="https://doi.org/10.1111/j.1365-2699.2011.02652.x">https://doi.org/10.1111/j.1365-2699.2011.02652.x</a>.
 </div>
 <div id="ref-Wang2010" class="csl-entry">
-Wang, Y., Y. Bao, M. Yu, G. Xu, and P. Ding. 2010. <span>“Nestedness for Different Reasons: The Distributions of Birds, Lizards and Small Mammals on Islands of an Inundated Lake.”</span> Journal Article. <em>Diversity and Distributions</em> 16 (5): 862–73. <a href="https://doi.org/10.1111/j.1472-4642.2010.00682.x">https://doi.org/10.1111/j.1472-4642.2010.00682.x</a>.
+Wang, Y., Y. Bao, M. Yu, G. Xu, and P. Ding. 2010. <span>“Nestedness for
+Different Reasons: The Distributions of Birds, Lizards and Small Mammals
+on Islands of an Inundated Lake.”</span> Journal Article. <em>Diversity
+and Distributions</em> 16 (5): 862–73. <a href="https://doi.org/10.1111/j.1472-4642.2010.00682.x">https://doi.org/10.1111/j.1472-4642.2010.00682.x</a>.
 </div>
 <div id="ref-Whittaker2008" class="csl-entry">
-Whittaker, R. J, K. A Triantis, and R. J Ladle. 2008. <span>“A General Dynamic Theory of Oceanic Island Biogeography.”</span> Journal Article. <em>Journal of Biogeography</em> 35 (6): 977–94.
+Whittaker, R. J, K. A Triantis, and R. J Ladle. 2008. <span>“A General
+Dynamic Theory of Oceanic Island Biogeography.”</span> Journal Article.
+<em>Journal of Biogeography</em> 35 (6): 977–94.
 </div>
 </div>
 </div>

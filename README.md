@@ -3,7 +3,7 @@
 
 # The **‘sars’** R Package <img src="man/figures/sars_logo.png" align="right" width="10%"/>
 
-[![CircleCI](https://circleci.com/gh/txm676/sars/tree/master.svg?style=svg)](https://circleci.com/gh/txm676/sars/tree/master)
+[![CircleCI](https://circleci.com/gh/txm676/sars/tree/master.svg?style=svg)](https://app.circleci.com/pipelines/github/txm676/sars?branch=master)
 [![Downloads](https://cranlogs.r-pkg.org/badges/sars?color=brightgreen)](https://cran.r-project.org/package=sars)
 [![CRAN
 Downloads](http://cranlogs.r-pkg.org/badges/grand-total/sars)](https://cran.r-project.org/package=sars)
@@ -12,7 +12,7 @@ Downloads](http://cranlogs.r-pkg.org/badges/grand-total/sars)](https://cran.r-pr
 [![License: GPL
 v3](https://img.shields.io/badge/License-GPLv3-yellow.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![Codecov test
-coverage](https://codecov.io/gh/txm676/sars/branch/master/graph/badge.svg)](https://codecov.io/gh/txm676/sars?branch=master)
+coverage](https://codecov.io/gh/txm676/sars/branch/master/graph/badge.svg)](https://app.codecov.io/gh/txm676/sars?branch=master)
 
 > *fit and compare **Species-Area Relationship (SAR)** models using
 > multi-model inference*
@@ -31,7 +31,7 @@ functions for fitting, evaluating and plotting a range of commonly used
 piecewise SAR models (see Matthews and Rigal (in press) for details on
 these functions).
 
-As this is version 1.3.5 of the package, it is possible that there are
+As this is version 1.3.6 of the package, it is possible that there are
 some bugs in places. Please report any issues to us via GitHub.
 
 The package has an associated vignette that provides examples of how to

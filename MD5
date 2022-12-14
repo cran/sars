@@ -1,7 +1,7 @@
-0cfd90621f24491831cff788ea6908b2 *DESCRIPTION
+9e5befe1f46e06679bad975ccc73c758 *DESCRIPTION
 e62637ea8a114355b985fd86c9ffbd6e *LICENSE
 46cca27b408dbc860fa51a5524472be1 *NAMESPACE
-8fd765a1382864044eef76d517e15d7d *NEWS.md
+d2e337c9090b53fbf7fd75da2d1e53df *NEWS.md
 4fb530be4b935647a69930c19cea444c *R/class_plot.R
 40756e56ccb219e197e22215a1fd0b9b *R/class_print.R
 37e1ac62cf273bbc197832ad7a154c5f *R/class_summary.R
@@ -17,9 +17,9 @@ ce859c8e20a42d047d23586ec6c50a83 *R/coleman_plot.R
 e7b4ab250165a15ee8545cfd53ab2e72 *R/link_functions.R
 b54afb8a86ce4bd67de66bcf832bf18f *R/mod_linear_power.R
 d52a9857c011946ddbb9301edb998efe *R/obs_shape.R
-10947fa481d6f35ec1c09088376bc329 *R/optim.R
+3e087d35f6570bd4d6f90f0a10590757 *R/optim.R
 d2701ba8221fd3d11e8db0cb4d040f28 *R/sar_asymp.R
-0364cc03f4617bbec80de061ac868eb7 *R/sar_average.R
+39cc895f6a986fbd9ff209d2394bd0d9 *R/sar_average.R
 1e5b73d8032471a56f654fa19c1f91b6 *R/sar_betap.R
 88909247395ae9a36b3bccdcf4635da2 *R/sar_chapman.R
 06e343a616a383bbeb5f93d1beeb28f3 *R/sar_conf_int.R
@@ -45,8 +45,8 @@ c31592f6e81955333681a1c32923bd16 *R/sar_weibull4.R
 d89f54beeb7f6dec6bb547c5bd834e15 *R/sars.R
 538d1b57ae43f30a452b30e000f1cf84 *R/style.R
 17d466385a24d126ed37970bbee839af *R/sysdata.rda
-a3d9718357f00c7b267d1fa191152e22 *README.md
-afa181eb00c29f2bb65260b5665cfe21 *build/vignette.rds
+5181f02c92f57df9bd27d80e58304186 *README.md
+adfc0b46ed481fcdeb0f6214d3f72fee *build/vignette.rds
 5ed1b3977601638396ebfdc57cdfb114 *data/aegean.rda
 1ab48cb3de90236f2ef9242a2aa1ea6d *data/aegean2.rda
 f0fb10f94d92d54763a52cacb739b5a6 *data/cole_sim.rda
@@ -56,8 +56,8 @@ c938976a90d442eafd30145233ddfdff *inst/CITATION
 93d74725c78b9feb8f28a55667dbfe17 *inst/REFERENCES.bib
 92dfcd3b770d67153587efbfc74adc19 *inst/_pkgdown.yml
 bbb323e5843f2e63b6d8d335bd9139fa *inst/doc/sars-r-package.R
-ec150c237cf0224351f2a4dcc33de5f5 *inst/doc/sars-r-package.Rmd
-e4cf3771292661a6a0015db0a3c17ccf *inst/doc/sars-r-package.html
+f34e5298bead3b7fa685cab33f51e7d1 *inst/doc/sars-r-package.Rmd
+b6d800d8a534122c5e3cd61aafc5c967 *inst/doc/sars-r-package.html
 24f99247d25dfe293d96b26d226f763f *inst/model_factory.R
 5a4d21e927c15ddb887701c774258c87 *inst/non_lin_models/Mod_asymp.R
 6761630f9f151ccbcbbe6811f02e2a54 *inst/non_lin_models/Mod_betap.R
@@ -86,7 +86,7 @@ d3ef3462440f5ace43d775973ff2177c *man/aegean2.Rd
 3edb317a0d72cb1dee16be631d7a8dff *man/display_sars_models.Rd
 d3b2e321f99be35863a5425397f28d3d *man/figures/README-plot-1.png
 675832830660ba7976a26f58ea24273b *man/figures/README-unnamed-chunk-4-1.png
-d4bdda8eecdcb4473474a54b84ea2b9f *man/figures/README-unnamed-chunk-5-1.png
+1812796286767516cca58cb4534784b2 *man/figures/README-unnamed-chunk-5-1.png
 cdb1afe123d768ac936c18ff64132263 *man/figures/README-unnamed-chunk-6-1.png
 d44268fdbb7c9761ba7eac46f318bf82 *man/figures/sars_logo.png
 2238f7b29950c804b125bd6f836ce563 *man/galap.Rd
@@ -149,5 +149,5 @@ f672890ef90273933817ca5d66bb4480 *tests/testthat/test_shape.R
 3398429deea0431368038b8fc7c8a562 *tests/testthat/test_thresholds.R
 4d8fca9f08f4152a91465c1ed371360a *tests/testthat/test_warnings.R
 d25d80602bdc456acde2fff903e9343d *tests/testthat/test_weibull3.R
-89f0f9616c8b4f88daf61181959b877a *vignettes/REFERENCES.bib
-ec150c237cf0224351f2a4dcc33de5f5 *vignettes/sars-r-package.Rmd
+82946e0d9f1a0037abf325ceae70025e *vignettes/REFERENCES.bib
+f34e5298bead3b7fa685cab33f51e7d1 *vignettes/sars-r-package.Rmd
