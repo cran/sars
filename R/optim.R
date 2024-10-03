@@ -35,9 +35,8 @@ rssoptim <- function(model, data, start = NULL, algo = "Nelder-Mead",
 
   #optimization (first result)
   res1 <- tryCatch(optim(startMod, rssfun, hessian = TRUE, data = data,
-                         method = algo, control = list(maxit = 50000) ),
-                   error = function(e){e}
-                   )
+                         method = algo, control = list(maxit = 50000)),
+                   error = function(e){e})
 
   #Backtransformation of parameter values; the rssfun backtransforms
   #the values tried by optim for Rplus parameters before calculating rss
@@ -123,11 +122,11 @@ rssoptim <- function(model, data, start = NULL, algo = "Nelder-Mead",
   P <- length(model$parLim) + 1  # + 1 for the estimated variance
 
   #R2 (Kvaleth, 1985, Am. Statistician)
-  R2 <-  1 - ( (res1$value) /  sum((data$S - mean(data$S))^2) )
+  R2 <-  1 - ((res1$value) /  sum((data$S - mean(data$S))^2))
 
   #R2a (He & Legendre 1996, p724)
-  R2a <-  1 - ( ((n-1)*(res1$value)) /
-                  ((n-P)*sum((data$S - mean(data$S))^2)) )
+  R2a <-  1 - (((n-1)*(res1$value)) /
+                  ((n-P)*sum((data$S - mean(data$S))^2)))
 
   #old formulas based on rss
   #AIC <- n * log(res1$value / n) + 2 * P

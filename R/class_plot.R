@@ -387,18 +387,28 @@ plot.sars <- function(x, mfplot = FALSE, xlab = NULL, ylab = NULL,
 #'   models. To plot fewer bars, use the \code{subset_weights} argument to
 #'   filter out models with lower weights than a threshold value. To provide
 #'   a different set of names use the \code{modNames} argument. The model
-#'   abbreviations used as the default are: \itemize{ \item{Pow = } { Power}
-#'   \item{PowR = } { PowerR} \item{E1 = } { Extended_Power_model_1} \item{E2
-#'   = } { Extended_Power_model_2} \item{P1 = } { Persistence_function_1}
-#'   \item{P2 = } { Persistence_function_2} \item{Loga = } { Logarithmic}
-#'   \item{Kob = } { Kobayashi} \item{MMF = } { MMF} \item{Mon = } { Monod}
-#'   \item{NegE = } { Negative_exponential} \item{CR = } { Chapman_Richards}
-#'   \item{CW3 = } { Cumulative_Weibull_3_par.} \item{AR = } {
-#'   Asymptotic_regression} \item{RF = } { Rational_function} \item{Gom = } {
-#'   Gompertz} \item{CW4 = } { Cumulative_Weibull_4_par.} \item{BP = } {
-#'   Beta-P_cumulative} \item{Logi = } { Logistic(Standard)}
-#'   \item{Hel = } { Heleg(Logistic)} \item{Lin = } {
-#'   Linear_model}}
+#'   abbreviations used as the default are: \itemize{ 
+#'   \item \strong{Pow} =   Power
+#'   \item \strong{PowR} =   PowerR 
+#'   \item \strong{E1} =   Extended_Power_model_1 
+#'   \item \strong{E2} =   Extended_Power_model_2 
+#'   \item \strong{P1} =   Persistence_function_1
+#'   \item \strong{P2} =   Persistence_function_2 
+#'   \item \strong{Loga} =   Logarithmic
+#'   \item \strong{Kob} =   Kobayashi 
+#'   \item \strong{MMF} =   MMF 
+#'   \item \strong{Mon} =   Monod
+#'   \item \strong{NegE} =   Negative_exponential 
+#'   \item \strong{CR} =   Chapman_Richards
+#'   \item \strong{CW3} =   Cumulative_Weibull_3_par. 
+#'   \item \strong{AR} =  Asymptotic_regression 
+#'   \item \strong{RF} =   Rational_function 
+#'   \item \strong{Gom} =  Gompertz 
+#'   \item \strong{CW4} =   Cumulative_Weibull_4_par. 
+#'   \item \strong{BP} =  Beta-P_cumulative 
+#'   \item \strong{Logi} =   Logistic(Standard)
+#'   \item \strong{Hel} =   Heleg(Logistic) 
+#'   \item \strong{Lin} =   Linear_model}
 #' @examples
 #' data(galap)
 #' #plot a multimodel SAR curve with all model fits included
@@ -789,7 +799,13 @@ contsPlot <- function (xx, yy, multPlot, xypred.cont, data, column, xlab = xlab,
 #'     
 #'#Plot multiple model fits in the same plot, with different colour for each 
 #'#model fit
-#'plot(fct, multPlot = FALSE, lcol = c("black", "red", "green", "purple"))
+#'plot(fct, multPlot = FALSE, lcol = c("yellow", "red", "green", "purple"))
+#' #Making a legend. First extract the model order:
+#' fct[[2]]
+#' #Then use the legend function -  note you may need to play around with the 
+#' #legend location depending on your data.
+#' legend("topleft", legend=c("ContOne", "DiscOne","Linear", "Intercept"), fill =
+#' c("yellow", "red", "green", "purple"))
 #'@rdname plot.threshold
 #'@importFrom stats predict
 #'@importFrom graphics par
@@ -1011,6 +1027,43 @@ plot.threshold <- function(x, xlab = NULL, ylab = NULL, multPlot = TRUE,
     }# eo if multPlot
   }#eo if one plot
 }#eo function
+
+
+
+
+#'Barplot of information criteria weights for a 'habitat' Object
+#'
+#'@description S3 method for class 'habitat'. \code{plot.habitat} creates
+#'  a simple barplot of information criteria weights for the different model fits
+#'@param x An object of class 'habitat'.
+#'@param IC The information criterion weights to present (must be one of 'AIC',
+#''BIC' or 'AICc')
+#'@param \dots Further graphical parameters may be supplied as arguments.
+#' @examples
+#' #data(habitat)
+#' ###TO FILL IN
+#'@importFrom graphics barplot
+#'@export
+
+plot.habitat <- function(x, IC = "AICc", ...){
+  
+  if (attributes(x)$type == "habitat"){
+    if (!IC %in% c("AIC", "BIC", "AICc")){
+      stop("IC must be one of 'AIC', 'BIC', 'AICc'")
+    }
+    x2 <- summary(x)$Model_table
+    #get delta ICs
+    delta_ICs <- x2[,IC] - min(x2[,IC])
+    #get akaike weights
+    akaikesum <- sum(exp(-0.5*(delta_ICs)))
+    x2$Weights <- exp(-0.5*delta_ICs) / akaikesum
+    IC_nam <- paste0(IC, " weight")
+    barplot(x2$Weights, names.arg = x2$Model,
+            xlab = "Model", ylab = IC_nam, ...)
+  }#eo if habitat
+  
+}
+
 
 #function to convert vector of model
 #names into abbreviated versions depending on which models are provided

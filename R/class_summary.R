@@ -1,3 +1,54 @@
+########################################################################
+##     internal functions for use within summary for sar_habitat     #######
+########################################################################
+
+#' function to return AIC etc as calculated inside sar_average
+#' @importFrom stats logLik 
+#' @noRd
+info_crit <- function(obj){
+  val <- logLik(obj)
+  P <- attr(logLik(obj), "df")
+  if (inherits(obj, "lm")){
+  n <- length(obj$residuals)
+  } else if (inherits(obj, "nls")){
+    n <- length(obj$m$getEnv()$S)
+  }
+  lAIC <- (2 * P) - (2 * val)
+  #if denominator of AICc is 0 or negative, return Inf
+  den <- n - P - 1
+  if (den < 1){
+    lAICc <- Inf
+  } else {
+    lAICc <- -2 * val + 2 * P * (n / (n - P - 1))
+  }
+  lBIC <- (-2 * val) + (P * log(n))
+  return(c(lAIC, lBIC, lAICc))
+}
+
+#' function to generate R2 and AIC etc for the model summary table
+#' @noRd
+extr_fit <- function(obj){
+  sobj <- summary(obj)
+  if (inherits(obj, "lm")){
+  r2 <- sobj$r.squared
+  adjr2 <- sobj$adj.r.squared
+  } else if (inherits(obj, "nls")){
+    SR <- obj$m$getEnv()$S
+    P <- length(obj$m$getPars()) + 1 #1 for variance
+    n <- length(SR)
+    value <- sum(obj$m$resid()^2)#RSS
+    #R2 (Kvaleth, 1985, Am. Statistician);
+    #gives same as aomisc::R2nls()
+    r2 <-  1 - ((value) /  sum((SR - mean(SR))^2))
+    #R2a (He & Legendre 1996, p724)
+    adjr2 <-  1 - (((n-1)*(value)) /
+                   ((n-P)*sum((SR - mean(SR))^2)))
+  }
+  IC <- info_crit(obj)
+  return(c(r2, adjr2, IC))
+}
+##############################################################################
+
 #' Summarising the results of the model fitting functions
 #'
 #' @description S3 method for class 'sars'. \code{summary.sars} creates
@@ -54,6 +105,12 @@
 #'   seg3 provide the number of datapoints within each segment (for the
 #'   threshold models); one-threshold models have two segements, and
 #'   two-threshold models have three segments.
+#'   
+#'   For a 'sars' object of Type 'habitat', a list with two elements is
+#'   returned: (i) a model summary table (models are ranked using AICc), and
+#'   (ii) the value of the \code{modType} argument used in the
+#'   \code{sar_habitat} function call.
+#'   
 #' @examples
 #' data(galap)
 #' #fit a multimodel SAR and get the model table
@@ -254,7 +311,83 @@ summary.sars <- function(object, ...){
     res <- list("order" = "BIC", "Model_table" = mt, 
                 "Axes transformation" = object[[5]][[1]])
   }
+  
+  if (attributes(object)$type == "habitat"){
+
+    modType <- attributes(object)$modType
+    mod_tab <- matrix(NA, nrow = length(object),
+                      ncol = 9)
+    colnames(mod_tab) <- c("Model", "z", "d", "d-z",
+                           "R2", "adjR2", "AIC",
+                           "BIC", "AICc")
+    mod_tab <- as.data.frame(mod_tab)
+    mod_tab$Model <- names(object)
+    mod_tab[,5:9] <- t(round(vapply(object, extr_fit, 
+                                    FUN.VALUE = numeric(5)),3))
+    #power or logarithmic results
+    if (attributes(object)$modType %in% c("power",
+                                          "logarithmic")){
+      #if not log-log, no d-z column needed
+      mod_tab <- mod_tab[,-which(colnames(mod_tab) == "d-z")]
+  
+      for (i in 1:length(object)){
+        if (names(object[i]) == "choros"){
+          mod_tab[which(mod_tab$Model == "choros"),
+                  "z"] <- round(object$choros$m$getAllPars()[2],
+                                3)
+        } else if (names(object[i]) == "jigsaw"){
+          mod_tab[which(mod_tab$Model == "jigsaw"),
+                  c("z", "d")] <- round(object$jigsaw$m$getAllPars()[2:3],
+                                        3)
+        } else if (names(object[i]) == "Kallimanis"){
+          mod_tab[which(mod_tab$Model == "Kallimanis"),
+                  c("z", "d")] <- round(object$Kallimanis$m$getAllPars()[2:3],
+                                        3)
+          
+        } else if (names(object[i]) == "power"){
+          mod_tab[which(mod_tab$Model == "power"),
+                  c("z")] <- round(object$power$m$getAllPars()[2],3)
+          
+        } else if (names(object[i]) == "logarithmic"){
+          mod_tab[which(mod_tab$Model == "logarithmic"),
+                  c("z")] <- round(object$logarithmic$m$getAllPars()[2],3)
+          
+        } #eo if
+      }#eo for
+    #log-log results
+    } else if (attributes(object)$modType == "power_log"){
+
+      for (i in 1:length(object)){
+        if (names(object[i]) == "choros"){
+          mod_tab[which(mod_tab$Model == "choros"),
+                  "z"] <- round(object$choros$coefficients[2],
+                                3)
+        } else if (names(object[i]) == "jigsaw"){
+          mod_tab[which(mod_tab$Model == "jigsaw"),
+                  c("z", "d", "d-z")] <- round(c(object$jigsaw$coefficients[2],
+                            object$jigsaw$coefficients[3] +
+                              object$jigsaw$coefficients[2],
+                            object$jigsaw$coefficients[3]),3)
+      } else if (names(object[i]) == "Kallimanis"){
+        mod_tab[which(mod_tab$Model == "Kallimanis"),
+                c("z", "d")] <- round(c(object$Kallimanis$coefficients[2],
+                                               object$Kallimanis$coefficients[3]),3)
+      
+      } else if (names(object[i]) == "power"){
+        mod_tab[which(mod_tab$Model == "power"),
+                c("z")] <- round(c(object$power$coefficients[2]),3)
+        
+      }#eo if
+  }#eo for
+  }#eo if lm
+    mod_tab <- mod_tab[order(mod_tab$AICc),]
+    res <- list("Model_table" = mod_tab, 
+                "modType" = modType)
+  }#eo if habitat
+  
   class(res) <- "summary.sars"
   attr(res, "type") <- attr(object, "type")
+  attr(res, "failedMods") <- attr(object, "failedMods")
+  attr(res, "modType") <- attr(object, "modType")
   res
 }
