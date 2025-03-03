@@ -2,6 +2,9 @@ context("sar_linear")
 
 test_that("sar_linear returns correct results", {
   fit <- sar_linear(galap)
+  expect_equal(length(capture_output_lines(fit, 
+                                           print = TRUE)),
+               11)
   expect_equal(round(fit$AICc, 2), 193.77)
   expect_equal(as.vector(round(fit$par[2], 2)), 0.19)
   expect_is(fit, "sars")
@@ -15,6 +18,9 @@ test_that("sar_linear returns correct results", {
   expect_equal(as.vector(round(fit2$homoTest[[2]]$p.value, 2)), 0.44)
   expect_match(fit2$homoTest[[2]]$method, 
                "Pearson's product-moment correlation")
+  expect_no_error(plot(fit))
+  expect_no_error(plot(fit, lcol = "black"))
+  expect_error(plot(fit, col = "black"))
 })
 
 

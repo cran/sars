@@ -11,6 +11,9 @@ test_that("sar_power returns correct results", {
   fit2 <- sar_power(galap, homoTest = "cor.fitted")
   expect_equal(as.vector(round(fit2$homoTest[[2]]$p.value, 2)), 0.04)
   expect_match(fit2$homoTest[[2]]$method, "Spearman's rank correlation rho")
+  expect_no_error(plot(fit))
+  expect_no_error(plot(fit, lcol = "black"))
+  expect_error(plot(fit, col = "black"))
 })
 
 
@@ -23,6 +26,9 @@ test_that("neg_expo and asymp returns correct results", {
   fit2 <- sar_asymp(niering)
   expect_equal(round(fit2$BIC, 2), 204.32)
   expect_equal(as.vector(round(fit2$par[3], 5)), 0)
+  expect_no_error(plot(fit))
+  expect_no_error(plot(fit, lcol = "black"))
+  expect_error(plot(fit, col = "black"))
 })
 
 
@@ -37,9 +43,12 @@ test_that("sar_power summary returns correct results", {
 
 test_that("sar_power returns warning for all identical species", {
   d <- data.frame("A" = 1:4, "S" = 0)
-  expect_warning(sar_power(d), "All richness values are zero: ",
+  #Note in R-devel 4.5.0, there is a change inside grepl, which 
+  #made this warning matching no longer work unless the long string, 
+  #which is split across lines, is put inside paste0()
+  expect_warning(sar_power(d), paste0("All richness values are zero: ",
                  "parameter estimates of non-linear models should be ",
-                  "interpreted with caution")
+                  "interpreted with caution"))
   d$S <- 1
   expect_warning(sar_power(d), "All richness values identical")
 })

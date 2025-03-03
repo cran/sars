@@ -5,8 +5,8 @@
 
 [![CircleCI](https://circleci.com/gh/txm676/sars/tree/master.svg?style=svg)](https://app.circleci.com/pipelines/github/txm676/sars?branch=master)
 [![Downloads](https://cranlogs.r-pkg.org/badges/sars?color=brightgreen)](https://cran.r-project.org/package=sars)
-[![CRAN
-Downloads](http://cranlogs.r-pkg.org/badges/grand-total/sars)](https://cran.r-project.org/package=sars)
+[![metacran
+downloads](http://cranlogs.r-pkg.org/badges/grand-total/sars)](https://cran.r-project.org/package=sars)
 [![CRAN](https://www.r-pkg.org/badges/version/sars)](https://cran.r-project.org/package=sars)
 [![DOI](https://zenodo.org/badge/95295704.svg)](https://zenodo.org/badge/latestdoi/95295704)
 [![License: GPL
@@ -29,10 +29,11 @@ abundance-site matrix, and extrapolating fitted SAR models to predict
 richness on larger islands / sample areas. Version 1.3.0 has added
 functions for fitting, evaluating and plotting a range of commonly used
 piecewise SAR models (see Matthews and Rigal (2021) for details on these
-functions).
+functions). Version 2.0.0 has added functions to fit a range of habitat
+and countryside SAR models, along with associated plot and prediction
+functions.
 
-As this is version 1.3.7 of the package, it is possible that there are
-some bugs in places. Please report any issues to us via GitHub.
+Please report any bugs or issues to us via GitHub.
 
 The package has an associated vignette that provides examples of how to
 use the package, and an accompanying paper (Matthews et al. 2019).
@@ -97,33 +98,33 @@ mm_galap <- sar_average(data = galap)
 #> 
 #>  Now attempting to fit the 20 SAR models: 
 #> 
-#> --  multi_sars ---------------------------------------------- multi-model SAR --
-#> > power    : v
-#> > powerR   : v
-#> > epm1     : v
-#> > epm2     : v
-#> > p1       : v
-#> > p2       : v
-#> > loga     : v
-#> > koba     : v
-#> > monod    : v
-#> > negexpo  : v
-#> > chapman  : v
-#> > weibull3 : v
-#> > asymp    : v
-#> > ratio    : v
-#> > gompertz : v
-#> > weibull4 : v
-#> > betap    : v
-#> > logistic : v
-#> > heleg    : v
-#> > linear   : v
+#> ──  multi_sars ────────────────────────────────────────────── multi-model SAR ──
+#> → power    : ✔
+#> → powerR   : ✔
+#> → epm1     : ✔
+#> → epm2     : ✔
+#> → p1       : ✔
+#> → p2       : ✔
+#> → loga     : ✔
+#> → koba     : ✔
+#> → monod    : ✔
+#> → negexpo  : ✔
+#> → chapman  : ✔
+#> → weibull3 : ✔
+#> → asymp    : ✔
+#> → ratio    : ✔
+#> → gompertz : ✔
+#> → weibull4 : ✔
+#> → betap    : ✔
+#> → logistic : ✔
+#> → heleg    : ✔
+#> → linear   : ✔
 #> 
 #> No model validation checks selected
 #> 
 #> 20 remaining models used to construct the multi SAR:
 #>  Power, PowerR, Extended Power model 1, Extended Power model 2, Persistence function 1, Persistence function 2, Logarithmic, Kobayashi, Monod, Negative exponential, Chapman Richards, Cumulative Weibull 3 par., Asymptotic regression, Rational function, Gompertz, Cumulative Weibull 4 par., Beta-P cumulative, Logistic(Standard), Heleg(Logistic), Linear model 
-#> --------------------------------------------------------------------------------
+#> ────────────────────────────────────────────────────────────────────────────────
 ```
 
 Each of the ‘fitted’ objects have corresponding plot methods:
@@ -149,33 +150,33 @@ mm_galap <- suppressMessages(sar_average(data = galap, verb = FALSE))
 #> 
 #>  Now attempting to fit the 20 SAR models: 
 #> 
-#> --  multi_sars ---------------------------------------------- multi-model SAR --
-#> > power    : v
-#> > powerR   : v
-#> > epm1     : v
-#> > epm2     : v
-#> > p1       : v
-#> > p2       : v
-#> > loga     : v
-#> > koba     : v
-#> > monod    : v
-#> > negexpo  : v
-#> > chapman  : v
-#> > weibull3 : v
-#> > asymp    : v
-#> > ratio    : v
-#> > gompertz : v
-#> > weibull4 : v
-#> > betap    : v
-#> > logistic : v
-#> > heleg    : v
-#> > linear   : v
+#> ──  multi_sars ────────────────────────────────────────────── multi-model SAR ──
+#> → power    : ✔
+#> → powerR   : ✔
+#> → epm1     : ✔
+#> → epm2     : ✔
+#> → p1       : ✔
+#> → p2       : ✔
+#> → loga     : ✔
+#> → koba     : ✔
+#> → monod    : ✔
+#> → negexpo  : ✔
+#> → chapman  : ✔
+#> → weibull3 : ✔
+#> → asymp    : ✔
+#> → ratio    : ✔
+#> → gompertz : ✔
+#> → weibull4 : ✔
+#> → betap    : ✔
+#> → logistic : ✔
+#> → heleg    : ✔
+#> → linear   : ✔
 #> 
 #> No model validation checks selected
 #> 
 #> 20 remaining models used to construct the multi SAR:
 #>  Power, PowerR, Extended Power model 1, Extended Power model 2, Persistence function 1, Persistence function 2, Logarithmic, Kobayashi, Monod, Negative exponential, Chapman Richards, Cumulative Weibull 3 par., Asymptotic regression, Rational function, Gompertz, Cumulative Weibull 4 par., Beta-P cumulative, Logistic(Standard), Heleg(Logistic), Linear model 
-#> --------------------------------------------------------------------------------
+#> ────────────────────────────────────────────────────────────────────────────────
 mm_galap 
 #> 
 #> This is a sar_average fit object:
@@ -203,7 +204,8 @@ plot(fit, cex = 0.8, cex.main = 1.1, cex.lab = 1.1, pcol = "grey") #Figure 1
 
 ## References
 
-<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="refs" class="references csl-bib-body hanging-indent"
+entry-spacing="0">
 
 <div id="ref-Arrhenius1921" class="csl-entry">
 

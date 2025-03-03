@@ -105,8 +105,10 @@ print.sars <- function(x, ...){
                             collapse = ", "), "\n\nTry different starting parameter values")
       }
       
-      cat("\nsar_countryside model fits \n\n", 
-          paste0(PNN),"\n\nModel fits:\n\n")
+      cat("\nsar_countryside model fits (",
+          paste0(attributes(object)$modType),
+          " form) \n\n", 
+          paste0(PNN),"\n\nModel fits:\n\n", sep = "")
       print.listof(object[[1]])
       
       cat("\n\nHabitat affinity values:\n\n")
@@ -115,6 +117,20 @@ print.sars <- function(x, ...){
       cat("\n\nc-values:\n\n")
       print(object[[3]])
       
+      cat("\n\nPredicted total richness values:\n\n")
+      if (length(object[[4]]) < 5){
+      print(object[[4]])
+      } else {
+        print(object[[4]][1:5])
+        cat("\n...Remaining values cut-off ...\n\n")
+      }
+      
+      cat("\nResidual sum of squares [based on total richness]:\n\n")
+      if (length(object[[4]]) == 1 | length(object[[5]]) == 1){
+        cat("No RSS values as some models could not be fitted\n\n")
+      } else {
+        print(object[[5]])
+      }
     }
   }
 }
