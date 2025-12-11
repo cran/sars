@@ -173,7 +173,7 @@ habitat_optim <- function(mod_nam, data){
 #'   Triantis, K.A., Mylonas, M., Lika, K. & Vardinoyannis, K. (2003) A model
 #'   for the species-area-habitat relationship. Journal of Biogeography, 30,
 #'   19–27.
-#' @author Euan N. Furness and Thomas J. Matthews
+#' @author Hidden
 #' @examples
 #' data(habitat)
 #' #Fit the models in log-log space
@@ -204,7 +204,7 @@ sar_habitat <- function(data, modType = "power_log",
   
   if (!(is.matrix(data) | is.data.frame(data)))
     stop('data must be a matrix or dataframe')
-  if (is.matrix(data)) data <- as.data.frame(data)
+  data <- as.data.frame(data)
   if (anyNA(data)) stop('NAs present in data')
   if (!any(c("power", "logarithmic", "power_log") %in% 
            modType)){

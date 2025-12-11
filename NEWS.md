@@ -1,3 +1,9 @@
+
+##Version 2.1.0
+  *Finished the multi-habitat functions and associated method
+  functions
+  *Added info on these to the vignette
+
 ##Version 2.0.0
   *Added major new functionality to fit multi-habitat
   SAR models: sar_habitat(), sar_countryside() & countryside_extrap()
@@ -7,6 +13,7 @@
   *Changed how a fitted asymptote is calculated (a slightly more 
   liberal approach)
   *Updated some tests to match with changes to base R in development version
+  *edited main functions to not error if tibbles are provided as input
 
 ## Version 1.3.7
   *small roxygen updates to pass new CRAN checks

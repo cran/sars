@@ -113,3 +113,71 @@ summary(fit)
 #Plot the resultant model fit 
 plot(fit, cex = 0.8, cex.main = 1, cex.lab = 0.8, pcol = "grey") 
 
+## ----fig.width=6, fig.height=6------------------------------------------------
+
+#Load the dataset and fit the three habitat-heterogeneity models
+#(power model form) alongside the Arrhenius power model, and view
+#the raw model fit objects
+data(habitat)
+s <- sar_habitat(data = habitat, modType = "power")
+s
+
+#Fit the three habitat-heterogeneity models in log–log power
+#model form alongside the linear (log–log) power model, and
+#compare the model fits using information criteria
+s2 <- sar_habitat(data = habitat, modType = "power_log")
+summary(s2)
+
+#Generate barplot of model AICc weights
+plot(s2) 
+
+## ----fig.width=7.5, fig.height=6----------------------------------------------
+# Fit the countryside SAR model (power form) to the data, and use the function’s
+# starting parameter value selection procedure (setting 'gridStart' here to
+# "none" just for speed). Abbreviations: AG = agricultural land, SH = shrubland,
+# F = oak forest, UB = ubiquitous species.data(countryside)
+data(countryside)
+s3 <- sar_countryside(data = countryside, modType = "power",
+                      gridStart = "none", 
+                      habNam = c("AG", "SH", "F"), 
+                      spNam = c("AG_Sp", "SH_Sp", "F_Sp", "UB_Sp"))
+
+# Use the fitted models to predict the richness of a site with given amounts of
+# agricultural land, shrub land and forest. The ‘Indiv_mods’ element shows the
+# predicted number of species (based on the given model) in a given group in the
+# site, while the ‘Total’ element is the predicted total number of species
+# across all groups.
+countryside_extrap(s3, area = c(1000, 1000, 1000))
+
+#Plot the fitted individual SAR curves for each species group (Type 2 plot),
+#including a total species richness curve, modifying various aspects of the
+#plot (e.g., legend position). Use the ‘which’ argument to only generate the
+#second plot (i.e., the plot for shrubland)
+par(mar=c(5.1, 4.1, 4.1, 7.5), xpd=TRUE)
+plot(s3, type = 2, totSp = TRUE,
+     lcol = c("black", "aquamarine4", "#CC661AB3",
+              "darkblue", "darkgrey"), pLeg = TRUE,
+     legPos ="topright", legInset = c(-0.27,0.3), 
+     lwd = 1.5, ModTitle = c("Agricultural land", 
+                             "Shrubland", "Forest"),
+     which = 2)
+
+# For a given habitat and a fixed site area, plot the number of species in each
+# species group as a function of the proportion of the given habitat in the site
+# (Type 3 plot).  Use the ‘which’ argument to only generate the first plot
+# (i.e., the plot for agricultural land)
+plot(s3, type = 3, totSp = TRUE, 
+     lcol = c("black", "aquamarine4","#CC661AB3",
+              "darkblue", "darkgrey"), pLeg = TRUE, 
+     legPos ="topright", legInset = c(-0.27,0.3), 
+     lwd = 1.5, ModTitle = c("Agricultural land", 
+                             "Shrubland", "Forest"), 
+     which = 1)
+
+## ----fig.width=12, fig.height=6-----------------------------------------------
+# Generate an effective area plot (Type 4 plot), customising point type and size
+# etc 
+par(mar=c(5.1, 4.1, 4.1, 2.1), xpd=FALSE)
+plot(s3, type = 4, pch = 16, lwd = 2, cex  = 0.75, cex.axis = 0.75, 
+     cex.lab = 0.9, ModTitle = c("Agricultural species"), which = 1)
+

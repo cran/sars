@@ -104,8 +104,23 @@ test_that("sar_countryside power returns correct values", {
                        pLeg = TRUE, lwd = 1.5,
                        legPos = "topright",
                        which = 3, ModTitle = "S"))
-  expect_error(plot(s, type = 4))
-
+  
+  expect_error(plot(s, type = 4, which = 1:2))
+  expect_error(plot(s, type = 5))
+  
+  expect_no_error(plot(s, type = 4, which = 1))
+  
+  expect_no_error(plot(s, type = 3, which = 1, 
+                       ModTitle = c("Agricultural land")))
+  
+  expect_no_error(plot(s, type = 3, which = 1))
+  
+  expect_no_error(plot(s, type = 3, which = 1, 
+                       ModTitle = "none"))
+  expect_error(plot(s, type = 3, which = 1, 
+                       ModTitle = c("R", "E")))
+  expect_error(plot(s, type = 4, 
+                    ModTitle = c("R", "E")))
   #Check countryside_extrap
   expect_error(countryside_extrap(s, area = 1:5))
   b <- countryside_extrap(s, area = 1:3)
@@ -173,6 +188,14 @@ test_that("sar_countryside power returns correct values", {
                                   "UB_Sp"))
   expect_equal(as.vector(round(Jj2$rss, 0)),
                c(5256, 10573))
+  #check works with tibble
+  cp2 <- tibble::as_tibble(countryside)
+  expect_no_error(sar_countryside(data = cp2,
+                                  modType = "power",
+                                  gridStart = "none",
+                                  habNam = c("AG", "F", "SH"),
+                                  spNam = c("SH_Sp","AG_Sp",  "F_Sp",
+                                            "UB_Sp")))
 })
 
  test_that("sar_countryside logarithmic returns correct values", {
@@ -218,6 +241,8 @@ test_that("sar_countryside power returns correct values", {
                       lcol = c("black", "aquamarine4"),
                       pLeg = TRUE, lwd = 1.5,
                       legPos = "topright", which = 3))
+  expect_no_error(plot(s2, type = 4, which = 2))
+  expect_error(plot(s, type = 4, which = 5))
 
   #Check countryside_extrap
   expect_error(countryside_extrap(s2, area = 1:5))
