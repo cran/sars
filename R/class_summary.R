@@ -120,7 +120,7 @@ extr_fit <- function(obj){
 #' #Get a summary of the fit of the linear power model
 #' fit <- lin_pow(galap, con = 1, compare = TRUE)
 #' summary(fit)
-#' @importFrom stats logLik
+#' @importFrom stats logLik AIC BIC
 #' @export
 
 summary.sars <- function(object, ...){
@@ -250,7 +250,19 @@ summary.sars <- function(object, ...){
     if (any(is.infinite(ICs$AICc))){
       warning("AICc not calculated for some models due to small sample size")
     }
-    
+    #New logLik.thresholdInt function should mean these are 
+    #now identical
+    if (any((sapply(mods, AIC) - ICs$AIC) > 0.015)){
+      stop("Information criteria calculation error: contact package maintainer")
+    }
+    if (any((sapply(mods, BIC) - ICs$BIC) > 0.015)){
+      stop("Information criteria calculation error: contact package maintainer")
+    }
+    # if (!identical(round(sapply(mods, 
+    #                             AICcmodavg::AICc),1),
+    #                round(ICs$AICc, 1))){
+    #   stop("Information criteria calculation error: contact package maintainer")
+    # }
     #get thresholds
     tdf <- matrix(NA, nrow = length(names), ncol = 2)
     for (i in 1:length(th)){
